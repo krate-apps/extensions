@@ -1,0 +1,49 @@
+name: rutorrent-pack
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths:
+      - 'rutorrent/sources.yaml'
+      - '.github/scripts/sync-rutorrent-sources.sh'
+  schedule:
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clone upstream into ext/ and themes/
+        run: |
+          chmod +x .github/scripts/sync-rutorrent-sources.sh
+          .github/scripts/sync-rutorrent-sources.sh
+
+      - name: Commit
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add rutorrent/ext rutorrent/themes
+          git diff --staged --quiet || git commit -m "chore(rutorrent): sync ext/ and themes/ from sources.yaml"
+          git push
+
+      - name: Release tag
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ver="rutorrent-$(date -u +%Y.%m.%d)-${GITHUB_SHA::7}"
+          git tag -f "${ver}"
+          git push -f origin "${ver}"
+          tar -czf /tmp/rutorrent-pack.tar.gz -C rutorrent ext themes
+          gh release create "${ver}" \
+            --title "ruTorrent pack ${ver}" \
+            --notes "Plugins in ext/, themes in themes/. Deploy via zen software add <username> rutorrent." \
+            /tmp/rutorrent-pack.tar.gz \
+            || gh release upload "${ver}" /tmp/rutorrent-pack.tar.gz --clobber

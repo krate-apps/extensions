@@ -1,0 +1,196 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 2.5.001)'
+        required: true
+        type: string
+      previous_tag:
+        description: 'Previous tag for changelog (e.g., initial)'
+        required: true
+        type: string
+        default: 'initial'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Setup environment
+        run: |
+          echo "Setting up release environment..."
+          chmod +x .github/scripts/generate-changelog.sh
+
+      - name: Get version from tag or input
+        id: get_version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION=${GITHUB_REF#refs/tags/}
+          fi
+          echo "version=$VERSION" >> $GITHUB_ENV
+          echo "Version: $VERSION"
+
+      - name: Update version in all files and commit
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${{ env.version }}"
+          echo "Updating version to $VERSION in all files..."
+          
+          # Configure git
+          git config --global user.name 'QBXWatcher'
+          git config --global user.email 'qbxwatcher@quickbox.io'
+          
+          # Run the update-version script (which will commit and push)
+          .github/scripts/update-version.sh "$VERSION"
+          
+          echo "✅ Version updated, committed, and pushed automatically"
+
+      - name: Get previous tag
+        id: get_previous_tag
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            PREVIOUS_TAG="${{ github.event.inputs.previous_tag }}"
+          else
+            PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "initial")
+          fi
+          
+          # Fetch all tags to ensure we have access to remote tags
+          echo "Fetching all tags from remote..."
+          git fetch --tags --force
+          
+          # Normalize tag format - add 'v' prefix if missing
+          if [[ "$PREVIOUS_TAG" != "initial" && ! "$PREVIOUS_TAG" =~ ^v ]]; then
+            PREVIOUS_TAG="v$PREVIOUS_TAG"
+            echo "Normalized tag to: $PREVIOUS_TAG"
+          fi
+          
+          # Check if the previous tag actually exists (try both with and without 'v' prefix)
+          if [[ "$PREVIOUS_TAG" != "initial" ]]; then
+            if git rev-parse "$PREVIOUS_TAG" >/dev/null 2>&1; then
+              echo "✅ Found tag: $PREVIOUS_TAG"
+            elif [[ "$PREVIOUS_TAG" =~ ^v ]] && git rev-parse "${PREVIOUS_TAG#v}" >/dev/null 2>&1; then
+              PREVIOUS_TAG="${PREVIOUS_TAG#v}"
+              echo "✅ Found tag without 'v' prefix: $PREVIOUS_TAG"
+            elif [[ ! "$PREVIOUS_TAG" =~ ^v ]] && git rev-parse "v$PREVIOUS_TAG" >/dev/null 2>&1; then
+              PREVIOUS_TAG="v$PREVIOUS_TAG"
+              echo "✅ Found tag with 'v' prefix: $PREVIOUS_TAG"
+            else
+              echo "⚠️ Previous tag '$PREVIOUS_TAG' does not exist, using 'initial'"
+              PREVIOUS_TAG="initial"
+            fi
+          fi
+          
+          # If previous_tag is "initial", use HEAD for git log
+          if [[ "$PREVIOUS_TAG" == "initial" ]]; then
+            GIT_RANGE="HEAD"
+          else
+            GIT_RANGE="${PREVIOUS_TAG}..HEAD"
+          fi
+          
+          echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_ENV
+          echo "git_range=$GIT_RANGE" >> $GITHUB_ENV
+          echo "Previous tag: $PREVIOUS_TAG"
+          echo "Git range: $GIT_RANGE"
+
+      - name: Generate changelog
+        id: generate_changelog
+        run: |
+          VERSION="${{ env.version }}"
+          PREVIOUS_TAG="${{ env.previous_tag }}"
+          GIT_RANGE="${{ env.git_range }}"
+          OUTPUT_FILE="CHANGELOG.md"
+          
+          echo "Generating changelog for version $VERSION from $PREVIOUS_TAG"
+          echo "Git range: $GIT_RANGE"
+          
+          # Pass git range to changelog script
+          export GIT_RANGE="$GIT_RANGE"
+          .github/scripts/generate-changelog.sh "$VERSION" "$PREVIOUS_TAG" "$OUTPUT_FILE"
+          
+          if [ -f "$OUTPUT_FILE" ]; then
+            echo "✅ Changelog generated successfully"
+            cat "$OUTPUT_FILE"
+          else
+            echo "❌ Failed to generate changelog"
+            exit 1
+          fi
+
+      - name: Create Release
+        id: create_release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Create the release using GitHub CLI
+          gh release create "v${{ env.version }}" \
+            --title "hide-dotpaths Plugin ${{ env.version }}" \
+            --notes-file CHANGELOG.md \
+            --draft=false \
+            --prerelease=false
+          
+          # Get the release URL
+          RELEASE_URL=$(gh release view "v${{ env.version }}" --json url --jq .url)
+          echo "release_url=$RELEASE_URL" >> $GITHUB_ENV
+          echo "Release created: $RELEASE_URL"
+
+      - name: Create Release Archive
+        run: |
+          VERSION="${{ env.version }}"
+          ARCHIVE_NAME="hide-dotpaths-plugin-v${VERSION}.tar.gz"
+          
+          echo "Creating release archive: $ARCHIVE_NAME"
+          
+          # Create archive with only the files that actually exist in this project
+          tar -czf "$ARCHIVE_NAME" \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='*.tar.gz' \
+            --exclude='CHANGELOG.md' \
+            conf.php \
+            debug-cache.js \
+            debug-utils.js \
+            init.js \
+            lang/ \
+            LICENSE \
+            plugin.info \
+            README.md \
+            version.txt
+          
+          echo "Archive created: $ARCHIVE_NAME"
+          ls -la "$ARCHIVE_NAME"
+
+      - name: Upload Release Archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Upload the archive using GitHub CLI
+          gh release upload "v${{ env.version }}" \
+            "./hide-dotpaths-plugin-v${{ env.version }}.tar.gz" \
+            --clobber
+          
+          echo "✅ Archive uploaded successfully"
+
+      - name: Cleanup
+        run: |
+          echo "Cleaning up temporary files..."
+          rm -f CHANGELOG.md hide-dotpaths-plugin-v*.tar.gz
+
+      - name: Release Summary
+        run: |
+          echo "🎉 Release completed successfully!"
+          echo "Version: ${{ env.version }}"
+          echo "Previous: ${{ env.previous_tag }}"
+          echo "Release URL: ${{ env.release_url }}" 

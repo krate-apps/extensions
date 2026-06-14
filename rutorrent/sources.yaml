@@ -1,0 +1,67 @@
+plugins:
+  - repo: autodl-community/autodl-rutorrent
+    target: autodl-irssi
+  - repo: Ardakilic/rutorrent-pausewebui
+    target: pausewebui
+  - repo: AkdM/rutorrent-all-seeders
+    target: all-seeders
+  - repo: Gyran/rutorrent-ratiocolor
+    target: ratiocolor
+  - repo: nelu/rutorrent-filemanager
+    target: filemanager
+  - repo: nelu/rutorrent-filemanager-share
+    target: filemanager-share
+  - repo: nelu/rutorrent-filemanager-media
+    target: filemanager-media
+  - repo: DoAndroids/rutorrent-discord
+    target: discord
+  - repo: Pingblue/trklimit
+    target: trklimit
+  - repo: QuickBox/rutorrent_hide-dotpaths
+    target: hide-dotpaths
+  - repo: QuickBox/rutorrent_logoff
+    target: logoff
+  - repo: QuickBox/rutorrent_filemanager
+    target: qb-filemanager
+  - repo: Micdu70/plugin-toggle_details_button-ruTorrent
+    target: toggle-details-button
+  - repo: Azema/rutorrent-ratiocolor
+    target: ratiocolor
+  - repo: Fleshgrinder/rutorrent-rename
+    target: rename-torrent
+  - repo: Micdu70/rutorrent-trackerstatus
+    target: trackerstatus
+  - repo: Micdu70/rutorrent-plimits
+    target: plimits
+
+themes:
+  - repo: norjms/3rd-Party-rutorrent-themes
+    target: Agent34
+    path: Agent34
+  - repo: norjms/3rd-Party-rutorrent-themes
+    target: Agent46
+    path: Agent46
+  - repo: norjms/3rd-Party-rutorrent-themes
+    target: FlatUI_Dark
+    path: FlatUI_Dark
+  - repo: norjms/3rd-Party-rutorrent-themes
+    target: FlatUI_Light
+    path: FlatUI_Light
+  - repo: norjms/3rd-Party-rutorrent-themes
+    target: FlatUI_Material
+    path: FlatUI_Material
+  - repo: norjms/3rd-Party-rutorrent-themes
+    target: OblivionBlue
+    path: OblivionBlue
+  - repo: chocolatkey/DarkBetter
+    target: DarkBetter
+    path: .
+  - repo: themightykitten/ruTorrent-MaterialDesign
+    target: MaterialDesign
+    path: .
+  - repo: QuickBox/club-QuickBox
+    target: club-QuickBox
+    path: .
+  - repo: Teal-c/rtModern-Remix
+    target: rtModern-Remix
+    path: .

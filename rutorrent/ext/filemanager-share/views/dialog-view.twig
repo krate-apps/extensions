@@ -1,0 +1,38 @@
+{% extends "flm::dialog-window.twig" %}
+{% import "flm::dialog-window.twig" as window %}
+
+{% block content %}
+
+    <label for="FS_downlink" class="form-label fw-semibold">{{ theUILang.FSdlink }}</label>
+    <textarea name="FS_downlink" rows="2" style="width: 100%; min-height: 198px" readonly="readonly" id="FS_downlink">{{ data.formatted.5 }}</textarea>
+
+    <table style="width:100%">
+        <tr>
+            <td class="fw-semibold">{{ theUILang.FSfile }}:</td>
+            <td class="float-end">{{ data.formatted.0 }}</td>
+        </tr>
+        <tr>
+            <td class="fw-semibold">{{ theUILang.FScreated }}:</td>
+            <td class="float-end">{{ data.formatted.3 }}</td>
+        </tr>
+        <tr>
+            <td class="fw-semibold">{{ theUILang.FSexpire }}:</td>
+            <td class="float-end">{{ data.formatted.4 }}</td>
+        </tr>
+        <tr>
+            <td class="fw-semibold">{{ theUILang.flm_password }}:</td>
+            <td class="float-end">{{ data.hasPass ? theUILang.yes : theUILang.no }}</td>
+        </tr>
+        <tr>
+            <td class="fw-semibold">{{ theUILang.FSdnumb }}:</td>
+            <td class="float-end">{{ data.downloads }}</td>
+        </tr>
+    </table>
+
+{% endblock %}
+{% block buttons %}
+    <div class="buttons-list">
+        <input class="flm-diag-cancel Cancel Button" type="button"
+               value="{{ theUILang.fDiagClose }}"/>
+    </div>
+{% endblock %}

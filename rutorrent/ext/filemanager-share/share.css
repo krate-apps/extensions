@@ -1,0 +1,20 @@
+
+.sprite-flm-create-share, .sprite-fsh-view {
+    background-image: url(images/icon.png) !important;
+    background-repeat: no-repeat !important;
+    display: block;
+    width: 16px;
+    height: 16px;
+}
+
+td.stable-FileShare-col-0 {
+    white-space: pre;
+}
+
+/*
+
+ul.CMenu li.hover {background-color: #CFDEEF;}
+ul.CMenu li.hover a {color: #000000}
+*/
+
+

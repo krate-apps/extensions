@@ -1,0 +1,5 @@
+plugin.description: Hide dot-prefixed paths from dropdowns with dual protection (v2.5 - Enhanced for ruTorrent v5.2+)
+plugin.author: JMSolo
+plugin.version: 2.5.210
+plugin.name: hide-dotpaths
+plugin.lang: en

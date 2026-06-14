@@ -1,0 +1,36 @@
+.flm-icon-audio  {
+    background-size: 16px 16px;
+    background-image: url("audio_file.svg") !important;
+}
+
+.flm-icon-image {
+    background-size: 16px 16px;
+    background-image: url("image_file.svg") !important;
+}
+
+.flm-icon-video {
+    background-size: 16px 16px;
+    background-image: url("video_file.svg") !important;
+}
+
+.sprite-media_screenshots {
+    background-image:  url("photo_reel.svg") !important;
+}
+
+.sprite-media_player {
+    background-image:  url("start.svg") !important;
+}
+
+.sprite-media_image_view {
+    background-image:  url("gallery.svg") !important;
+}
+
+.flm-media-player-video {
+    min-height: 240px;
+    min-width: 320px;
+}
+
+.flm-media-player-audio {
+    min-height: 5rem;
+    min-width: 32rem;
+}

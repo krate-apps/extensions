@@ -1,0 +1,107 @@
+{% extends "flm::dialog-window.twig" %}
+{% import "flm::dialog-window.twig" as window %}
+
+{% block heading %}
+    {{ window.pathBrowser(selectedTarget, 'Video file', "flm-diag-nav-path-screens-source", "disabled readonly") }}
+{% endblock %}
+
+{% block content %}
+    {{ window.pathBrowser(selectedTarget, theUILang.flm_media_screens_file) }}
+
+    <fieldset>
+        <legend>Options:</legend>
+
+        <div class="row mb-3 ">
+            <div class="input-group">
+                <label class="input-group-text" for="flm-media-screenshots-type">Format</label>
+                <select id="flm-media-screenshots-type" class="form-select flm-media-screenshots-type"
+                        name="flm-media-screenshots-type"
+                        aria-label="Format" disabled>
+                    <option value="sheet" selected>Screensheet (single file - mosaic)</option>
+
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3 flm-media-screensheet-settings " style="">
+            <div class="col-md-4 position-relative">
+                <div class="input-group has-validation">
+                    <label class="input-group-text form-label" for="flm-settings-opt-sccols">Columns</label>
+                    <input type="number" min="1" step="1" max="1000" value="4" class="form-control"
+                           id="flm-settings-opt-sccols" required>
+                    <div class="invalid-tooltip">
+                        Please input a valid columns number: 1-1000.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 position-relative">
+                <div class="input-group has-validation">
+                    <label class="input-group-text form-label" for="flm-settings-opt-scrows">Rows</label>
+                    <input type="number" min="1" step="1" max="1000" value="10" class="form-control"
+                           id="flm-settings-opt-scrows" required>
+                    <div class="invalid-tooltip">
+                        Please input a valid rows number: 1-1000.
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 position-relative">
+                <div class="input-group has-validation">
+                    <label class="input-group-text form-label" for="flm-settings-opt-scwidth">Width</label>
+                    <input type="number" min="90" step="90" max="10000" value="320" class="form-control"
+                           id="flm-settings-opt-scwidth" required>
+                    <div class="invalid-tooltip">
+                        Please input a valid size: 90-10000.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        (function () {
+            let dialogs = flm.ui.getDialogs();
+            const diagId = dialogs.getCurrentDialog();
+            let pathBrowser = dialogs.dirBrowserInput(diagId);
+            let videoFile = $(".flm-diag-nav-path-screens-source");
+            let ext = 'jpg';
+
+            let sheet_settings = $(".flm-media-screensheet-settings");
+
+            let type = $("#flm-media-screenshots-type");
+            let screen_rows = $("#flm-settings-opt-scrows");
+            let screen_cols = $("#flm-settings-opt-sccols");
+            let screen_width = $("#flm-settings-opt-scwidth");
+
+            dialogs.onStart(() => flm.media.doScreensheet(videoFile, pathBrowser,
+                {
+                    type: type.val(),
+                    rows: screen_rows.val(),
+                    columns: screen_cols.val(),
+                    width: screen_width.val()
+                }
+            ));
+
+
+            var updateFilePath = function (path, forceExtension = true) {
+                let filePath = flm.utils.replaceFilePath(path.val(), path.data('previousValue'), ext, forceExtension ? ext : false);
+                dialogs.updateTargetPath(diagId, filePath);
+            };
+
+
+            dialogs.dirBrowserInput(diagId).change(function (event) {
+                updateFilePath($(this));
+            });
+
+            type.change(function () {
+                $(this).val() === 'sheet' && sheet_settings.show() || sheet_settings.hide();
+            })
+
+            updateFilePath(pathBrowser, true);
+
+        })();
+    </script>
+{% endblock %}
+
