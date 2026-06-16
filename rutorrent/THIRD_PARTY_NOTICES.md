@@ -19,6 +19,6 @@ Examples (non-exhaustive — run `find rutorrent -name 'LICENSE*' -o -name 'COPY
 
 ## No unified license
 
-**There is no single license covering the entire `apps-extensions` repository.** The aggregate pack is distributed inside the KRATE `.deb` for runtime use with the official `rutorrent` app definition.
+**There is no single license covering the entire `apps-extensions` repository.** Each add-on or extension set retains the license of its upstream project. This repository is not bundled in the KRATE `.deb`.
 
 When adding a new upstream source in `sources.yaml`, record its license in the pull request description.
