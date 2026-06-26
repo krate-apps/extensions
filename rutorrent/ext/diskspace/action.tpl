@@ -1,6 +1,16 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../php/util.php';
+require_once dirname(__FILE__).'/../../php/util.php';
+require_once dirname(__FILE__).'/../../php/settings.php';
+eval(FileUtil::getPluginConf('diskspace'));
+
+if (is_null($partitionDirectory)) {
+	if (User::isLocalMode() && rTorrentSettings::get()->linkExist && file_exists(rTorrentSettings::get()->directory)) {
+		$partitionDirectory = rTorrentSettings::get()->directory;
+	} else {
+		$partitionDirectory = $topDirectory;
+	}
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -29,94 +39,74 @@ const KRATE_REPQUOTA = '/usr/sbin/repquota';
  */
 function krate_rutorrent_quota_bytes(string $mount, string $username): ?array
 {
-    if (
-        $username === '' ||
-        !is_executable(KRATE_REPQUOTA)
-    ) {
-        return null;
-    }
+	if (
+		$username === '' ||
+		!is_executable(KRATE_REPQUOTA)
+	) {
+		return null;
+	}
 
-    $output = @shell_exec(
-        '/usr/bin/sudo ' .
-        KRATE_REPQUOTA .
-        ' -u ' .
-        escapeshellarg($mount) .
-        ' 2>/dev/null'
-    );
+	$output = @shell_exec(
+		'/usr/bin/sudo '.
+		KRATE_REPQUOTA.
+		' -u '.
+		escapeshellarg($mount).
+		' 2>/dev/null'
+	);
 
-    if ($output === null || $output === '') {
-        return null;
-    }
+	if ($output === null || $output === '') {
+		return null;
+	}
 
-    foreach (preg_split('/\r?\n/', $output) as $line) {
-        $line = trim($line);
+	foreach (preg_split('/\r?\n/', $output) as $line) {
+		$line = trim($line);
 
-        if ($line === '') {
-            continue;
-        }
+		if ($line === '') {
+			continue;
+		}
 
-        $parts = preg_split('/\s+/', $line);
+		$parts = preg_split('/\s+/', $line);
 
-        if (
-            !isset($parts[0], $parts[2], $parts[3]) ||
-            $parts[0] !== $username
-        ) {
-            continue;
-        }
+		if (
+			!isset($parts[0], $parts[2], $parts[3]) ||
+			$parts[0] !== $username
+		) {
+			continue;
+		}
 
-        $usedKb = (int) $parts[2];
-        $hardKb = (int) $parts[3];
+		$usedKb = (int) $parts[2];
+		$hardKb = (int) $parts[3];
 
-        if ($hardKb <= 0) {
-            return null;
-        }
+		if ($hardKb <= 0) {
+			return null;
+		}
 
-        return [
-            'total' => $hardKb * 1024,
-            'free'  => max(0, ($hardKb - $usedKb) * 1024),
-        ];
-    }
+		return [
+			'total' => $hardKb * 1024,
+			'free'  => max(0, ($hardKb - $usedKb) * 1024),
+		];
+	}
 
-    return null;
+	return null;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Default filesystem stats
-|--------------------------------------------------------------------------
-*/
+$ret = [
+	'total' => 0,
+	'free'  => 0,
+];
 
-$total = disk_total_space($topDirectory);
-$free  = disk_free_space($topDirectory);
-
-/*
-|--------------------------------------------------------------------------
-| Override with quota values if available
-|--------------------------------------------------------------------------
-*/
+if (is_dir($partitionDirectory)) {
+	$ret['total'] = disk_total_space($partitionDirectory);
+	$ret['free'] = disk_free_space($partitionDirectory);
+}
 
 if (isset($quotaUser) && $quotaUser !== '') {
-    $quota = krate_rutorrent_quota_bytes(
-        KRATE_QUOTA_MOUNT,
-        $quotaUser
-    );
+	$quota = krate_rutorrent_quota_bytes(KRATE_QUOTA_MOUNT, $quotaUser);
 
-    if ($quota !== null) {
-        $total = $quota['total'];
-        $free  = $quota['free'];
-    }
+	if ($quota !== null) {
+		$ret['total'] = $quota['total'];
+		$ret['free'] = $quota['free'];
+	}
 }
 
-/*
-|--------------------------------------------------------------------------
-| JSON response
-|--------------------------------------------------------------------------
-*/
-
-cachedEcho(
-    json_encode([
-        'total' => $total,
-        'free'  => $free,
-    ]),
-    'application/json'
-);
+CachedEcho::send(JSON::safeEncode($ret), 'application/json');
