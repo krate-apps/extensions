@@ -2,14 +2,15 @@
 // duration & links limits
 // 0 = unlimited
 
-// max expire time for a share in hours
-$conf['duration'] = $_ENV['RU_FLM_SHARE_MAX_DURATION'] ?? 1; // 0 - unlimited
-
-// max links per user
-$conf['links'] = $_ENV['RU_FLM_SHARE_MAX_LINKS'] ?? 0; // 0 - unlimited
+$share_limits = [
+    // max expire time for a share in hours
+    'duration' => (int)($_ENV['RU_FLM_SHARE_MAX_DURATION'] ?? 1), // 0 - unlimited
+    // max links per user
+    'links' => (int)($_ENV['RU_FLM_SHARE_MAX_LINKS'] ?? 0), // 0 - unlimited
+];
 
 return [
-    'limits' => $conf,
+    'limits' => $share_limits,
 
     // whether a password is mandatory for link creation
     'require_password' => false,
