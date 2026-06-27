@@ -9,6 +9,17 @@ $share_limits = [
     'links' => (int)($_ENV['RU_FLM_SHARE_MAX_LINKS'] ?? 0), // 0 - unlimited
 ];
 
+$shareKey = $_ENV['RU_FLM_SHARE_KEY'] ?? '';
+if ($shareKey === '') {
+    $profile = $_ENV['RU_PROFILE_PATH'] ?? $_SERVER['RU_PROFILE_PATH'] ?? '';
+    if ($profile !== '') {
+        $keyFile = rtrim($profile, '/') . '/settings/share.key';
+        if (is_readable($keyFile)) {
+            $shareKey = trim((string) file_get_contents($keyFile));
+        }
+    }
+}
+
 return [
     'limits' => $share_limits,
 
@@ -22,8 +33,8 @@ return [
     // 'endpoint' = './plugins/filemanager-share/share.php',
     'endpoint' => $_ENV['RU_FLM_SHARE_ENDPOINT'] ?? '',
 
-    // key used for storing encrypted data
-    "key" => $_ENV['RU_FLM_SHARE_KEY'] ?? "",
+    // key used for storing encrypted data (generated per user in settings/share.key)
+    "key" => $shareKey,
 
     // automatically remove shares - only when removing the file or the containing directory
     "remove_share_on_file_delete" => false,
