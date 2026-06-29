@@ -2,26 +2,14 @@
 // duration & links limits
 // 0 = unlimited
 
-$share_limits = [
-    // max expire time for a share in hours
-    'duration' => (int)($_ENV['RU_FLM_SHARE_MAX_DURATION'] ?? 1), // 0 - unlimited
-    // max links per user
-    'links' => (int)($_ENV['RU_FLM_SHARE_MAX_LINKS'] ?? 0), // 0 - unlimited
-];
+// max expire time for a share in hours
+$conf['duration'] = $_ENV['RU_FLM_SHARE_MAX_DURATION'] ?? 1; // 0 - unlimited
 
-$shareKey = $_ENV['RU_FLM_SHARE_KEY'] ?? '';
-if ($shareKey === '') {
-    $profile = $_ENV['RU_PROFILE_PATH'] ?? $_SERVER['RU_PROFILE_PATH'] ?? '';
-    if ($profile !== '') {
-        $keyFile = rtrim($profile, '/') . '/settings/share.key';
-        if (is_readable($keyFile)) {
-            $shareKey = trim((string) file_get_contents($keyFile));
-        }
-    }
-}
+// max links per user
+$conf['links'] = $_ENV['RU_FLM_SHARE_MAX_LINKS'] ?? 0; // 0 - unlimited
 
 return [
-    'limits' => $share_limits,
+    'limits' => $conf,
 
     // whether a password is mandatory for link creation
     'require_password' => false,
@@ -33,8 +21,8 @@ return [
     // 'endpoint' = './plugins/filemanager-share/share.php',
     'endpoint' => $_ENV['RU_FLM_SHARE_ENDPOINT'] ?? '',
 
-    // key used for storing encrypted data (generated per user in settings/share.key)
-    "key" => $shareKey,
+    // key used for storing encrypted data
+    "key" => $_ENV['RU_FLM_SHARE_KEY'] ?? "",
 
     // automatically remove shares - only when removing the file or the containing directory
     "remove_share_on_file_delete" => false,
