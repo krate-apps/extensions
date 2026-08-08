@@ -9,15 +9,15 @@ Optional add-ons, plugins, and themes for KRATE applications. Extensions are not
 | Layer                                                            | Responsibility                                                |
 | ---------------------------------------------------------------- | ------------------------------------------------------------- |
 | **`apps-extensions`** (this repo)                                | Optional add-ons published alongside their target apps        |
-| [`apps-official`](https://github.com/krate-client/apps-official) | Official app catalog                                          |
-| [`krate`](https://github.com/krate-client/krate)                 | Core `.deb` package (console, setup, HarmonyUI, app catalogs) |
-| [`web`](https://github.com/krate-client/web)                     | HarmonyUI — extension management from the browser             |
+| [`apps-official`](https://github.com/runkrate/apps-official) | Official app catalog                                          |
+| [`krate`](https://github.com/runkrate/krate)                 | Core `.deb` package (console, setup, HarmonyUI, app catalogs) |
+| [`web`](https://github.com/runkrate/web)                     | HarmonyUI — extension management from the browser             |
 
 ## Current extensions
 
 ### ruTorrent (`rutorrent/`)
 
-Plugins and themes for the [`rutorrent`](https://github.com/krate-client/apps-official) app.
+Plugins and themes for the [`rutorrent`](https://github.com/runkrate/apps-official) app.
 
 ```
 rutorrent/
@@ -31,7 +31,7 @@ Each release publishes a `rutorrent-pack.tar.gz` asset. The workflow ([`.github/
 ## Using extensions
 
 1. Install KRATE and add the target app (e.g. `zen software add rutorrent -u <user>`).
-2. Pick a release from [GitHub Releases](https://github.com/krate-client/apps-extensions/releases).
+2. Pick a release from [GitHub Releases](https://github.com/runkrate/apps-extensions/releases).
 3. Deploy the add-ons you want into the app tree on your server.
 
 Extension management is designed to integrate with **zen** and **HarmonyUI** over time.
