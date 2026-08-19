@@ -71,15 +71,16 @@ Links point to the **official upstream repository** for each add-on (not to this
 
 | Theme | Upstream |
 | ----- | -------- |
-| `Agent34` | [norjms/3rd-Party-rutorrent-themes](https://github.com/norjms/3rd-Party-rutorrent-themes) |
-| `Agent46` | [norjms/3rd-Party-rutorrent-themes](https://github.com/norjms/3rd-Party-rutorrent-themes) |
+| `Agent34` | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes) |
+| `Agent46` | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes) |
 | `club-QuickBox` | [QuickBox/club-QuickBox](https://github.com/QuickBox/club-QuickBox) |
 | `DarkBetter` | [chocolatkey/DarkBetter](https://github.com/chocolatkey/DarkBetter) |
-| `FlatUI_Dark` | [norjms/3rd-Party-rutorrent-themes](https://github.com/norjms/3rd-Party-rutorrent-themes) |
-| `FlatUI_Light` | [norjms/3rd-Party-rutorrent-themes](https://github.com/norjms/3rd-Party-rutorrent-themes) |
-| `FlatUI_Material` | [norjms/3rd-Party-rutorrent-themes](https://github.com/norjms/3rd-Party-rutorrent-themes) |
+| `Dracula` | [karrni/ruTorrent-Dracula](https://github.com/karrni/ruTorrent-Dracula) |
+| `FlatUI_Dark` | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes) |
+| `FlatUI_Light` | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes) |
+| `FlatUI_Material` | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes) |
 | `MaterialDesign` | [themightykitten/ruTorrent-MaterialDesign](https://github.com/themightykitten/ruTorrent-MaterialDesign) |
-| `OblivionBlue` | [norjms/3rd-Party-rutorrent-themes](https://github.com/norjms/3rd-Party-rutorrent-themes) |
+| `OblivionBlue` | [InAnimaTe/rutorrent-themes](https://github.com/InAnimaTe/rutorrent-themes) |
 | `rtModern-Remix` | [Teal-c/rtModern-Remix](https://github.com/Teal-c/rtModern-Remix) |
 
 ## Useful links

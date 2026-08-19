@@ -70,16 +70,19 @@ while IFS=$'\t' read -r kind repo target path; do
 	fi
 done < <(awk '
 	function trim(s) { sub(/^ +| +$/, "", s); return s }
-	/^plugins:/ { k = "plugins"; next }
-	/^themes:/ { k = "themes"; next }
-	/^[[:space:]]*- repo:/ { sub(/^[^:]*:[[:space:]]*/, ""); r = trim($0); p = "."; next }
-	/^[[:space:]]*target:/ {
-		sub(/^[^:]*:[[:space:]]*/, ""); t = trim($0)
-		if (k != "" && r != "") print k "\t" r "\t" t "\t" p
-		r = ""; p = "."
+	function flush() {
+		if (k != "" && r != "" && t != "") print k "\t" r "\t" t "\t" p
+	}
+	/^plugins:/ { flush(); k = "plugins"; r = ""; t = ""; p = "."; next }
+	/^themes:/ { flush(); k = "themes"; r = ""; t = ""; p = "."; next }
+	/^[[:space:]]*- repo:/ {
+		flush()
+		sub(/^[^:]*:[[:space:]]*/, ""); r = trim($0); t = ""; p = "."
 		next
 	}
+	/^[[:space:]]*target:/ { sub(/^[^:]*:[[:space:]]*/, ""); t = trim($0); next }
 	/^[[:space:]]*path:/ { sub(/^[^:]*:[[:space:]]*/, ""); p = trim($0); next }
+	END { flush() }
 ' "${YAML}")
 
 echo "sync-rutorrent-sources: done"

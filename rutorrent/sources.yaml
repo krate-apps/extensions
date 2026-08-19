@@ -35,22 +35,22 @@ plugins:
     target: plimits
 
 themes:
-  - repo: norjms/3rd-Party-rutorrent-themes
+  - repo: artyuum/3rd-party-rutorrent-themes
     target: Agent34
     path: Agent34
-  - repo: norjms/3rd-Party-rutorrent-themes
+  - repo: artyuum/3rd-party-rutorrent-themes
     target: Agent46
     path: Agent46
-  - repo: norjms/3rd-Party-rutorrent-themes
+  - repo: artyuum/3rd-party-rutorrent-themes
     target: FlatUI_Dark
     path: FlatUI_Dark
-  - repo: norjms/3rd-Party-rutorrent-themes
+  - repo: artyuum/3rd-party-rutorrent-themes
     target: FlatUI_Light
     path: FlatUI_Light
-  - repo: norjms/3rd-Party-rutorrent-themes
+  - repo: artyuum/3rd-party-rutorrent-themes
     target: FlatUI_Material
     path: FlatUI_Material
-  - repo: norjms/3rd-Party-rutorrent-themes
+  - repo: InAnimaTe/rutorrent-themes
     target: OblivionBlue
     path: OblivionBlue
   - repo: chocolatkey/DarkBetter
@@ -64,4 +64,7 @@ themes:
     path: .
   - repo: Teal-c/rtModern-Remix
     target: rtModern-Remix
+    path: .
+  - repo: karrni/ruTorrent-Dracula
+    target: Dracula
     path: .
