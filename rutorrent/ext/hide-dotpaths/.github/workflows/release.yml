@@ -3,26 +3,26 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to release (e.g., 2.5.001)'
+        description: "Version to release (e.g., 2.5.001)"
         required: true
         type: string
       previous_tag:
-        description: 'Previous tag for changelog (e.g., initial)'
+        description: "Previous tag for changelog (e.g., initial)"
         required: true
         type: string
-        default: 'initial'
+        default: "initial"
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -49,14 +49,14 @@ jobs:
         run: |
           VERSION="${{ env.version }}"
           echo "Updating version to $VERSION in all files..."
-          
+
           # Configure git
           git config --global user.name 'QBXWatcher'
           git config --global user.email 'qbxwatcher@quickbox.io'
-          
+
           # Run the update-version script (which will commit and push)
           .github/scripts/update-version.sh "$VERSION"
-          
+
           echo "✅ Version updated, committed, and pushed automatically"
 
       - name: Get previous tag
@@ -67,17 +67,17 @@ jobs:
           else
             PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "initial")
           fi
-          
+
           # Fetch all tags to ensure we have access to remote tags
           echo "Fetching all tags from remote..."
           git fetch --tags --force
-          
+
           # Normalize tag format - add 'v' prefix if missing
           if [[ "$PREVIOUS_TAG" != "initial" && ! "$PREVIOUS_TAG" =~ ^v ]]; then
             PREVIOUS_TAG="v$PREVIOUS_TAG"
             echo "Normalized tag to: $PREVIOUS_TAG"
           fi
-          
+
           # Check if the previous tag actually exists (try both with and without 'v' prefix)
           if [[ "$PREVIOUS_TAG" != "initial" ]]; then
             if git rev-parse "$PREVIOUS_TAG" >/dev/null 2>&1; then
@@ -93,14 +93,14 @@ jobs:
               PREVIOUS_TAG="initial"
             fi
           fi
-          
+
           # If previous_tag is "initial", use HEAD for git log
           if [[ "$PREVIOUS_TAG" == "initial" ]]; then
             GIT_RANGE="HEAD"
           else
             GIT_RANGE="${PREVIOUS_TAG}..HEAD"
           fi
-          
+
           echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_ENV
           echo "git_range=$GIT_RANGE" >> $GITHUB_ENV
           echo "Previous tag: $PREVIOUS_TAG"
@@ -113,14 +113,14 @@ jobs:
           PREVIOUS_TAG="${{ env.previous_tag }}"
           GIT_RANGE="${{ env.git_range }}"
           OUTPUT_FILE="CHANGELOG.md"
-          
+
           echo "Generating changelog for version $VERSION from $PREVIOUS_TAG"
           echo "Git range: $GIT_RANGE"
-          
+
           # Pass git range to changelog script
           export GIT_RANGE="$GIT_RANGE"
           .github/scripts/generate-changelog.sh "$VERSION" "$PREVIOUS_TAG" "$OUTPUT_FILE"
-          
+
           if [ -f "$OUTPUT_FILE" ]; then
             echo "✅ Changelog generated successfully"
             cat "$OUTPUT_FILE"
@@ -140,7 +140,7 @@ jobs:
             --notes-file CHANGELOG.md \
             --draft=false \
             --prerelease=false
-          
+
           # Get the release URL
           RELEASE_URL=$(gh release view "v${{ env.version }}" --json url --jq .url)
           echo "release_url=$RELEASE_URL" >> $GITHUB_ENV
@@ -150,9 +150,9 @@ jobs:
         run: |
           VERSION="${{ env.version }}"
           ARCHIVE_NAME="hide-dotpaths-plugin-v${VERSION}.tar.gz"
-          
+
           echo "Creating release archive: $ARCHIVE_NAME"
-          
+
           # Create archive with only the files that actually exist in this project
           tar -czf "$ARCHIVE_NAME" \
             --exclude='.git' \
@@ -168,7 +168,7 @@ jobs:
             plugin.info \
             README.md \
             version.txt
-          
+
           echo "Archive created: $ARCHIVE_NAME"
           ls -la "$ARCHIVE_NAME"
 
@@ -180,7 +180,7 @@ jobs:
           gh release upload "v${{ env.version }}" \
             "./hide-dotpaths-plugin-v${{ env.version }}.tar.gz" \
             --clobber
-          
+
           echo "✅ Archive uploaded successfully"
 
       - name: Cleanup
@@ -193,4 +193,4 @@ jobs:
           echo "🎉 Release completed successfully!"
           echo "Version: ${{ env.version }}"
           echo "Previous: ${{ env.previous_tag }}"
-          echo "Release URL: ${{ env.release_url }}" 
+          echo "Release URL: ${{ env.release_url }}"
