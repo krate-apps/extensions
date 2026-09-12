@@ -12,6 +12,11 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
+
+concurrency:
+  group: rutorrent-pack-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   sync:
@@ -19,19 +24,47 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Clone upstream into ext/ and themes/
+      # develop/main require PRs (rulesets). Sync onto a bot branch, then open a PR.
+      - name: Sync upstream and open PR
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          base="${GITHUB_REF_NAME}"
+          branch="chore/rutorrent-sync"
+
+          git fetch origin "${base}"
+          git checkout -B "${branch}" "origin/${base}"
+
           chmod +x .github/scripts/sync-rutorrent-sources.sh
           .github/scripts/sync-rutorrent-sources.sh
 
-      - name: Commit
-        if: github.event_name != 'pull_request'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add rutorrent/ext rutorrent/themes
-          git diff --staged --quiet || git commit -m "chore(rutorrent): sync ext/ and themes/ from sources.yaml"
-          git push
+          if git diff --staged --quiet; then
+            echo "No upstream changes to commit."
+            exit 0
+          fi
+
+          git commit -m "chore(rutorrent): sync ext/ and themes/ from sources.yaml"
+          git push -u origin "${branch}" --force
+
+          pr="$(gh pr list --base "${base}" --head "${branch}" --state open --json number --jq '.[0].number // empty')"
+          if [[ -z "${pr}" ]]; then
+            gh pr create --base "${base}" --head "${branch}" \
+              --title "chore(rutorrent): sync ext/ and themes/ from sources.yaml" \
+              --body "$(cat <<'EOF'
+          ## Summary
+          - Automated sync of `rutorrent/ext/` and `rutorrent/themes/` from `rutorrent/sources.yaml`
+
+          ## Notes
+          Branch protection requires a pull request into `develop`/`main`; this workflow no longer pushes those branches directly.
+          EOF
+          )"
+          fi
 
       - name: Release tag
         if: github.event_name == 'push'
