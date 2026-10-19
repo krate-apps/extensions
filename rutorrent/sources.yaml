@@ -59,8 +59,8 @@ themes:
   - repo: themightykitten/ruTorrent-MaterialDesign
     target: MaterialDesign
     path: .
-  - repo: QuickBox/club-QuickBox
-    target: club-QuickBox
+  - repo: krate-apps/krate-torrent
+    target: Krate
     path: .
   - repo: Teal-c/rtModern-Remix
     target: rtModern-Remix
