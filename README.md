@@ -34,12 +34,12 @@ Follow the install instructions in the [`runkrate/krate` README](https://github.
 
 ## What this repository contains
 
-| Path | Contents |
-| ---- | -------- |
-| `rutorrent/ext/` | Vendored ruTorrent plugins |
-| `rutorrent/themes/` | Vendored ruTorrent themes |
+| Path                     | Contents                              |
+| ------------------------ | ------------------------------------- |
+| `rutorrent/ext/`         | Vendored ruTorrent plugins            |
+| `rutorrent/themes/`      | Vendored ruTorrent themes             |
 | `rutorrent/sources.yaml` | Upstream GitHub sources used for sync |
-| `.github/` | Sync / pack workflows |
+| `.github/`               | Sync / pack workflows                 |
 
 ## Listed extensions (upstream)
 
@@ -47,41 +47,41 @@ Links point to the **official upstream repository** for each add-on (not to this
 
 ### Plugins (`rutorrent/ext/`)
 
-| Extension | Upstream |
-| --------- | -------- |
-| `all-seeders` | [AkdM/rutorrent-all-seeders](https://github.com/AkdM/rutorrent-all-seeders) |
-| `autodl-irssi` | [autodl-community/autodl-rutorrent](https://github.com/autodl-community/autodl-rutorrent) |
-| `discord` | [DoAndroids/rutorrent-discord](https://github.com/DoAndroids/rutorrent-discord) |
-| `diskspace` | [Novik/ruTorrent (PluginDiskspace)](https://github.com/Novik/ruTorrent/wiki/PluginDiskspace) |
-| `filemanager` | [nelu/rutorrent-filemanager](https://github.com/nelu/rutorrent-filemanager) |
-| `filemanager-media` | [nelu/rutorrent-filemanager-media](https://github.com/nelu/rutorrent-filemanager-media) |
-| `filemanager-share` | [nelu/rutorrent-filemanager-share](https://github.com/nelu/rutorrent-filemanager-share) |
-| `hide-dotpaths` | [QuickBox/rutorrent_hide-dotpaths](https://github.com/QuickBox/rutorrent_hide-dotpaths) |
-| `logoff` | [QuickBox/rutorrent_logoff](https://github.com/QuickBox/rutorrent_logoff) |
-| `pausewebui` | [Ardakilic/rutorrent-pausewebui](https://github.com/Ardakilic/rutorrent-pausewebui) |
-| `plimits` | [Micdu70/rutorrent-plimits](https://github.com/Micdu70/rutorrent-plimits) |
-| `qb-filemanager` | [QuickBox/rutorrent_filemanager](https://github.com/QuickBox/rutorrent_filemanager) |
-| `ratiocolor` | [Azema/rutorrent-ratiocolor](https://github.com/Azema/rutorrent-ratiocolor) |
-| `rename-torrent` | [Fleshgrinder/rutorrent-rename](https://github.com/Fleshgrinder/rutorrent-rename) |
+| Extension               | Upstream                                                                                                            |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `all-seeders`           | [AkdM/rutorrent-all-seeders](https://github.com/AkdM/rutorrent-all-seeders)                                         |
+| `autodl-irssi`          | [autodl-community/autodl-rutorrent](https://github.com/autodl-community/autodl-rutorrent)                           |
+| `discord`               | [DoAndroids/rutorrent-discord](https://github.com/DoAndroids/rutorrent-discord)                                     |
+| `diskspace`             | [Novik/ruTorrent (PluginDiskspace)](https://github.com/Novik/ruTorrent/wiki/PluginDiskspace)                        |
+| `filemanager`           | [nelu/rutorrent-filemanager](https://github.com/nelu/rutorrent-filemanager)                                         |
+| `filemanager-media`     | [nelu/rutorrent-filemanager-media](https://github.com/nelu/rutorrent-filemanager-media)                             |
+| `filemanager-share`     | [nelu/rutorrent-filemanager-share](https://github.com/nelu/rutorrent-filemanager-share)                             |
+| `hide-dotpaths`         | [QuickBox/rutorrent_hide-dotpaths](https://github.com/QuickBox/rutorrent_hide-dotpaths)                             |
+| `logoff`                | [QuickBox/rutorrent_logoff](https://github.com/QuickBox/rutorrent_logoff)                                           |
+| `pausewebui`            | [Ardakilic/rutorrent-pausewebui](https://github.com/Ardakilic/rutorrent-pausewebui)                                 |
+| `plimits`               | [Micdu70/rutorrent-plimits](https://github.com/Micdu70/rutorrent-plimits)                                           |
+| `qb-filemanager`        | [QuickBox/rutorrent_filemanager](https://github.com/QuickBox/rutorrent_filemanager)                                 |
+| `ratiocolor`            | [Azema/rutorrent-ratiocolor](https://github.com/Azema/rutorrent-ratiocolor)                                         |
+| `rename-torrent`        | [Fleshgrinder/rutorrent-rename](https://github.com/Fleshgrinder/rutorrent-rename)                                   |
 | `toggle-details-button` | [Micdu70/plugin-toggle_details_button-ruTorrent](https://github.com/Micdu70/plugin-toggle_details_button-ruTorrent) |
-| `trackerstatus` | [Micdu70/rutorrent-trackerstatus](https://github.com/Micdu70/rutorrent-trackerstatus) |
-| `trklimit` | [Pingblue/trklimit](https://github.com/Pingblue/trklimit) |
+| `trackerstatus`         | [Micdu70/rutorrent-trackerstatus](https://github.com/Micdu70/rutorrent-trackerstatus)                               |
+| `trklimit`              | [Pingblue/trklimit](https://github.com/Pingblue/trklimit)                                                           |
 
 ### Themes (`rutorrent/themes/`)
 
-| Theme | Upstream |
-| ----- | -------- |
-| `Agent34` | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes) |
-| `Agent46` | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes) |
-| `club-QuickBox` | [QuickBox/club-QuickBox](https://github.com/QuickBox/club-QuickBox) |
-| `DarkBetter` | [chocolatkey/DarkBetter](https://github.com/chocolatkey/DarkBetter) |
-| `Dracula` | [karrni/ruTorrent-Dracula](https://github.com/karrni/ruTorrent-Dracula) |
-| `FlatUI_Dark` | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes) |
-| `FlatUI_Light` | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes) |
-| `FlatUI_Material` | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes) |
-| `MaterialDesign` | [themightykitten/ruTorrent-MaterialDesign](https://github.com/themightykitten/ruTorrent-MaterialDesign) |
-| `OblivionBlue` | [InAnimaTe/rutorrent-themes](https://github.com/InAnimaTe/rutorrent-themes) |
-| `rtModern-Remix` | [Teal-c/rtModern-Remix](https://github.com/Teal-c/rtModern-Remix) |
+| Theme             | Upstream                                                                                                |
+| ----------------- | ------------------------------------------------------------------------------------------------------- |
+| `Agent34`         | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes)             |
+| `Agent46`         | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes)             |
+| `DarkBetter`      | [chocolatkey/DarkBetter](https://github.com/chocolatkey/DarkBetter)                                     |
+| `Dracula`         | [karrni/ruTorrent-Dracula](https://github.com/karrni/ruTorrent-Dracula)                                 |
+| `FlatUI_Dark`     | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes)             |
+| `FlatUI_Light`    | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes)             |
+| `FlatUI_Material` | [artyuum/3rd-party-rutorrent-themes](https://github.com/artyuum/3rd-party-rutorrent-themes)             |
+| `Krate`           | [krate-apps/krate-torrent](https://github.com/krate-apps/krate-torrent)                                 |
+| `MaterialDesign`  | [themightykitten/ruTorrent-MaterialDesign](https://github.com/themightykitten/ruTorrent-MaterialDesign) |
+| `OblivionBlue`    | [InAnimaTe/rutorrent-themes](https://github.com/InAnimaTe/rutorrent-themes)                             |
+| `rtModern-Remix`  | [Teal-c/rtModern-Remix](https://github.com/Teal-c/rtModern-Remix)                                       |
 
 ## Useful links
 
