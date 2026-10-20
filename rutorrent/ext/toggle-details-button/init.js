@@ -69,13 +69,14 @@ if(plugin.canChangeTabs())
 		w-=11;
 		if(hideDetails)
 		{
-			theWebUI.resizeTop( w, Math.floor(wh * (1-(sh/wh)))-th-7 );
+			/* Modern ruTorrent: resizeTop(h) only; the width arg is deprecated. */
+			theWebUI.resizeTop( Math.floor(wh * (1-(sh/wh)))-th-7 );
 			theWebUI.resizeBottom( w, Math.floor(wh * (1 - (1-(sh/wh)))) );
 			$("#tdetails").height(26);
 		}
 		else
 		{
-			theWebUI.resizeTop( w, Math.floor(wh * theWebUI.settings["webui.vsplit"])-th-7 );
+			theWebUI.resizeTop( Math.floor(wh * theWebUI.settings["webui.vsplit"])-th-7 );
 			theWebUI.resizeBottom( w, Math.floor(wh * (1 - theWebUI.settings["webui.vsplit"])) );
 		}
 		$("#HDivider").height( wh-th+2 );
@@ -83,11 +84,14 @@ if(plugin.canChangeTabs())
 
 	plugin.addToggleDetailsButton = function(id,name,idBefore)
 	{
+		// Desktop tab bar only — missing under the mobile UI (body replaced)
+		var beforeLbl = $$("tab_"+idBefore);
+		if (!beforeLbl || !beforeLbl.parentNode)
+			return;
 		var newLbl = document.createElement("li");
 		newLbl.id = "tab_"+id;
 		newLbl.title = theUILang.Toggle_details;
 		newLbl.innerHTML = "<a href=\"javascript://void();\" onmousedown=\"theWebUI.newToggleDetails(); return(false);\" onfocus=\"this.blur();\">" + name + "</a>";
-		var beforeLbl = $$("tab_"+idBefore);
 		beforeLbl.parentNode.insertBefore(newLbl,beforeLbl);
 	}
 
@@ -175,6 +179,11 @@ if(plugin.canChangeTabs())
 
 	plugin.allDone = function()
 	{
+		// waitLoad still invokes this after mobile disableOthers(); skip
+		// when we are not active or the desktop chrome is gone
+		if (!plugin.enabled || !$$("tab_gcont"))
+			return;
+
 		this.toggleDetailsButton(true);
 
 		if(!browser.isOpera || !e.fromTextCtrl)
@@ -219,5 +228,6 @@ if(plugin.canChangeTabs())
 		return(false);
 	};
 
-	thePlugins.waitLoad( "thePlugins.get('toggle_details_button').allDone" );
+	/* Folder may be toggle-details-button (Krate) or toggle_details_button (upstream). */
+	thePlugins.waitLoad( "(thePlugins.get('toggle-details-button')||thePlugins.get('toggle_details_button')).allDone" );
 }
