@@ -33,6 +33,8 @@ plugins:
     target: trackerstatus
   - repo: Micdu70/rutorrent-plimits
     target: plimits
+  - repo: krate-apps/ruTorrent-Mobile
+    target: mobile
 
 themes:
   - repo: artyuum/3rd-party-rutorrent-themes

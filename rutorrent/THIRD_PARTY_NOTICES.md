@@ -15,6 +15,7 @@ Examples (non-exhaustive — run `find rutorrent -name 'LICENSE*' -o -name 'COPY
 | Area                 | Typical upstream licenses                   |
 | -------------------- | ------------------------------------------- |
 | `rutorrent/ext/*`    | GPL-2.0 / GPL-3.0 / MIT (varies per plugin) |
+| `rutorrent/ext/mobile` | GPL-3.0-or-later ([krate-apps/ruTorrent-Mobile](https://github.com/krate-apps/ruTorrent-Mobile); derivative of Novik/ruTorrent `plugins/mobile`) — **replaces** the bundled core `mobile` plugin on KRATE hosts |
 | `rutorrent/themes/*` | GPL / MIT / project-specific                |
 
 ## No unified license

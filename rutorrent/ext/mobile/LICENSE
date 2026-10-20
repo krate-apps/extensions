@@ -1,0 +1,15 @@
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+
+This plugin is a derivative of the ruTorrent mobile plugin
+(Novik/ruTorrent, originally zebraxxl / xombiemp), distributed under
+the GNU General Public License version 3 (or later).
+
+Copyright (C) 2009-2026 ruTorrent contributors
+Copyright (C) 2026 tomcdj71
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+The Bootstrap Icons font files under fonts/ are licensed under the MIT
+License (see fonts/ for vendor attribution).

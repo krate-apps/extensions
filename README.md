@@ -66,6 +66,7 @@ Links point to the **official upstream repository** for each add-on (not to this
 | `toggle-details-button` | [Micdu70/plugin-toggle_details_button-ruTorrent](https://github.com/Micdu70/plugin-toggle_details_button-ruTorrent) |
 | `trackerstatus`         | [Micdu70/rutorrent-trackerstatus](https://github.com/Micdu70/rutorrent-trackerstatus)                               |
 | `trklimit`              | [Pingblue/trklimit](https://github.com/Pingblue/trklimit)                                                           |
+| `mobile`                | [krate-apps/ruTorrent-Mobile](https://github.com/krate-apps/ruTorrent-Mobile) (replaces bundled Novik `mobile`)     |
 
 ### Themes (`rutorrent/themes/`)
 

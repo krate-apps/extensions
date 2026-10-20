@@ -1,0 +1,292 @@
+<div id="mainContainer" class="kr-mob-root">
+
+  <header id="krMobHeader" class="kr-mob-header">
+    <div class="kr-mob-header-brand">
+      <img class="kr-mob-logo" src="images/logo.png" width="22" height="22" alt="">
+      <span class="kr-mob-title" id="krMobTitle">ruTorrent</span>
+    </div>
+    <div class="kr-mob-speeds" aria-live="polite">
+      <span class="kr-mob-speed kr-mob-speed-up"><i class="bi bi-upload" aria-hidden="true"></i><span id="upspeed"></span></span>
+      <span class="kr-mob-speed kr-mob-speed-down"><i class="bi bi-download" aria-hidden="true"></i><span id="downspeed"></span></span>
+    </div>
+  </header>
+
+  <!-- Kept for JS that still targets #mainNavbar (height / fixed-bar math). -->
+  <nav id="mainNavbar" class="kr-mob-navbar-legacy" hidden aria-hidden="true">
+    <ul class="nav">
+      <li><a id="navHome" href="javascript://void();" onclick="mobile.goHome();"></a></li>
+      <li><a id="navSettings" href="javascript://void();" onclick="mobile.showSettings();"></a></li>
+      <li><a id="navAdd" href="javascript://void();" onclick="mobile.addTorrent();"></a></li>
+      <li class="torrentControl"><a id="torrentStart" href="javascript://void();" onclick="mobile.start();"></a></li>
+      <li class="torrentControl"><a id="torrentStop" href="javascript://void();" onclick="mobile.stop();"></a></li>
+      <li class="torrentControl"><a id="torrentPause" href="javascript://void();" onclick="mobile.pause();"></a></li>
+      <li class="torrentControl"><a id="torrentDelete" href="javascript://void();" onclick="mobile.delete();"></a></li>
+    </ul>
+  </nav>
+
+  <main id="krMobStage" class="kr-mob-stage">
+
+    <div class="mainContainer kr-mob-page" id="torrentsList">
+      <div class="kr-mob-toolbar" id="listToolbar">
+        <button type="button" id="sortIcon" class="kr-mob-icon-btn" onclick="mobile.showSort();" aria-label="Sort">
+          <i class="bi bi-arrow-down-up" aria-hidden="true"></i>
+        </button>
+        <button type="button" id="searchIcon" class="kr-mob-icon-btn" onclick="mobile.toggleSearch();" aria-label="Search">
+          <i class="bi bi-search" aria-hidden="true"></i>
+        </button>
+        <button type="button" id="refreshIcon" class="kr-mob-icon-btn" onclick="mobile.refresh();" aria-label="Refresh">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+        </button>
+        <button type="button" id="torrentsFilter" class="kr-mob-chip" onclick="mobile.showFilter();">
+          <i class="bi bi-funnel" aria-hidden="true"></i>
+          <span id="filterText"></span>
+          <span id="filterCount" class="kr-mob-badge"></span>
+        </button>
+        <!-- legacy wrappers still referenced by some selectors -->
+        <span id="sort" hidden></span>
+        <span id="search" hidden></span>
+        <span id="refresh" hidden></span>
+      </div>
+      <div id="searchBar" class="kr-mob-search" style="display:none;">
+        <input type="search" id="searchInput" class="form-control" autocomplete="off" enterkeyhint="search">
+        <button type="button" id="searchClose" onclick="mobile.toggleSearch();" class="kr-mob-icon-btn" aria-label="Close search">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div id="list" class="kr-mob-list">
+        <table class="kr-mob-table"><tbody></tbody></table>
+        <div id="krMobEmpty" class="kr-mob-empty" hidden>
+          <span class="kr-mob-empty-glyph" aria-hidden="true"></span>
+          <p class="kr-mob-empty-text">No torrents</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mainContainer kr-mob-page" id="torrentDetails" style="display:none;">
+      <div id="torrentDetailsHeader" class="kr-mob-detail-header">
+        <h5 id="torrentName"></h5>
+        <div class="progress" id="torrentProgress">
+          <div class="progress-bar progress-bar-striped"></div>
+          <span class="progress-label"></span>
+        </div>
+      </div>
+      <div id="krMobDetailActions" class="kr-mob-detail-actions torrentControl" style="display:none;">
+        <button type="button" class="kr-mob-action" onclick="mobile.start();" id="krActStart"><i class="bi bi-play-fill"></i><span>Start</span></button>
+        <button type="button" class="kr-mob-action" onclick="mobile.pause();" id="krActPause"><i class="bi bi-pause-fill"></i><span>Pause</span></button>
+        <button type="button" class="kr-mob-action" onclick="mobile.stop();" id="krActStop"><i class="bi bi-stop-fill"></i><span>Stop</span></button>
+        <button type="button" class="kr-mob-action kr-mob-action-danger" onclick="mobile.delete();" id="krActDelete"><i class="bi bi-trash"></i><span>Delete</span></button>
+      </div>
+      <ul class="nav nav-tabs kr-mob-seg" id="detailsNav">
+        <li class="active" id="detailsDetailsTab">
+          <a href="javascript://void();" onclick="mobile.showDetailsInDetails();"></a>
+        </li>
+        <li id="detailsTrackers">
+          <a href="javascript://void();" onclick="mobile.showTrackersInDetails();"></a>
+        </li>
+        <li id="detailsFiles">
+          <a href="javascript://void();" onclick="mobile.showFilesInDetails();"></a>
+        </li>
+        <li id="detailsPeers">
+          <a href="javascript://void();" onclick="mobile.showPeersInDetails();"></a>
+        </li>
+      </ul>
+      <table class="table table-striped detailsPage kr-mob-kv" id="detailsDetailsPage">
+        <tbody>
+          <tr id="status"><td></td><td></td></tr>
+          <tr id="priority"><td></td><td><select id="torrentPriority" class="kr-mob-native-select" data-kr-native></select></td></tr>
+          <tr id="label"><td></td><td></td></tr>
+          <tr id="done"><td></td><td></td></tr>
+          <tr id="downloaded"><td></td><td></td></tr>
+          <tr id="size"><td></td><td></td></tr>
+          <tr id="remaining"><td></td><td></td></tr>
+          <tr id="eta"><td></td><td></td></tr>
+          <tr id="uploaded"><td></td><td></td></tr>
+          <tr id="ratio"><td></td><td></td></tr>
+          <tr id="downloadSpeed"><td></td><td></td></tr>
+          <tr id="uploadSpeed"><td></td><td></td></tr>
+          <tr id="timeElapsed"><td></td><td></td></tr>
+          <tr id="created"><td></td><td></td></tr>
+          <tr id="wasted"><td></td><td></td></tr>
+          <tr id="seeds"><td></td><td></td></tr>
+          <tr id="peers"><td></td><td></td></tr>
+          <tr id="savePath"><td></td><td></td></tr>
+          <tr id="freeDiskSpace"><td></td><td></td></tr>
+          <tr id="hash"><td></td><td></td></tr>
+          <tr id="comment"><td></td><td></td></tr>
+          <tr id="trackerUrl"><td></td><td></td></tr>
+          <tr id="trackerStatus"><td></td><td></td></tr>
+        </tbody>
+      </table>
+      <div class="detailsPage" id="detailsTrackersPage"></div>
+      <div class="detailsPage" id="detailsFilesPage"></div>
+      <div class="detailsPage" id="detailsPeersPage">
+        <div id="peerActions" class="kr-mob-peer-actions">
+          <div class="input-append" id="peerAddBlock">
+            <input type="text" id="peerIp" class="form-control" inputmode="url" autocomplete="off">
+            <button type="button" id="peerAddBtn" class="btn btn-outline-secondary"></button>
+          </div>
+          <div id="peerRowActions">
+            <button type="button" id="peerBanBtn" class="btn btn-outline-secondary" disabled></button>
+            <button type="button" id="peerKickBtn" class="btn btn-outline-secondary" disabled></button>
+            <button type="button" id="peerSnubBtn" class="btn btn-outline-secondary" disabled></button>
+          </div>
+        </div>
+        <div class="table-responsive tableFixHead">
+          <table class="table table-sm table-striped table-scroll" id="peersTable">
+            <thead>
+              <tr>
+                <th id="country" scope="col"></th>
+                <th id="address" scope="col"></th>
+                <th id="client" scope="col"></th>
+                <th id="flags" scope="col"></th>
+                <th id="done" scope="col"></th>
+                <th id="downloaded" scope="col"></th>
+                <th id="uploaded" scope="col"></th>
+                <th id="dl" scope="col"></th>
+                <th id="ul" scope="col"></th>
+                <th id="peer_dl" scope="col"></th>
+                <th id="peer_downloaded" scope="col"></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="mainContainer container kr-mob-page kr-mob-sheet" id="torrentSort" style="display:none;">
+      <div class="form-group">
+        <label class="select" for="sortOption"><h5></h5></label>
+        <select id="sortOption" class="kr-mob-native-select" data-kr-native></select>
+        <div class="radio kr-mob-radio-row">
+          <label id="sortAsc" class="radio-inline"><input type="radio" name="inlineRadioOptions" id="sort_asc" value=""><i class="bi bi-sort-down-alt"></i></label>
+          <label id="sortDesc" class="radio-inline"><input type="radio" name="inlineRadioOptions" id="sort_desc" value="-"><i class="bi bi-sort-down"></i></label>
+        </div>
+      </div>
+      <div class="kr-mob-sheet-actions">
+        <button type="button" id="sortOk" onclick="mobile.setSort();" class="btn btn-primary"></button>
+        <button type="button" id="sortCancel" onclick="mobile.goBack();" class="btn btn-outline-secondary"></button>
+      </div>
+    </div>
+
+    <div class="mainContainer container kr-mob-page kr-mob-sheet" id="torrentFilter" style="display:none;">
+      <div id="filterButtons" class="kr-mob-sheet-actions">
+        <button type="button" id="filterDone" onclick="mobile.filterDone();" class="btn btn-primary"></button>
+        <button type="button" id="filterClear" onclick="mobile.clearFilters();" class="btn btn-outline-secondary"></button>
+      </div>
+      <h5 id="filterTotals"></h5>
+      <h5 id="filterStatusHeader"></h5>
+      <div class="list-group" id="filterStatusList"></div>
+      <h5 id="filterLabelsHeader"></h5>
+      <div class="list-group" id="filterLabelsList"></div>
+      <h5 id="filterTrackersHeader"></h5>
+      <div class="list-group" id="filterTrackersList"></div>
+    </div>
+
+    <div class="mainContainer container kr-mob-page kr-mob-sheet" id="globalSettings" style="display:none;">
+      <div class="form-group">
+        <label class="select" for="dlLimit"><h5></h5></label>
+        <select id="dlLimit" class="kr-mob-native-select" data-kr-native></select>
+      </div>
+      <div class="form-group">
+        <label class="select" for="ulLimit"><h5></h5></label>
+        <select id="ulLimit" class="kr-mob-native-select" data-kr-native></select>
+      </div>
+      <div class="form-group">
+        <label class="select" for="themeSelect"><h5></h5></label>
+        <select id="themeSelect" class="kr-mob-native-select" data-kr-native></select>
+      </div>
+      <div class="form-group">
+        <label class="select" for="accentSelect"><h5></h5></label>
+        <select id="accentSelect" class="kr-mob-native-select" data-kr-native></select>
+      </div>
+      <h5 id="serverInfoHeader"></h5>
+      <table class="table table-striped kr-mob-kv" id="serverInfo">
+        <tbody>
+          <tr id="verRutorrent"><td></td><td></td></tr>
+          <tr id="verRtorrent"><td></td><td></td></tr>
+          <tr id="portIpv4" style="display:none;"><td></td><td></td></tr>
+          <tr id="portIpv6" style="display:none;"><td></td><td></td></tr>
+          <tr id="openStatus" style="display:none;"><td></td><td></td></tr>
+          <tr id="diskSpace" style="display:none;"><td></td><td>
+            <div class="progress" id="diskSpaceBar"><div class="progress-bar"></div><span class="progress-label"></span></div>
+            <span id="diskSpaceText"></span>
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mainContainer container kr-mob-page kr-mob-sheet" id="addTorrent" style="display:none;">
+      <form action="php/addtorrent.php?" id="addTorrentFile" method="post" enctype="multipart/form-data" target="uploadFrame" class="kr-mob-form">
+        <div class="input-append" id="dirEditBlock">
+          <input type="text" id="dir_edit" name="dir_edit" class="form-control" placeholder="Directory" autocomplete="off">
+        </div>
+        <div class="checkbox"><label id="notAddPath"><input type="checkbox" name="not_add_path" id="not_add_path"></label></div>
+        <div class="checkbox"><label id="startStopped"><input type="checkbox" name="torrents_start_stopped" id="torrents_start_stopped"></label></div>
+        <div class="checkbox"><label id="fastResume"><input type="checkbox" name="fast_resume" id="fast_resume"></label></div>
+        <div class="checkbox"><label id="randomizeHash"><input type="checkbox" name="randomize_hash" id="randomize_hash"></label></div>
+        <div id="labelBlock">
+          <select id="tadd_label_select" class="kr-mob-native-select" data-kr-native></select>
+          <input class="form-control" type="text" id="tadd_label" name="tadd_label" placeholder="Label" style="display:none;">
+          <button type="button" id="taddReturnSelect" class="btn btn-outline-secondary" style="display:none;"></button>
+        </div>
+        <hr>
+        <div class="form-group">
+          <label class="control-label" for="torrent_file" id="torrentFile"></label>
+          <input type="file" name="torrent_file[]" id="torrent_file" multiple accept=".torrent">
+        </div>
+        <button type="submit" class="btn btn-primary" id="torrentFileSend" disabled></button>
+      </form>
+      <hr>
+      <form action="php/addtorrent.php?" id="addTorrentUrl" method="post" target="uploadFrame" class="kr-mob-form">
+        <div class="form-group">
+          <textarea id="url" name="url" class="form-control" rows="4" inputmode="url"></textarea>
+        </div>
+        <button type="submit" id="addUrl" class="btn btn-primary" disabled></button>
+      </form>
+    </div>
+
+    <div class="mainContainer container kr-mob-page kr-mob-sheet" id="torrentDataDir" style="display:none;">
+      <h5 id="dataDirHeader"></h5>
+      <div class="input-append" id="dataDirEditBlock">
+        <input type="text" id="datadir_edit" class="form-control" autocomplete="off">
+      </div>
+      <div class="checkbox"><label id="dataDirAddPath"><input type="checkbox" id="datadir_not_add_path"></label></div>
+      <div class="checkbox"><label id="dataDirMove"><input type="checkbox" id="datadir_move"></label></div>
+      <div class="checkbox"><label id="dataDirFastResume"><input type="checkbox" id="datadir_fastresume"></label></div>
+      <div class="kr-mob-sheet-actions">
+        <button type="button" id="dataDirOk" onclick="mobile.sendDataDir();" class="btn btn-primary"></button>
+        <button type="button" id="dataDirCancel" onclick="mobile.goBack();" class="btn btn-outline-secondary"></button>
+      </div>
+    </div>
+
+    <div class="mainContainer kr-mob-page" id="getDirList" style="display:none;"></div>
+
+    <div class="mainContainer container text-center kr-mob-page kr-mob-sheet" id="confirmTorrentDelete" style="display:none;">
+      <h5></h5>
+      <div class="kr-mob-sheet-actions">
+        <button type="button" id="deleteOk" onclick="mobile.deleteConfirmed();" class="btn btn-primary"></button>
+        <button type="button" id="deleteCancel" onclick="mobile.goBack();" class="btn btn-outline-secondary"></button>
+      </div>
+    </div>
+
+  </main>
+
+  <nav id="krMobTabbar" class="kr-mob-tabbar" aria-label="Main">
+    <button type="button" class="kr-mob-tab is-active" data-kr-tab="home" onclick="mobile.goHome();">
+      <i class="bi bi-house" aria-hidden="true"></i><span>Home</span>
+    </button>
+    <button type="button" class="kr-mob-tab" data-kr-tab="filter" onclick="mobile.showFilter();">
+      <i class="bi bi-funnel" aria-hidden="true"></i><span>Filter</span>
+    </button>
+    <button type="button" class="kr-mob-tab" data-kr-tab="add" onclick="mobile.addTorrent();">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i><span>Add</span>
+    </button>
+    <button type="button" class="kr-mob-tab" data-kr-tab="settings" onclick="mobile.showSettings();">
+      <i class="bi bi-gear" aria-hidden="true"></i><span>Settings</span>
+    </button>
+  </nav>
+
+  <div id="alert_placeholder"></div>
+
+</div>

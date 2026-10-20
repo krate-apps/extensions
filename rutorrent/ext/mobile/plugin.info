@@ -1,0 +1,7 @@
+plugin.description: Krate mobile UI for ruTorrent (app shell). Replaces the bundled mobile plugin on KRATE hosts.
+plugin.author: zebraxxl,xombiemp,tomcdj71
+plugin.version: 3.6
+rtorrent.need: 1
+rtorrent.remote: warning
+plugin.runlevel: 15
+plugin.help: https://github.com/krate-apps/ruTorrent-Mobile
