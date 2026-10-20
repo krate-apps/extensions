@@ -197,15 +197,23 @@ function UploadMethod(idDlg, idParent, isPrefs)
 
 	var this_ = this;
 
-	if (thePlugins.isInstalled("_getdir"))
+	/* Placeholder buttons are only for the legacy rDirBrowser(dlg, edit, btn)
+	 * API. Modern _getdir uses rDirBrowser(editId) and injects its own button;
+	 * calling the old signature makes edit_id the dialog id, so
+	 * $(...).data("dnd") is undefined and .options throws during __init2. */
+	$("#" + this.id("getdir-button")).remove();
+	$("#" + this.id("rt-getdir-button")).remove();
+	if (thePlugins.isInstalled("_getdir") && typeof theWebUI.rDirBrowser === "function")
 	{
-		this.getdirButton1 = new theWebUI.rDirBrowser(idDlg, this.id("watchdir-folder"), this.id("getdir-button"));
-		this.getdirButton2 = new theWebUI.rDirBrowser(idDlg, this.id("rtorrent-folder"), this.id("rt-getdir-button"));
-	}
-	else
-	{
-		$("#" + this.id("getdir-button")).remove();
-		$("#" + this.id("rt-getdir-button")).remove();
+		try
+		{
+			this.getdirButton1 = new theWebUI.rDirBrowser(this.id("watchdir-folder"));
+			this.getdirButton2 = new theWebUI.rDirBrowser(this.id("rtorrent-folder"));
+		}
+		catch (ex)
+		{
+			log("autodl-irssi: rDirBrowser: " + formatException(ex));
+		}
 	}
 
 	this.dropdown = new DropDownTabs(this.id("method"));
