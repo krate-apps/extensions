@@ -65,11 +65,8 @@ export function FileManagerShare(plugin) {
     this.deleteEntries = () => {
 
         const selectedEntries = $.map(self.table.get().getSelected(), function (value) {
-            if (value == null || value === "")
-                return;
-            const entry = self.entriesList[String(value).split('_fsh_')[1]];
-            return entry ? entry.hash : undefined;
-        }).filter(Boolean);
+            return self.entriesList[value.split('_fsh_')[1]].hash;
+        });
         askYesNo(theUILang.FSdel, theUILang.FSdelmsg, function () {
             // unbinding call and add flm start btn class to bind on
             $("#yesnoOK").addClass('flm-diag-start').off();
