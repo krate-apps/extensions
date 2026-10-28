@@ -1,0 +1,593 @@
+/*
+ *  Krate skin for ruTorrent -- plugin surfaces.
+ *  Every color reads from a --kr-* token; masked glyphs carry no raster
+ *  background so the core sprite sheets never bleed through the mask.
+ */
+
+/* ============================================================
+ * Masked glyphs: solid token fill clipped to the SVG, no raster.
+ * background-image is forced off so the plugins' own base64 GIF /
+ * spritesheet backgrounds cannot show through the mask window.
+ * ============================================================ */
+#autodl-tb,
+div#logoff,
+.sprite-archive, .sprite-rar, .sprite-rarpart, .sprite-zip, .sprite-console,
+.sprite-copy, .sprite-curdir, .sprite-delete, .flm-sprite-dir_up, .sprite-extract,
+.sprite-image, .sprite-move, .sprite-mp3, .sprite-mkdir, .sprite-nfo,
+.sprite-nfo_view, .sprite-refresh, .sprite-rename, .sprite-sfv, .sprite-sfv_create,
+.sprite-sfv_check, .sprite-torrent, .sprite-video, .sprite-vplay {
+	background-color: var(--kr-icon);
+	background-image: none !important;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	mask-position: center;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	transition: background-color 0.15s ease;
+}
+
+#autodl-tb:hover,
+div#logoff:hover {
+	background-color: var(--kr-icon-hover);
+	background-image: none !important;
+}
+
+/* ============================================================
+ * Status-bar mini meters (disk / band quota are bars; cpu is a sparkline).
+ * The pane glyph is owned by statusbar.css; this owns the track, fill and
+ * the label beside the bar. The plugin sets the fill WIDTH inline (%); the
+ * fill COLOR is forced to the brand gradient so the old primary->destructive
+ * interpolation can no longer render a muddy mid-usage bar. Usage-threshold
+ * tinting is an init.js concern (see return note).
+ * ============================================================ */
+
+/* Neutralize the cpuload/diskspace base64 GIF on the pane glyph so it cannot
+ * bleed through the mask. statusbar.css owns the mask glyph and its tint; its
+ * `#StatusBar .icon { background-image: none }` ties the plugin rule on
+ * specificity and loses on order, so the override has to live here. */
+#meter-disk-pane .icon,
+#meter-cpu-pane .icon {
+	background-color: var(--kr-icon);
+	background-image: none !important;
+	flex: none;
+}
+
+/* One shared meter layout for disk and cpu: a single flex row holding the
+ * glyph, then a 56x4 track with its fill, then the percent label -- all on
+ * one vertical centre line, no absolute positioning. extras.js moves the
+ * label out of the track and converts the cpu sparkline into the same bar. */
+#meter-disk-pane,
+#meter-cpu-pane {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	height: 100%;
+}
+
+/* The track: holder becomes the 56px rounded rail the fill sits inside. The
+ * plugin CSS sets an inset border + width 50/100px via a media query, so the
+ * dimensions and border are forced. The rail colour is mixed from the muted
+ * foreground so it stays visible on every variant (plain --kr-muted vanishes
+ * into the surface on the dark themes). */
+#meter-disk-holder,
+#meter-cpu-holder {
+	position: relative;
+	flex: none;
+	width: 56px !important;
+	height: 4px !important;
+	min-width: 56px;
+	margin: 0;
+	padding: 0;
+	border: 0 !important;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--kr-fg-muted) 26%, transparent);
+	overflow: hidden;
+	line-height: normal;
+}
+
+/* The fill: disk uses the plugin-driven #meter-disk-value (init.js paints its
+ * usage-threshold colour inline per update), cpu uses the .kr-meter-fill
+ * extras.js adds and tints with the same threshold. The primary here is only
+ * the pre-paint fallback, so no !important -- the inline tint must win. */
+#meter-disk-value,
+#meter-cpu-holder .kr-meter-fill {
+	display: block;
+	position: static;
+	height: 100%;
+	min-width: 2px;
+	max-width: 100%;
+	margin: 0;
+	border: 0;
+	border-radius: 999px;
+	float: none;
+	background-color: var(--kr-primary);
+	background-image: none;
+}
+
+/* The label: a flex sibling beside the bar. The plugin CSS makes it
+ * position:absolute with width/height 100% (it overlays the bar in stock
+ * ruTorrent), so both are reset to a static, content-sized flex item. */
+#meter-disk-text,
+#meter-cpu-text {
+	flex: none;
+	position: static !important;
+	top: auto;
+	width: auto !important;
+	height: auto !important;
+	margin: 0;
+	transform: none;
+	text-align: left;
+	overflow: visible;
+	white-space: nowrap;
+	color: var(--kr-fg-muted);
+	text-shadow: none;
+	font-size: 12px;
+	line-height: 1;
+	font-family: var(--kr-font);
+	font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+ * Consoles + listboxes (plugin terminal surfaces)
+ * ============================================================ */
+.console,
+.exconsole,
+.starterConsole,
+.tskconsole,
+.listbox {
+	background-color: var(--kr-input);
+	color: var(--kr-foreground);
+	font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+.listbox {
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius);
+	overflow: auto;
+	white-space: nowrap;
+}
+
+.listboxItem {
+	color: var(--kr-fg-muted);
+	padding: 1px 4px;
+}
+
+.listboxItem:hover {
+	background-color: var(--kr-surface-2);
+	color: var(--kr-foreground);
+}
+
+.listboxItemSelected {
+	background-color: var(--kr-surface-3);
+	color: var(--kr-foreground);
+}
+
+/* ============================================================
+ * Cell styling (status / chunk map)
+ * ============================================================ */
+.cCell {
+	color: var(--kr-foreground);
+}
+
+.status-cell {
+	padding: 0 3px;
+	border-right: solid 2px var(--kr-border);
+}
+
+/* Chunk / allocation map: a token-driven intensity ladder.
+ * Downloaded chunks climb a primary ramp; reserved/empty chunks use a
+ * muted ramp. No fixed green ladder -- each step follows the variant. */
+.Cell0 {
+	background-color: var(--kr-surface-2);
+	border: 1px solid var(--kr-border);
+}
+
+.Cell1 { background-color: color-mix(in srgb, var(--kr-primary) 32%, var(--kr-surface)); }
+.Cell2 { background-color: color-mix(in srgb, var(--kr-primary) 42%, var(--kr-surface)); }
+.Cell3 { background-color: color-mix(in srgb, var(--kr-primary) 52%, var(--kr-surface)); }
+.Cell4 { background-color: color-mix(in srgb, var(--kr-primary) 62%, var(--kr-surface)); }
+.Cell5 { background-color: color-mix(in srgb, var(--kr-primary) 70%, var(--kr-surface)); }
+.Cell6 { background-color: color-mix(in srgb, var(--kr-primary) 78%, var(--kr-surface)); }
+.Cell7 { background-color: color-mix(in srgb, var(--kr-primary) 86%, var(--kr-surface)); }
+.Cell8 { background-color: color-mix(in srgb, var(--kr-primary) 93%, var(--kr-surface)); }
+.Cell9 { background-color: var(--kr-primary); }
+
+.CellA { background-color: color-mix(in srgb, var(--kr-fg-muted) 30%, var(--kr-surface)); }
+.CellB { background-color: color-mix(in srgb, var(--kr-fg-muted) 44%, var(--kr-surface)); }
+.CellC { background-color: color-mix(in srgb, var(--kr-fg-muted) 58%, var(--kr-surface)); }
+.CellD { background-color: color-mix(in srgb, var(--kr-fg-muted) 72%, var(--kr-surface)); }
+.CellE { background-color: color-mix(in srgb, var(--kr-fg-muted) 86%, var(--kr-surface)); }
+.CellF {
+	background-color: var(--kr-foreground);
+	color: var(--kr-background);
+}
+
+#tCellNotSupported {
+	text-align: center;
+}
+
+#tRowNotSupported {
+	vertical-align: middle;
+	color: var(--kr-destructive-text);
+}
+
+/* ============================================================
+ * Graph tab + legend + focus text
+ * ============================================================ */
+div.graph_tab {
+	color: var(--kr-foreground);
+	border-color: var(--kr-border);
+}
+
+.legendLabel {
+	color: var(--kr-fg-muted) !important;
+}
+
+#traf_graph_ctrl {
+	margin-top: -5px;
+}
+
+.lf li input.TextboxFocus,
+.lf_rur input.TextboxFocus {
+	background-color: transparent;
+	color: var(--kr-accent-text);
+}
+
+#PluginList {
+	margin-top: 0;
+	/* Card chrome lives in css/table.css with FileList / TrackerList. */
+}
+
+#maincont {
+	margin: 0;
+}
+
+li.cat.tracker {
+	padding: 3px 4px !important;
+}
+
+/* ============================================================
+ * AutoDL IRC -- detail tab (log console + toolbar)
+ * Plugin dark.min.css forces 100px buttons + form{display:inline};
+ * override those so the toolbar matches other Krate panes.
+ * ============================================================ */
+#autodl-tb {
+	-webkit-mask: url(images/icons/toolbar-autodl.svg) center / 20px no-repeat;
+	mask: url(images/icons/toolbar-autodl.svg) center / 20px no-repeat;
+}
+
+#autodl-multiselect-header {
+	background-image: none;
+}
+
+#autodl-irssi-tab {
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	gap: 10px;
+	margin: 0;
+	padding: 4px 6px 6px;
+	border: 0;
+	font-family: var(--kr-font);
+	font-size: 13px;
+	color: var(--kr-foreground);
+	background: transparent;
+	height: 100%;
+	min-height: 0;
+}
+
+#autodl-log-buttons,
+#autodl-log-buttons.kr-pane-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	box-sizing: border-box;
+	min-height: 50px;
+	padding: 6px 12px;
+	margin: 0;
+	background: var(--kr-surface-2);
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius-lg);
+}
+
+.kr-autodl-actions,
+.kr-autodl-config {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+}
+
+.kr-autodl-actions { flex: 1 1 auto; }
+
+.kr-autodl-config {
+	flex: 1 1 280px;
+	padding-left: 10px;
+	border-left: 1px solid var(--kr-border-soft);
+}
+
+#autodl-log-buttons input.Button,
+#autodl-log-clear-button,
+#autodl-log-update-button,
+#autodl-log-whatsnew-button,
+#autodl-log-version-button,
+#autodl-log-reload-button,
+#autodl-log-reload-trackers-button,
+#autodl-log-backup-button,
+#autodl-log-restore-button {
+	box-sizing: border-box;
+	width: auto !important;
+	min-width: 0;
+	height: 32px;
+	min-height: 32px;
+	margin: 0;
+	padding: 0 12px;
+	font-family: var(--kr-font);
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1;
+	color: var(--kr-foreground);
+	background: var(--kr-surface);
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius);
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+#autodl-log-buttons input.Button:hover,
+#autodl-log-buttons input.Button:focus {
+	background: var(--kr-surface-3);
+	color: var(--kr-foreground);
+	text-shadow: none;
+}
+
+#autodl-log-buttons form,
+#autodl-restore {
+	display: inline-flex !important;
+	align-items: center;
+	gap: 8px;
+	flex: 1 1 220px;
+	margin: 0;
+	min-width: 0;
+	max-width: 100%;
+}
+
+#autodl-restore-file {
+	box-sizing: border-box;
+	flex: 1 1 auto;
+	min-width: 140px;
+	height: 32px;
+	margin: 0;
+	padding: 0 4px 0 0;
+	font-family: var(--kr-font);
+	font-size: 12px;
+	color: var(--kr-fg-muted);
+	background: var(--kr-input);
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius);
+	cursor: pointer;
+}
+
+#autodl-restore-file::file-selector-button {
+	box-sizing: border-box;
+	height: 30px;
+	margin: 0 8px 0 0;
+	padding: 0 12px;
+	font-family: var(--kr-font);
+	font-size: 12px;
+	font-weight: 500;
+	color: var(--kr-foreground);
+	background: var(--kr-surface-2);
+	border: 0;
+	border-right: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius) 0 0 var(--kr-radius);
+	cursor: pointer;
+}
+
+#autodl-restore-file:hover::file-selector-button {
+	background: var(--kr-surface-3);
+}
+
+#autodl-irssi-log {
+	box-sizing: border-box;
+	flex: 1 1 auto;
+	min-height: 120px;
+	margin: 0;
+	padding: 10px 12px !important;
+	overflow: auto;
+	font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace !important;
+	font-size: 12px;
+	line-height: 1.5;
+	color: var(--kr-foreground);
+	background: var(--kr-input) !important;
+	border: 1px solid var(--kr-border-soft);
+	border-radius: var(--kr-radius-lg);
+}
+
+#autodl-irssi-log table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#autodl-irssi-log td {
+	padding: 1px 0;
+	vertical-align: top;
+	font-family: inherit;
+	font-size: inherit;
+}
+
+/* Go button: legacy sprite is suppressed by the `#go` rule in style.css */
+#go,
+#go:hover {
+	background: none;
+}
+
+.lf_rur {
+	background-color: var(--kr-input);
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius);
+	flex: 1 0 160px;
+	overflow-y: auto;
+}
+
+.lf_rur input.TextboxNormal {
+	background-color: var(--kr-input);
+}
+
+.browseFrame {
+	border: 1px solid var(--kr-border);
+	background-color: var(--kr-input);
+}
+
+div#autodl-filters {
+	width: auto;
+	height: auto;
+}
+
+#autodl-filters-left {
+	float: left;
+	min-height: max-content;
+	padding: 0 0 65px 0;
+	vertical-align: top;
+	display: flow;
+}
+
+div#autodl-filters-right {
+	display: inline-flex;
+	float: right;
+}
+
+div#autodl-filters-tabs {
+	display: inline-block;
+	width: 150px;
+}
+
+div#autodl-filters-contents {
+	display: inline-block;
+	width: 95%;
+	padding-bottom: 9%;
+}
+
+.aright.buttons-list.dialog-buttons {
+	padding: 5px 30px;
+	display: inline-flex;
+	background: var(--kr-surface-2);
+	width: 100%;
+	margin-bottom: 0;
+	margin-right: 0;
+	height: auto;
+	clear: both;
+	float: left;
+	border: 1px solid var(--kr-border);
+	border-bottom-left-radius: var(--kr-radius-lg);
+	border-bottom-right-radius: var(--kr-radius-lg);
+}
+
+div#autodl-filters-contents-wol {
+	display: inline-flex;
+	width: 300px;
+	max-width: 400px;
+}
+
+div#autodl-ircsrvs {
+	height: fit-content;
+	width: fit-content;
+}
+
+fieldset#autodl-ircsrvs-servers-fieldset {
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius-lg);
+	margin: 3px 12px;
+	padding: 3px 9px;
+}
+
+fieldset#autodl-ircsrvs-channels-fieldset {
+	margin: 3px 12px 65px 12px;
+	padding: 3px 9px;
+}
+
+#autodl-prefs {
+	width: fit-content;
+	height: auto;
+}
+
+#autodl-prefs-tabs {
+	margin: 5px 2px;
+	padding: 0 0 65px 0;
+	display: inline-flex;
+}
+
+#autodl-prefs-contents {
+	margin: 3px 5px 65px 5px;
+	padding: 0 0 65px 0;
+	display: inline-flex;
+}
+
+#autodl-help {
+	height: auto;
+}
+
+#autodl-help:not(.dlg-window) {
+	width: fit-content;
+	height: auto;
+	padding: 15px 15px 15px 0;
+}
+
+/* ============================================================
+ * File manager chrome (colors only; details lane owns the layout)
+ * ============================================================ */
+.sprite-archive, .sprite-rar, .sprite-rarpart, .sprite-zip,
+.sprite-copy, .sprite-curdir, .sprite-delete, .flm-sprite-dir_up, .sprite-extract,
+.sprite-image, .sprite-move, .sprite-mp3, .sprite-mkdir, .sprite-nfo,
+.sprite-nfo_view, .sprite-refresh, .sprite-rename, .sprite-sfv, .sprite-sfv_create,
+.sprite-sfv_check, .sprite-torrent, .sprite-video, .sprite-vplay,
+.sprite-console {
+	width: 16px;
+	height: 16px;
+}
+
+.sprite-archive, .sprite-rar, .sprite-rarpart, .sprite-zip { -webkit-mask-image: url(images/icons/file-archive.svg); mask-image: url(images/icons/file-archive.svg); }
+.sprite-console { -webkit-mask-image: url(images/icons/fm-console.svg); mask-image: url(images/icons/fm-console.svg); }
+.sprite-copy { -webkit-mask-image: url(images/icons/fm-copy.svg); mask-image: url(images/icons/fm-copy.svg); }
+.sprite-curdir { -webkit-mask-image: url(images/icons/fm-curdir.svg); mask-image: url(images/icons/fm-curdir.svg); }
+.sprite-delete { -webkit-mask-image: url(images/icons/fm-delete.svg); mask-image: url(images/icons/fm-delete.svg); }
+.flm-sprite-dir_up { -webkit-mask-image: url(images/icons/fm-dir-up.svg); mask-image: url(images/icons/fm-dir-up.svg); }
+.sprite-extract { -webkit-mask-image: url(images/icons/fm-extract.svg); mask-image: url(images/icons/fm-extract.svg); }
+.sprite-image { -webkit-mask-image: url(images/icons/file-image.svg); mask-image: url(images/icons/file-image.svg); }
+.sprite-move { -webkit-mask-image: url(images/icons/fm-move.svg); mask-image: url(images/icons/fm-move.svg); }
+.sprite-mp3 { -webkit-mask-image: url(images/icons/file-audio.svg); mask-image: url(images/icons/file-audio.svg); }
+.sprite-mkdir { -webkit-mask-image: url(images/icons/fm-mkdir.svg); mask-image: url(images/icons/fm-mkdir.svg); }
+.sprite-nfo, .sprite-nfo_view { -webkit-mask-image: url(images/icons/file-nfo.svg); mask-image: url(images/icons/file-nfo.svg); }
+.sprite-refresh { -webkit-mask-image: url(images/icons/fm-refresh.svg); mask-image: url(images/icons/fm-refresh.svg); }
+.sprite-rename { -webkit-mask-image: url(images/icons/fm-rename.svg); mask-image: url(images/icons/fm-rename.svg); }
+.sprite-sfv, .sprite-sfv_create, .sprite-sfv_check { -webkit-mask-image: url(images/icons/file-sfv.svg); mask-image: url(images/icons/file-sfv.svg); }
+.sprite-torrent { -webkit-mask-image: url(images/icons/file-torrent.svg); mask-image: url(images/icons/file-torrent.svg); }
+.sprite-video { -webkit-mask-image: url(images/icons/file-video.svg); mask-image: url(images/icons/file-video.svg); }
+.sprite-vplay { -webkit-mask-image: url(images/icons/fm-vplay.svg); mask-image: url(images/icons/fm-vplay.svg); }
+
+input#flm-nav-refresh,
+#flm-nav-refresh {
+	background: var(--kr-surface-2);
+	border: 1px solid var(--kr-border);
+	box-shadow: none;
+	padding: .25rem !important;
+}
+
+#flm-navigation-head .input-group-text,
+#flm-navpath {
+	background: var(--kr-surface-2);
+	border-color: var(--kr-border);
+	color: var(--kr-foreground);
+}
+
+div#logoff {
+	-webkit-mask: url(images/icons/logoff.svg) center / 20px no-repeat;
+	mask: url(images/icons/logoff.svg) center / 20px no-repeat;
+}
+
+div#logoffDlg div.dlg-header {
+	background-image: none;
+}

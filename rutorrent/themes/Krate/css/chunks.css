@@ -1,0 +1,187 @@
+/*
+ *  Krate skin for ruTorrent -- Chunks pane.
+ *  A canvas heatmap replaces the lettered boxes: a toolbar header of stat
+ *  chips plus a Downloaded/Seen segmented control, a full-width overview
+ *  strip, and a dense cell grid. The plugin's native header and #cTable grid
+ *  are hidden; their ids stay live so core keeps feeding data. Token-only.
+ */
+
+/* Hide the plugin's own header row and lettered grid; keep them in the DOM
+ * (the native #chunks_mode select and #cTable are still driven by core). */
+/* The header carries Bootstrap's .d-flex (display:flex !important), so the
+ * override must be !important to win. */
+#Chunks > div.d-flex.flex-row { display: none !important; }
+#Chunks #cCont { display: none; }
+
+#kr-chunks {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	min-height: 0;
+	gap: 8px;
+	padding: 2px;
+}
+
+/* Header toolbar row -- same surface/height as the File Manager and Traffic
+ * pane toolbars for cross-pane consistency. */
+.kr-chunks-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	flex: none;
+	min-height: 40px;
+	padding: 0 10px;
+	background: var(--kr-surface-2);
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius-lg);
+}
+
+.kr-chunks-stats {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	min-width: 0;
+	flex-wrap: wrap;
+}
+
+.kr-chunks-chip {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 6px;
+	white-space: nowrap;
+}
+
+.kr-chunks-chip-l {
+	font-size: 11px;
+	font-weight: 600;
+	font-style: normal;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: var(--kr-fg-muted);
+}
+
+.kr-chunks-chip-v {
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--kr-foreground);
+	font-variant-numeric: tabular-nums;
+}
+
+.kr-chunks-note {
+	font-size: 11px;
+	color: var(--kr-fg-muted);
+	white-space: nowrap;
+	padding-left: 14px;
+	border-left: 1px solid var(--kr-border);
+}
+
+/* Downloaded / Seen segmented control (v4 SegmentedControl idiom).
+ * Equal-width segments sized by the longer label, with a 3px inset track so
+ * the active pill never meets the track edge. */
+.kr-seg {
+	display: flex;
+	align-items: stretch;
+	gap: 2px;
+	flex: none;
+	height: 32px;
+	padding: 3px;
+	box-sizing: border-box;
+	background: var(--kr-input);
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius);
+}
+
+.kr-seg-btn {
+	flex: 1 1 0;
+	min-width: 114px;
+	height: 100%;
+	min-height: 0;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	appearance: none;
+	border: 0;
+	margin: 0;
+	background: transparent;
+	color: var(--kr-fg-muted);
+	font-family: var(--kr-font);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1;
+	white-space: nowrap;
+	padding: 0 14px;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.kr-seg-btn:hover { color: var(--kr-foreground); }
+
+/* Active pill: a raised surface fill with a tight shadow only -- no border, and
+ * not the large drop shadow, so it stays centered inside the 3px track inset. */
+.kr-seg-btn.is-active {
+	background: var(--kr-surface);
+	color: var(--kr-foreground);
+	font-weight: 600;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.kr-seg-btn:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 2px var(--kr-focus);
+}
+
+/* Full-width completion overview. */
+.kr-chunks-overview {
+	display: block;
+	flex: none;
+	width: 100%;
+	height: 12px;
+}
+
+/* Dense cell grid; scrolls within the pane when taller than the drawer. */
+.kr-chunks-gridwrap {
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	scrollbar-width: thin;
+	scrollbar-color: var(--kr-scrollbar-thumb) transparent;
+}
+
+.kr-chunks-gridwrap::-webkit-scrollbar { width: 8px; }
+.kr-chunks-gridwrap::-webkit-scrollbar-track { background: transparent; }
+.kr-chunks-gridwrap::-webkit-scrollbar-thumb {
+	background: var(--kr-scrollbar-thumb);
+	border-radius: 4px;
+}
+.kr-chunks-gridwrap::-webkit-scrollbar-thumb:hover { background: var(--kr-scrollbar-thumb-hover); }
+
+#kr-chunks-grid { display: block; }
+
+/* Per-cell floating tooltip (token-styled, matches the shared tooltip). */
+.kr-chunks-tip {
+	position: fixed;
+	z-index: 99999;
+	pointer-events: none;
+	opacity: 0;
+	display: none;
+	max-width: 240px;
+	padding: 4px 8px;
+	border-radius: 6px;
+	font-size: 12px;
+	line-height: 1.4;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+	background: var(--kr-tooltip-bg);
+	color: var(--kr-tooltip-fg);
+	border: 1px solid var(--kr-tooltip-border);
+	box-shadow: var(--kr-shadow-soft);
+	transition: opacity 0.12s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.kr-seg-btn, .kr-chunks-tip { transition: none; }
+}

@@ -7,17 +7,28 @@ YAML="${ROOT}/sources.yaml"
 declare -A REPO_CACHE=()
 
 git_clone() {
-	local repo="$1" dest="$2" url branch
+	local repo="$1" dest="$2" url clone_url branch token
 	if [[ "${repo}" == http://* || "${repo}" == https://* || "${repo}" == git@* ]]; then
 		url="${repo}"
 	else
 		url="https://github.com/${repo}"
 	fi
-	branch="$(git ls-remote --symref "${url}" HEAD 2>/dev/null |
+	clone_url="${url}"
+	token="${GH_TOKEN:-${GITHUB_TOKEN:-}}"
+	# Private same-org repos need a token with access beyond the default
+	# GITHUB_TOKEN (repo-scoped). Prefer a PAT/app token exported as GH_TOKEN.
+	if [[ -n "${token}" && "${url}" == https://github.com/* ]]; then
+		clone_url="https://x-access-token:${token}@${url#https://}"
+	fi
+	branch="$(git ls-remote --symref "${clone_url}" HEAD 2>/dev/null |
 		awk '/^ref:/ { sub(/refs\/heads\//, "", $2); print $2; exit }')"
 	branch="${branch:-main}"
 	rm -rf "${dest}"
-	git clone --depth 1 --branch "${branch}" "${url}" "${dest}"
+	if ! git clone --depth 1 --branch "${branch}" "${clone_url}" "${dest}"; then
+		echo "sync-rutorrent-sources: git clone failed for ${repo} (branch=${branch})" >&2
+		echo "sync-rutorrent-sources: private sources need a .krate skip marker or a token that can read them" >&2
+		exit 128
+	fi
 	# Nested .git would make the parent repo record gitlinks (submodules) on commit.
 	rm -rf "${dest}/.git"
 }

@@ -1,0 +1,626 @@
+/*
+ *  Krate skin for ruTorrent -- base surface -- document, forms, buttons, links, scrollbars, loader.
+ *  Moved out of style.css; every color reads from a --kr-* token.
+ */
+
+body,
+html {
+	background-color: var(--kr-background);
+	color: var(--kr-foreground);
+	font-family: var(--kr-font);
+	font-size: 13px;
+	text-shadow: none;
+	margin: 0;
+	padding: 0;
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Loading Indicator: pure-CSS token-colored ring, no raster */
+#ind {
+	width: 28px;
+	height: 28px;
+	background: none;
+	border: 3px solid var(--kr-border);
+	border-top-color: var(--kr-primary);
+	border-radius: 50%;
+	animation: kr-spin 0.8s linear infinite;
+	cursor: default;
+}
+
+@keyframes kr-spin {
+	to { transform: rotate(360deg); }
+}
+
+/* General Links */
+a {
+	color: var(--kr-accent-text);
+	font-family: var(--kr-font);
+	font-size: 12px;
+	text-decoration: none;
+}
+
+a:hover,
+a:focus {
+	color: var(--kr-primary);
+	text-decoration: underline;
+}
+
+.dropdown-menu {
+	--bs-dropdown-border-color: var(--menu-border-color);
+	--bs-dropdown-bg: var(--menu-background-color);
+	--bs-dropdown-link-color: var(--menu-color);
+	--bs-dropdown-link-active-color: var(--menu-highlight-color);
+	--bs-dropdown-link-active-bg: var(--menu-highlight-background-color);
+	--bs-dropdown-link-hover-color: var(--menu-highlight-color);
+	--bs-dropdown-link-hover-bg: var(--menu-highlight-background-color);
+}
+
+.list-group {
+	--bs-list-group-border-color: transparent;
+	--bs-list-group-border-width: 0;
+	--bs-list-group-bg: var(--menu-background-color);
+	--bs-list-group-color: var(--menu-color);
+	--bs-list-group-active-color: var(--menu-highlight-color);
+	--bs-list-group-active-border-color: transparent;
+	--bs-list-group-active-bg: var(--menu-highlight-background-color);
+	--bs-list-group-action-hover-color: var(--menu-highlight-color);
+	--bs-list-group-action-hover-bg: var(--menu-highlight-background-color);
+	--bs-list-group-action-active-color: var(--menu-highlight-color);
+	--bs-list-group-action-active-bg: var(--menu-highlight-background-color);
+	--bs-list-group-item-padding-x: 0.25rem;
+	--bs-list-group-item-padding-y: 0.25rem;
+}
+
+/* Bootstrap 5 form controls + buttons */
+.form-control,
+.form-select {
+	background-color: var(--kr-input);
+	border: 1px solid var(--kr-border);
+	color: var(--kr-foreground);
+	border-radius: var(--kr-radius);
+}
+
+.form-control:focus,
+.form-select:focus {
+	background-color: var(--kr-input);
+	border-color: var(--kr-ring);
+	color: var(--kr-foreground);
+	box-shadow: 0 0 0 2px var(--kr-focus);
+}
+
+.form-control::placeholder {
+	color: var(--kr-fg-muted);
+	opacity: 1;
+}
+
+.btn {
+	border-radius: var(--kr-radius);
+}
+
+.btn-primary {
+	--bs-btn-bg: var(--kr-primary);
+	--bs-btn-border-color: var(--kr-primary);
+	--bs-btn-color: var(--kr-primary-fg);
+	--bs-btn-hover-bg: var(--kr-accent);
+	--bs-btn-hover-border-color: var(--kr-accent);
+	--bs-btn-hover-color: var(--kr-accent-fg);
+	--bs-btn-active-bg: var(--kr-accent);
+	--bs-btn-active-border-color: var(--kr-accent);
+}
+
+.btn-secondary,
+.btn-default {
+	--bs-btn-bg: var(--kr-surface-2);
+	--bs-btn-border-color: var(--kr-border);
+	--bs-btn-color: var(--kr-foreground);
+	--bs-btn-hover-bg: var(--kr-surface-3);
+	--bs-btn-hover-border-color: var(--kr-border);
+	--bs-btn-hover-color: var(--kr-foreground);
+	--bs-btn-active-bg: var(--kr-surface-3);
+	--bs-btn-active-border-color: var(--kr-border);
+	--bs-btn-active-color: var(--kr-foreground);
+}
+
+/* Horizontal Rule */
+hr {
+	border: none;
+	border-top: 1px solid var(--kr-border);
+	margin: 1em 0;
+	height: 1px;
+}
+
+/* Containers */
+#cover {
+	background-color: var(--kr-background);
+}
+
+#msg {
+	background-color: var(--kr-surface);
+	border-top: 1px solid var(--kr-border);
+	border-bottom: 1px solid var(--kr-border);
+	color: var(--kr-fg-muted);
+	font-size: 12px;
+	font-weight: 700;
+	text-shadow: none;
+	padding: 10px;
+}
+
+#sc {
+	border: 1px solid var(--kr-border);
+	background-color: var(--kr-background);
+}
+
+#sc li.se_act div {
+	background-color: var(--kr-surface-2);
+	color: var(--kr-fg-muted);
+}
+
+#lng {
+	background-color: var(--kr-background);
+	border: 1px solid var(--kr-border);
+}
+
+/* Fieldsets + inputs */
+fieldset {
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius-lg);
+	margin: 0.25rem 0;
+	padding: 0.25rem 0.5rem;
+}
+
+input[type="file"],
+input[type="password"],
+input[type=number],
+input[type="text"],
+select {
+	box-sizing: border-box;
+	height: 36px;
+	padding: 0 10px;
+	background-color: var(--kr-input);
+	border: 1px solid var(--kr-border);
+	color: var(--kr-foreground);
+	font-family: var(--kr-font);
+	font-size: 13px;
+	border-radius: var(--kr-radius);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+	accent-color: var(--kr-primary);
+	width: 16px;
+	height: 16px;
+}
+
+input[type="file"][disabled],
+input[type="password"][disabled],
+input[type=number][disabled],
+input[type="text"][disabled],
+select[disabled] {
+	background-color: var(--kr-surface-2);
+	color: var(--kr-fg-muted);
+	opacity: 0.6;
+}
+
+input::placeholder,
+textarea::placeholder {
+	color: var(--kr-fg-muted);
+	opacity: 1;
+}
+
+input.Button {
+	box-sizing: border-box;
+	min-height: 36px;
+	background-color: var(--kr-surface-2);
+	border: 1px solid var(--kr-border);
+	color: var(--kr-foreground);
+	cursor: pointer;
+	padding: 0 14px;
+	font-weight: 500;
+	border-radius: var(--kr-radius);
+	font-size: 13px;
+	transition: background-color 0.15s ease;
+}
+
+input.Button:hover,
+input.Button:focus {
+	background-color: var(--kr-surface-3);
+	color: var(--kr-foreground);
+	text-shadow: none;
+}
+
+/* ============================================================
+ * Input group: a text input + an attached icon button read as ONE
+ * control -- one outer border and radius, a hairline divider between
+ * them, the focus ring on the whole group. Used by every path/browse
+ * field across dialogs and Settings.
+ * ============================================================ */
+.kr-input-group {
+	display: flex;
+	align-items: stretch;
+	box-sizing: border-box;
+	width: 100%;
+	height: 36px;
+	background-color: var(--kr-input);
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius);
+}
+
+.kr-input-group:focus-within {
+	border-color: var(--kr-ring);
+	box-shadow: 0 0 0 3px var(--kr-focus);
+}
+
+.kr-input-group > input,
+.kr-input-group > select,
+.kr-input-group > .browseEdit {
+	flex: 1 1 auto;
+	min-width: 0;
+	width: auto;
+	height: auto;
+	min-height: 0;
+	margin: 0;
+	padding: 0 10px;
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	color: var(--kr-foreground);
+	font-family: var(--kr-font);
+	font-size: 13px;
+}
+
+.kr-input-group > input:focus,
+.kr-input-group > input:focus-visible,
+.kr-input-group > select:focus,
+.kr-input-group > .browseEdit:focus {
+	outline: none;
+	border: 0;
+	box-shadow: none;
+	background: transparent;
+}
+
+/* The attached browse button: a 36px square folder glyph, flush, with a
+ * hairline divider and the shared tint on hover. */
+.kr-input-group > button,
+.kr-input-group > .kr-browse,
+.kr-input-group > .browseButton {
+	position: relative;
+	flex: 0 0 36px;
+	width: 36px;
+	min-width: 36px;
+	height: auto;
+	min-height: 0;
+	margin: 0;
+	padding: 0;
+	background: transparent;
+	background-image: none;
+	border: 0;
+	border-left: 1px solid var(--kr-border);
+	border-radius: 0;
+	color: transparent;
+	font-size: 0;
+	cursor: pointer;
+}
+
+.kr-input-group > button::before,
+.kr-input-group > .kr-browse::before,
+.kr-input-group > .browseButton::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-color: var(--kr-icon);
+	-webkit-mask: url(../images/icons/file-folder.svg) center / 16px no-repeat;
+	mask: url(../images/icons/file-folder.svg) center / 16px no-repeat;
+}
+
+.kr-input-group > button:not(:disabled):hover,
+.kr-input-group > .kr-browse:hover,
+.kr-input-group > .browseButton:hover {
+	background-color: var(--kr-muted);
+	background-image: none;
+}
+
+.kr-input-group > button:not(:disabled):hover::before,
+.kr-input-group > .kr-browse:hover::before,
+.kr-input-group > .browseButton:hover::before {
+	background-color: var(--kr-icon-hover);
+}
+
+.kr-input-group > .kr-browse:focus-visible,
+.kr-input-group > .browseButton:focus-visible,
+.kr-input-group > button:focus-visible {
+	outline: 2px solid var(--kr-ring);
+	outline-offset: -2px;
+	z-index: 1;
+}
+
+/* ============================================================
+ * Switch: the shared on/off control for boolean options, used by
+ * Settings and dialogs. Markup: <label class="kr-switch"><input
+ * type=checkbox><span class="kr-switch-track"></span></label>.
+ * ============================================================ */
+.kr-switch {
+	position: relative;
+	display: inline-block;
+	flex: none;
+	width: 34px;
+	height: 18px;
+	cursor: pointer;
+	vertical-align: middle;
+}
+
+.kr-switch input {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.kr-switch .kr-switch-track {
+	position: absolute;
+	inset: 0;
+	border-radius: 999px;
+	background-color: var(--kr-surface-3);
+	transition: background-color 0.15s ease;
+}
+
+.kr-switch .kr-switch-track::after {
+	content: "";
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background-color: var(--kr-fg-muted);
+	transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.kr-switch input:checked + .kr-switch-track { background-color: var(--kr-primary); }
+
+.kr-switch input:checked + .kr-switch-track::after {
+	transform: translateX(16px);
+	background-color: var(--kr-primary-fg);
+}
+
+.kr-switch input:focus-visible + .kr-switch-track { box-shadow: 0 0 0 2px var(--kr-focus); }
+
+input:focus-visible,
+select:focus-visible,
+button:focus-visible,
+a.Button:focus-visible,
+.nav-link:focus-visible {
+	outline: 2px solid var(--kr-ring);
+	outline-offset: 1px;
+	box-shadow: 0 0 0 2px var(--kr-focus);
+}
+
+/* Textarea */
+textarea {
+	background-color: var(--kr-input);
+	border: 1px solid var(--kr-border);
+	color: var(--kr-foreground);
+	font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+	padding: 10px;
+	border-radius: var(--kr-radius);
+}
+
+textarea[disabled] {
+	background-color: var(--kr-surface-2);
+	color: var(--kr-fg-muted);
+	opacity: 0.6;
+}
+
+/* Thin themed scrollbars; no legacy arrow buttons, no opaque corner. */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+/* Kill the end-cap arrow glyphs in every form the engine can draw them:
+ * the bare button, the single/double-button variants, and the start/end
+ * segments on both axes. Any one left unset lets the raster arrow back in. */
+::-webkit-scrollbar-button,
+::-webkit-scrollbar-button:single-button,
+::-webkit-scrollbar-button:double-button,
+::-webkit-scrollbar-button:start,
+::-webkit-scrollbar-button:end,
+::-webkit-scrollbar-button:vertical:start,
+::-webkit-scrollbar-button:vertical:end,
+::-webkit-scrollbar-button:horizontal:start,
+::-webkit-scrollbar-button:horizontal:end,
+::-webkit-scrollbar-button:vertical:start:single-button,
+::-webkit-scrollbar-button:vertical:end:single-button,
+::-webkit-scrollbar-button:vertical:start:double-button,
+::-webkit-scrollbar-button:vertical:end:double-button,
+::-webkit-scrollbar-button:horizontal:start:single-button,
+::-webkit-scrollbar-button:horizontal:end:single-button,
+::-webkit-scrollbar-button:horizontal:start:double-button,
+::-webkit-scrollbar-button:horizontal:end:double-button {
+	display: none;
+	width: 0;
+	height: 0;
+	background: none;
+}
+
+::-webkit-scrollbar-corner {
+	background: transparent;
+}
+
+::-webkit-scrollbar-track-piece {
+	background-color: var(--kr-scrollbar-track);
+	border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: var(--kr-scrollbar-thumb);
+	border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: var(--kr-scrollbar-thumb-hover);
+}
+
+/* Firefox reads the standard properties; Chromium must NOT, because setting
+ * either `scrollbar-width` or `scrollbar-color` on an element makes it ignore
+ * every `::-webkit-scrollbar*` rule and fall back to native end-cap arrow
+ * buttons drawn in the thumb color. Gating these to Firefox keeps Chromium on
+ * the `::-webkit-scrollbar` styling above, where the buttons are hidden. */
+@supports (-moz-appearance: none) {
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: var(--kr-scrollbar-thumb) var(--kr-scrollbar-track);
+	}
+}
+
+/* Motion only where it reads as feedback; honour reduced-motion. */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+legend {
+	color: var(--kr-fg-muted);
+}
+
+/* Generic buttons -- token hover/active surfaces so the core near-white
+ * washes never show on any variant, for every button family. */
+button:not(:disabled):hover,
+input[type=button]:not(:disabled):hover,
+input[type=submit]:not(:disabled):hover,
+input.Button:not(:disabled):hover,
+a.Button:not(:disabled):hover {
+	background-color: var(--kr-surface-3);
+	color: var(--kr-foreground);
+}
+
+button:not(:disabled):active,
+input[type=button]:not(:disabled):active,
+input[type=submit]:not(:disabled):active,
+input.Button:not(:disabled):active,
+a.Button:not(:disabled):active {
+	background-color: var(--kr-surface-3);
+	color: var(--kr-foreground);
+}
+
+button,
+input[type=button],
+input[type=submit],
+.Button {
+	box-sizing: border-box;
+	min-height: 36px;
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius);
+	margin: 0.25rem;
+	padding: 0 14px;
+	background: var(--kr-surface-2);
+	color: var(--kr-foreground);
+	text-wrap: nowrap;
+	font-size: 13px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background-color 0.15s ease;
+}
+
+/* ============================================================
+ * Icon-only control -- the one square primitive for every icon button
+ * or link: pane toolbars (32, default), dialog headers + card inline
+ * actions (28, --md), table/sidebar rows (24, --sm), top bar (36, --lg).
+ * Size, radius and glyph size come from one modifier; the core
+ * width/margin/padding and the near-white core hover/active washes are
+ * neutralized so the control is always a square muted glyph that tints
+ * its surface on hover and never covers row content.
+ * ============================================================ */
+.kr-icon-btn {
+	--kr-ib-size: 32px;
+	--kr-ib-radius: 8px;
+	--kr-ib-glyph: 16px;
+	box-sizing: border-box;
+	display: inline-grid;
+	place-items: center;
+	flex: none;
+	width: var(--kr-ib-size);
+	height: var(--kr-ib-size);
+	min-width: var(--kr-ib-size);
+	min-height: 0;
+	margin: 0;
+	padding: 0;
+	border: 1px solid transparent;
+	border-radius: var(--kr-ib-radius);
+	background: transparent;
+	background-image: none;
+	color: var(--kr-fg-muted);
+	cursor: pointer;
+	transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.kr-icon-btn--sm { --kr-ib-size: 24px; --kr-ib-radius: 6px; --kr-ib-glyph: 14px; }
+.kr-icon-btn--md { --kr-ib-size: 28px; --kr-ib-radius: 8px; --kr-ib-glyph: 16px; }
+.kr-icon-btn--lg { --kr-ib-size: 36px; --kr-ib-radius: 8px; --kr-ib-glyph: 20px; }
+
+/* Glyph: a masked SVG span (color follows the button via currentColor) or
+ * an inline <svg>. The mask-image itself is set per control. */
+.kr-icon-btn > .kr-icon,
+.kr-icon-btn > svg {
+	width: var(--kr-ib-glyph);
+	height: var(--kr-ib-glyph);
+	flex: none;
+}
+.kr-icon-btn > .kr-icon {
+	background-color: currentColor;
+	-webkit-mask: center / contain no-repeat;
+	mask: center / contain no-repeat;
+}
+
+/* :not(:disabled) raises specificity above the generic button:hover/:active
+ * washes above so the muted-to-foreground tint always wins on every variant. */
+.kr-icon-btn:not(:disabled):hover {
+	background-color: var(--kr-surface-2);
+	background-image: none;
+	color: var(--kr-foreground);
+	border-color: transparent;
+}
+.kr-icon-btn:not(:disabled):active {
+	background-color: var(--kr-surface-3);
+	background-image: none;
+	color: var(--kr-foreground);
+}
+.kr-icon-btn:focus-visible {
+	outline: 2px solid var(--kr-ring);
+	outline-offset: -1px;
+	box-shadow: 0 0 0 2px var(--kr-focus);
+}
+.kr-icon-btn:disabled,
+.kr-icon-btn[disabled] {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* Shared custom tooltip. One element, created and positioned by init.js, which
+ * sets only position/left/top/opacity; the visual box lives here. max-width is
+ * capped and long unbroken values (a spaceless torrent name) wrap inside the
+ * padded body, so text never overflows the box. */
+.kr-tooltip {
+	max-width: min(480px, calc(100vw - 16px));
+	padding: 4px 8px;
+	border-radius: 6px;
+	font-size: 12px;
+	line-height: 1.4;
+	white-space: normal;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+	background: var(--kr-surface);
+	color: var(--kr-foreground);
+	border: 1px solid var(--kr-border);
+	box-shadow: var(--kr-shadow-soft);
+	transition: opacity .12s ease;
+}

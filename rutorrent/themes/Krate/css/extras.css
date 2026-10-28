@@ -1,0 +1,331 @@
+/*
+ *  Krate skin for ruTorrent -- extras surface.
+ *  Krate extras: v4 toasts (restyled noty), the full-window
+ *  drop zone, and the Ctrl/Cmd+K command palette. Every color is a
+ *  --kr-* token; no raster, no hex.
+ */
+
+/* ============================================================
+ * Toasts -- core noty restyled as v4 toasts (bottom-right, tone bar)
+ * ============================================================ */
+ul.noty_cont.noty_layout_bottomRight {
+	right: 20px;
+	bottom: 20px;
+	width: 340px;
+}
+
+ul.noty_cont.noty_layout_bottomRight li {
+	margin: 10px 0 0 0;
+}
+
+.noty_bar.noty_theme_default {
+	background: var(--kr-surface) !important;
+	background-image: none !important;
+	color: var(--kr-foreground);
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius-lg);
+	box-shadow: var(--kr-shadow);
+	overflow: hidden;
+}
+
+.noty_bar.noty_theme_default .noty_message {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 12px 36px 12px 14px;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.45;
+	text-align: left;
+	font-family: var(--kr-font);
+	color: var(--kr-foreground);
+}
+
+/* Tone glyph: a 16px masked icon tinted by tone, in place of a tone stripe. */
+.noty_bar.noty_theme_default .noty_message::before {
+	content: "";
+	flex: none;
+	width: 16px;
+	height: 16px;
+	margin-top: 1px;
+	background-color: var(--kr-fg-muted);
+	background-image: none;
+	-webkit-mask: url(../images/icons/header-about.svg) center / contain no-repeat;
+	mask: url(../images/icons/header-about.svg) center / contain no-repeat;
+}
+
+.noty_bar.noty_theme_default.noty_error .noty_message::before {
+	background-color: var(--kr-destructive);
+	-webkit-mask-image: url(../images/icons/state-error.svg);
+	mask-image: url(../images/icons/state-error.svg);
+}
+
+.noty_bar.noty_theme_default.noty_success .noty_message::before {
+	background-color: var(--kr-primary);
+	-webkit-mask-image: url(../images/icons/state-finished.svg);
+	mask-image: url(../images/icons/state-finished.svg);
+}
+
+.noty_bar.noty_theme_default.noty_information .noty_message::before,
+.noty_bar.noty_theme_default.noty_alert .noty_message::before {
+	background-color: var(--kr-accent-text);
+	-webkit-mask-image: url(../images/icons/header-about.svg);
+	mask-image: url(../images/icons/header-about.svg);
+}
+
+/* Close control: masked glyph, no raster */
+.noty_bar.noty_theme_default .noty_close {
+	top: 10px;
+	right: 10px;
+	width: 18px;
+	height: 18px;
+	background-color: var(--kr-fg-muted);
+	background-image: none !important;
+	-webkit-mask: url(../images/icons/menu-close.svg) center / 12px no-repeat;
+	mask: url(../images/icons/menu-close.svg) center / 12px no-repeat;
+	opacity: 0.8;
+	transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.noty_bar.noty_theme_default .noty_close:hover {
+	background-color: var(--kr-foreground);
+	opacity: 1;
+}
+
+.noty_bar.noty_theme_default .noty_message .noty_buttons {
+	border-top: 1px solid var(--kr-border);
+	margin: 10px 0 0 0;
+	padding-top: 10px;
+	text-align: right;
+}
+
+.noty_modal.noty_theme_default {
+	background-color: var(--kr-overlay);
+	opacity: 0.6;
+}
+
+/* ============================================================
+ * Drop zone -- full-window overlay fed into the core add path
+ * ============================================================ */
+#kr-drop {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	background: color-mix(in srgb, var(--kr-background) 85%, transparent);
+}
+
+#kr-drop.is-active {
+	display: flex;
+}
+
+#kr-drop .kr-drop-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 14px;
+	min-width: 320px;
+	max-width: 520px;
+	padding: 48px 56px;
+	text-align: center;
+	color: var(--kr-foreground);
+	background: var(--kr-surface);
+	border: 2px dashed var(--kr-primary);
+	border-radius: 16px;
+	box-shadow: var(--kr-shadow);
+}
+
+#kr-drop .kr-drop-icon {
+	width: 56px;
+	height: 56px;
+	background-color: var(--kr-primary);
+	background-image: none;
+	-webkit-mask: url(../images/icons/drop-zone.svg) center / contain no-repeat;
+	mask: url(../images/icons/drop-zone.svg) center / contain no-repeat;
+}
+
+#kr-drop .kr-drop-title {
+	font-size: 18px;
+	font-weight: 600;
+}
+
+#kr-drop .kr-drop-sub {
+	font-size: 13px;
+	color: var(--kr-fg-muted);
+}
+
+/* ============================================================
+ * Command palette (Ctrl/Cmd+K)
+ * ============================================================ */
+#kr-palette {
+	position: fixed;
+	inset: 0;
+	z-index: 100001;
+	display: none;
+	justify-content: center;
+	align-items: flex-start;
+	padding: 12vh 16px 16px;
+	background: color-mix(in srgb, var(--kr-overlay) 60%, transparent);
+}
+
+#kr-palette.is-active {
+	display: flex;
+}
+
+#kr-palette .kr-pal-panel {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	max-width: 560px;
+	max-height: 70vh;
+	overflow: hidden;
+	background: var(--kr-surface);
+	border: 1px solid var(--kr-border);
+	border-radius: 14px;
+	box-shadow: var(--kr-shadow);
+}
+
+#kr-palette .kr-pal-search {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 14px 16px;
+	border-bottom: 1px solid var(--kr-border);
+}
+
+#kr-palette .kr-pal-search-icon {
+	flex: none;
+	width: 18px;
+	height: 18px;
+	background-color: var(--kr-fg-muted);
+	background-image: none;
+	-webkit-mask: url(../images/icons/toolbar-search.svg) center / contain no-repeat;
+	mask: url(../images/icons/toolbar-search.svg) center / contain no-repeat;
+}
+
+#kr-palette input.kr-pal-input {
+	flex: 1 1 auto;
+	min-width: 0;
+	border: 0;
+	outline: none;
+	background: transparent;
+	color: var(--kr-foreground);
+	font-family: var(--kr-font);
+	font-size: 15px;
+	line-height: 1.4;
+}
+
+#kr-palette input.kr-pal-input::placeholder {
+	color: var(--kr-fg-muted);
+}
+
+#kr-palette .kr-pal-list {
+	flex: 1 1 auto;
+	overflow-y: auto;
+	padding: 6px;
+}
+
+#kr-palette .kr-pal-group {
+	padding: 10px 10px 4px;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--kr-fg-muted);
+}
+
+#kr-palette .kr-pal-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 9px 10px;
+	border-radius: 8px;
+	cursor: pointer;
+	color: var(--kr-foreground);
+}
+
+#kr-palette .kr-pal-row .kr-pal-row-icon {
+	flex: none;
+	width: 16px;
+	height: 16px;
+	background-color: var(--kr-fg-muted);
+	background-image: none;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	mask-position: center;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+}
+
+#kr-palette .kr-pal-row .kr-pal-row-label {
+	flex: 1 1 auto;
+	font-size: 13px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#kr-palette .kr-pal-row .kr-pal-row-hint {
+	flex: none;
+	font-size: 11px;
+	color: var(--kr-fg-muted);
+	font-variant-numeric: tabular-nums;
+}
+
+#kr-palette .kr-pal-row.is-active {
+	background: color-mix(in srgb, var(--kr-primary) 14%, transparent);
+	color: var(--kr-primary-text);
+}
+
+#kr-palette .kr-pal-row.is-active .kr-pal-row-icon {
+	background-color: var(--kr-primary);
+}
+
+#kr-palette .kr-pal-empty {
+	padding: 24px 12px;
+	text-align: center;
+	font-size: 13px;
+	color: var(--kr-fg-muted);
+}
+
+#kr-palette .kr-pal-foot {
+	display: flex;
+	gap: 14px;
+	padding: 8px 14px;
+	border-top: 1px solid var(--kr-border);
+	font-size: 11px;
+	color: var(--kr-fg-muted);
+}
+
+#kr-palette .kr-pal-foot .kr-key {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+}
+
+#kr-palette .kr-pal-foot kbd {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 18px;
+	height: 18px;
+	padding: 0 5px;
+	border: 1px solid var(--kr-border);
+	border-radius: 5px;
+	background: var(--kr-surface-2);
+	color: var(--kr-fg-muted);
+	font-family: var(--kr-font);
+	font-size: 11px;
+	line-height: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#kr-drop .kr-drop-icon,
+	.noty_bar.noty_theme_default .noty_close {
+		transition: none;
+	}
+}
