@@ -51,6 +51,11 @@ RUN mkdir -p ${APP_HOME} \
         AllowOverride All
     </Directory>
 
+    <Directory ${APP_HOME}>
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
 
 	ErrorLog ${APACHE_LOG_DIR}/error.log
 	CustomLog ${APACHE_LOG_DIR}/access.log vhost_combined
@@ -93,9 +98,17 @@ LABEL org.opencontainers.image.authors="hwk <nelu@github.com>"
 ARG STORAGE_DIR=/data
 ARG UID=1000
 ARG GID=1000
-ARG RUTORRENT_VER=v5.3.17
+ARG RUTORRENT_VER=v5.3.18
 ENV APP_HOME=/usr/src/app
 ENV PATH="$PATH:$APP_HOME"
+ENV RU_LOG_FILE="$STORAGE_DIR/logs/errors.log"
+ENV RU_TOP_DIR="$STORAGE_DIR/downloads/"
+ENV RU_PROFILE_PATH="$STORAGE_DIR/share"
+ENV RU_TEMP_DIRECTORY="$STORAGE_DIR/tmp"
+
+# utf8 support
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
 
 WORKDIR $APP_HOME
 
@@ -107,10 +120,7 @@ RUN mkdir -p "$APP_HOME" \
 RUN chown -R www-data:www-data "$APP_HOME" \
     && rm -rf /var/www/html && ln -s "$APP_HOME"  "/var/www/html"
 
-# COPY entrypoint.sh  "/usr/src/entrypoint.sh" #
-# chmod 775 "/usr/src/entrypoint.sh" \ #
-#     &&  #
-
+VOLUME ["$STORAGE_DIR"]
 STOPSIGNAL TERM
 
 
