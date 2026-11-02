@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      # develop/main require PRs (rulesets). Sync onto a bot branch, then open a PR.
+      # main requires PRs (rulesets). Sync onto a bot branch, then open a PR.
       - name: Sync upstream and open PR
         if: github.event_name != 'pull_request'
         env:
@@ -61,7 +61,7 @@ jobs:
           - Automated sync of `rutorrent/ext/` and `rutorrent/themes/` from `rutorrent/sources.yaml`
 
           ## Notes
-          Branch protection requires a pull request into `develop`/`main`; this workflow no longer pushes those branches directly.
+          Branch protection requires a pull request into `main`; this workflow no longer pushes that branch directly.
           EOF
           )"
           fi
