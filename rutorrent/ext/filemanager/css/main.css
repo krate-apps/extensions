@@ -65,6 +65,7 @@ input.text-long {
 #flm_popup_nfo_view-content pre, #flm_popup_console-log-container pre {
     font-family: "Courier New", Courier, monospace;
     font-size: 9pt;
+    overflow: initial;
 }
 
 #flm_popup_console .flm-sprite-loading-create
@@ -212,7 +213,7 @@ input.text-long {
 div[id^="flm"] .input-group input, div[id^="flm"] .input-group select
 {
     color: inherit;
-    background-color: field;
+    background-color: inherit;
 }
 
 
