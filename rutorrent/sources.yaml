@@ -61,9 +61,6 @@ themes:
   - repo: themightykitten/ruTorrent-MaterialDesign
     target: MaterialDesign
     path: .
-  - repo: krate-apps/krate-torrent
-    target: Krate
-    path: .
   - repo: Teal-c/rtModern-Remix
     target: rtModern-Remix
     path: .

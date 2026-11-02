@@ -1,0 +1,10 @@
+theUILang.krAppearance   = "外观";
+theUILang.krVariantAuto  = "自动 (HarmonyUI)";
+theUILang.krVariantDark  = "深色";
+theUILang.krVariantLight = "浅色";
+theUILang.kr_var_auto   = "自动";
+theUILang.kr_wn_title   = "Krate 更新";
+theUILang.kr_wn_link    = "更新说明";
+theUILang.kr_wn_close   = "关闭";
+theUILang.kr_wn_none    = "暂无更新说明。";
+theUILang.kr_wn_version = "Krate v{version}";

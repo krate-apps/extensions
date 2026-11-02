@@ -9,7 +9,7 @@
  */
 ;(function () {
 	/* var: scripts/release.sh rewrites this literal on bump. Also used as ?kr= cache-bust. */
-	var KR_VERSION = "1.0.1";
+	var KR_VERSION = "0.0.0";
 	const VARIANTS = ["dark", "light"];
 	const OVERRIDE_KEY = "kr-rutorrent-variant";
 	const LIB_MODULES = ["variants", "i18n", "dom", "markdown"];

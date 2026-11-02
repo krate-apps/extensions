@@ -1,13 +1,11 @@
 # Krate
 
-![Krate, Dark](docs/screenshots/main-dark.webp)
-
 ruTorrent theme aligned with HarmonyUI (sky accent, Dark / Light).
 
 **Distribution**
 
-- **Any ruTorrent** — copy or symlink this `Krate/` tree into `plugins/theme/themes/` (see Install). GitHub Releases ship a standalone archive when this theme repo tags a version.
-- **KRATE** — included automatically in KRATE app / extensions releases; install/update sets `$defaultTheme = "Krate"`.
+- **Any ruTorrent** — copy or symlink this tree into `plugins/theme/themes/Krate/` (see Install).
+- **KRATE** — synced into `krate-apps/extensions/rutorrent/themes/Krate` on each push; install/update sets `$defaultTheme = "Krate"`.
 
 ## Variants
 
@@ -18,8 +16,6 @@ ruTorrent theme aligned with HarmonyUI (sky accent, Dark / Light).
 | **Auto** | HarmonyUI `krate_theme` cookie → `localStorage.theme` → `prefers-color-scheme`. |
 
 Choose a variant next to the stock theme list in Settings. Auto re-checks when the tab regains focus.
-
-Screenshots: [docs/screenshots/README.md](docs/screenshots/README.md). Re-capture against a live install if the chrome has changed.
 
 ## Install
 
@@ -40,15 +36,13 @@ Reload ruTorrent. Auto mode needs a `krate_theme` cookie or `localStorage.theme`
 
 ## Development
 
-- Script contract: [docs/JS.md](docs/JS.md)
 - Tests: `npm test`
 - Catalog: `sh scripts/i18n.sh`
 - Bump SemVer + local changelogs (cache-bust `?kr=<version>`, What’s New): `bash scripts/release.sh`
-- GitHub draft notes: Release Drafter (`.github/release-drafter.yml`)
 
 ## Translations
 
-Catalog under `lang/`. Procedure: [TRANSLATING.md](TRANSLATING.md).
+Catalog under `lang/`.
 
 ## Changelog
 

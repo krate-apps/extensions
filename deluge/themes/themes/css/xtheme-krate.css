@@ -1,0 +1,850 @@
+/*
+ * Krate xtheme for Deluge WebUI (ExtJS).
+ * Flat HarmonyUI shell (ruTorrent parity) — kills Ext 9-slice/gradients.
+ * Variant: :root[data-kr-variant="dark"|"light"] (set by init.js).
+ *
+ * Do NOT blank background-image on .x-btn-text — toolbar icons live there.
+ * Do NOT change grid/list padding/heights — Ext measures those precisely.
+ */
+
+:root,
+:root[data-kr-variant="dark"] {
+	--kr-background: #171519;
+	--kr-foreground: #f5f5f5;
+	--kr-surface: #1c1a1f;
+	--kr-surface-2: #222027;
+	--kr-surface-3: #2a272e;
+	--kr-chrome: #1c1a1f;
+	--kr-muted: #222027;
+	--kr-fg-muted: #a3a3a3;
+	--kr-border: #3f3f46;
+	--kr-border-soft: #2a2a30;
+	--kr-input: #141218;
+	--kr-primary: #0ea5e9;
+	--kr-primary-fg: #0b1220;
+	--kr-primary-text: #38bdf8;
+	--kr-accent: #38bdf8;
+	--kr-destructive: #ef4444;
+	--kr-ring: #38bdf8;
+	--kr-focus: rgba(14, 165, 233, 0.35);
+	--kr-scrollbar-track: #141218;
+	--kr-scrollbar-thumb: #0ea5e9;
+	--kr-scrollbar-thumb-hover: #38bdf8;
+	--kr-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+	--kr-shadow-soft: 0 6px 16px rgba(0, 0, 0, 0.3);
+	--kr-speed-down: #38bdf8;
+	--kr-speed-up: #22c55e;
+	--kr-prg-start: #0284c7;
+	--kr-prg-end: #38bdf8;
+	--kr-state-downloading: #38bdf8;
+	--kr-state-seeding: #22c55e;
+	--kr-state-paused: #fbbf24;
+	--kr-state-stopped: #a3a3a3;
+	--kr-state-error: #ef4444;
+	--kr-icon: #a3a3a3;
+	--kr-icon-hover: #f5f5f5;
+	color-scheme: dark;
+}
+
+:root[data-kr-variant="light"] {
+	--kr-background: #d8dee8;
+	--kr-foreground: #0f172a;
+	--kr-surface: #e8edf4;
+	--kr-surface-2: #dde3ec;
+	--kr-surface-3: #cfd6e0;
+	--kr-chrome: #ffffff;
+	--kr-muted: #dde3ec;
+	--kr-fg-muted: #334155;
+	--kr-border: #94a3b8;
+	--kr-border-soft: #cbd5e1;
+	--kr-input: #f8fafc;
+	--kr-primary: #0284c7;
+	--kr-primary-fg: #ffffff;
+	--kr-primary-text: #0369a1;
+	--kr-accent: #0369a1;
+	--kr-destructive: #b91c1c;
+	--kr-ring: #0284c7;
+	--kr-focus: rgba(2, 132, 199, 0.32);
+	--kr-scrollbar-track: #dde3ec;
+	--kr-scrollbar-thumb: #0284c7;
+	--kr-scrollbar-thumb-hover: #0369a1;
+	--kr-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+	--kr-shadow-soft: 0 6px 16px rgba(15, 23, 42, 0.08);
+	--kr-speed-down: #0369a1;
+	--kr-speed-up: #15803d;
+	--kr-prg-start: #0369a1;
+	--kr-prg-end: #0ea5e9;
+	--kr-state-downloading: #0284c7;
+	--kr-state-seeding: #15803d;
+	--kr-state-paused: #b45309;
+	--kr-state-stopped: #475569;
+	--kr-state-error: #b91c1c;
+	--kr-icon: #334155;
+	--kr-icon-hover: #0369a1;
+	color-scheme: light;
+}
+
+:root {
+	--kr-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+	--kr-radius: 10px;
+	--kr-radius-sm: 8px;
+	--kr-radius-lg: 14px;
+	accent-color: var(--kr-primary);
+}
+
+html,
+body {
+	background: var(--kr-background) !important;
+	color: var(--kr-foreground) !important;
+	font-family: var(--kr-font) !important;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--kr-scrollbar-track); }
+::-webkit-scrollbar-thumb {
+	background: var(--kr-scrollbar-thumb);
+	border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--kr-scrollbar-thumb-hover); }
+
+.ext-el-mask { background: rgba(0, 0, 0, 0.55) !important; }
+.ext-el-mask-msg,
+.x-mask-loading div {
+	background: var(--kr-surface) !important;
+	border: 1px solid var(--kr-border) !important;
+	color: var(--kr-foreground) !important;
+	border-radius: var(--kr-radius-lg);
+	box-shadow: var(--kr-shadow);
+}
+
+/* ==========================================================================
+ * Nuclear: strip Ext blue/gray theme sprites (9-slice, tabs, toolbars).
+ * Keep .x-btn-text backgrounds — those are Deluge action icons.
+ * ========================================================================== */
+.x-window-tc,
+.x-window-tl,
+.x-window-tr,
+.x-window-bc,
+.x-window-bl,
+.x-window-br,
+.x-window-ml,
+.x-window-mr,
+.x-window-mc,
+.x-panel-tc,
+.x-panel-tl,
+.x-panel-tr,
+.x-panel-bc,
+.x-panel-bl,
+.x-panel-br,
+.x-panel-ml,
+.x-panel-mr,
+.x-panel-mc,
+.x-panel-header,
+.x-toolbar,
+.x-toolbar .xtb-sep,
+.x-toolbar-more-icon,
+.x-btn-tl,
+.x-btn-tr,
+.x-btn-tc,
+.x-btn-ml,
+.x-btn-mr,
+.x-btn-mc,
+.x-btn-bl,
+.x-btn-br,
+.x-btn-bc,
+.x-btn-mc em.x-btn-arrow,
+.x-btn-mc em.x-btn-arrow-bottom,
+.x-btn-mc em.x-btn-split,
+.x-btn-mc em.x-btn-split-bottom,
+.x-btn-over .x-btn-mc em.x-btn-split,
+.x-btn-click .x-btn-mc em.x-btn-split,
+.x-btn-menu-active .x-btn-mc em.x-btn-split,
+.x-btn-pressed .x-btn-mc em.x-btn-split,
+.x-btn-over .x-btn-mc em.x-btn-split-bottom,
+.x-btn-click .x-btn-mc em.x-btn-split-bottom,
+.x-btn-menu-active .x-btn-mc em.x-btn-split-bottom,
+.x-btn-pressed .x-btn-mc em.x-btn-split-bottom,
+.x-toolbar .x-btn-mc em.x-btn-split,
+.x-toolbar .x-btn-mc em.x-btn-split-bottom,
+ul.x-tab-strip-top,
+ul.x-tab-strip-bottom,
+.x-tab-strip-top .x-tab-right,
+.x-tab-strip-top .x-tab-left,
+.x-tab-strip-top .x-tab-strip-inner,
+.x-tab-strip-bottom .x-tab-right,
+.x-tab-strip-bottom .x-tab-left,
+.x-tab-strip-bottom .x-tab-strip-over .x-tab-right,
+.x-tab-strip-bottom .x-tab-strip-over .x-tab-left,
+.x-tab-strip-bottom .x-tab-strip-active .x-tab-right,
+.x-tab-strip-bottom .x-tab-strip-active .x-tab-left,
+.x-tab-scroller-left,
+.x-tab-scroller-right,
+.x-tab-strip .x-tab-strip-closable a.x-tab-strip-close,
+.x-progress-inner,
+.x-menu,
+.x-menu-item-active,
+.x-menu-item-arrow,
+.x-menu-scroller-top,
+.x-menu-scroller-bottom,
+.x-tool,
+td.x-grid3-hd-over .x-grid3-hd-inner,
+td.sort-desc .x-grid3-hd-inner,
+td.sort-asc .x-grid3-hd-inner,
+td.x-grid3-hd-menu-open .x-grid3-hd-inner,
+.x-grid3-hd-btn,
+.x-date-middle,
+.x-date-left,
+.x-date-right,
+.x-date-bottom,
+.x-date-inner th,
+.x-date-mp-btns {
+	background-image: none !important;
+}
+
+/* Surfaces */
+.x-panel,
+.x-panel-body,
+.x-panel-bwrap,
+.x-panel-bbar,
+.x-panel-tbar,
+.x-panel-header,
+.x-panel-mc,
+.x-tab-panel,
+.x-tab-panel-body,
+.x-tab-panel-header,
+.x-viewport,
+.x-border-layout-ct {
+	background-color: var(--kr-surface) !important;
+	background-image: none !important;
+	border-color: var(--kr-border) !important;
+	color: var(--kr-foreground) !important;
+}
+
+.x-panel-header,
+.x-window-header,
+.x-window-header-text,
+.x-panel-header-text,
+.x-tab-strip span.x-tab-strip-text {
+	color: var(--kr-foreground) !important;
+	font-family: var(--kr-font) !important;
+}
+
+.x-panel-header {
+	background-color: var(--kr-chrome) !important;
+	border-bottom: 1px solid var(--kr-border-soft) !important;
+	font-weight: 600 !important;
+}
+
+/* Brand mark in window titles (injected by chrome.js) */
+.x-window-header-text .kr-win-brand {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin-right: 8px;
+	vertical-align: -3px;
+	background-color: var(--kr-primary);
+	-webkit-mask: var(--kr-mark-url) center / contain no-repeat;
+	mask: var(--kr-mark-url) center / contain no-repeat;
+}
+
+/* ==========================================================================
+ * Toolbar — flat app bar (ruTorrent-like), ghost icon buttons
+ * ========================================================================== */
+.x-toolbar,
+.x-toolbar-ct,
+.x-panel-tbar .x-toolbar,
+.x-panel-bbar .x-toolbar {
+	background-color: var(--kr-chrome) !important;
+	background-image: none !important;
+	border-color: var(--kr-border-soft) !important;
+	color: var(--kr-foreground) !important;
+	padding: 6px 10px !important;
+}
+#deluge-toolbar,
+.x-panel-tbar > .x-toolbar {
+	min-height: 48px !important;
+	padding: 8px 14px !important;
+	border: 0 !important;
+	border-bottom: 1px solid var(--kr-border) !important;
+	/* Sky accent line — same signal as ruTorrent topbar. */
+	background-image: linear-gradient(to right, var(--kr-primary), var(--kr-primary)) !important;
+	background-repeat: no-repeat !important;
+	background-position: left bottom !important;
+	background-size: 100% 2px !important;
+	box-shadow: none !important;
+}
+.x-toolbar .xtb-sep {
+	background: var(--kr-border-soft) !important;
+	width: 1px !important;
+	height: 22px !important;
+	margin: 0 8px !important;
+	border: 0 !important;
+}
+
+.x-btn-tl,
+.x-btn-tr,
+.x-btn-tc,
+.x-btn-ml,
+.x-btn-mr,
+.x-btn-mc,
+.x-btn-bl,
+.x-btn-br,
+.x-btn-bc {
+	background-color: transparent !important;
+}
+
+.x-btn {
+	background: transparent !important;
+	border: 1px solid transparent !important;
+	border-radius: var(--kr-radius-sm) !important;
+}
+.x-toolbar .x-btn {
+	margin: 0 2px !important;
+}
+.x-btn button,
+.x-btn .x-btn-text {
+	color: var(--kr-foreground) !important;
+	font-family: var(--kr-font) !important;
+	background-repeat: no-repeat !important;
+}
+.x-btn-over {
+	background: color-mix(in srgb, var(--kr-primary) 12%, var(--kr-surface-2)) !important;
+	border-color: var(--kr-border) !important;
+}
+.x-btn-over button,
+.x-btn-over .x-btn-text {
+	color: var(--kr-primary-text) !important;
+}
+.x-btn-click,
+.x-btn-pressed {
+	background: color-mix(in srgb, var(--kr-primary) 22%, var(--kr-surface-2)) !important;
+	border-color: var(--kr-primary) !important;
+}
+.x-btn-click button,
+.x-btn-pressed button,
+.x-btn-click .x-btn-text,
+.x-btn-pressed .x-btn-text {
+	color: var(--kr-primary-text) !important;
+}
+
+/* Dialog footer / labeled buttons — solid chips, not Ext bevels */
+.x-window-bbar .x-btn,
+.x-panel-bbar .x-btn,
+.x-window .x-panel-btns .x-btn {
+	background: var(--kr-surface-3) !important;
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius-sm) !important;
+	margin-left: 6px !important;
+}
+.x-window-bbar .x-btn-over,
+.x-panel-bbar .x-btn-over,
+.x-window .x-panel-btns .x-btn-over {
+	background: color-mix(in srgb, var(--kr-primary) 14%, var(--kr-surface-2)) !important;
+	border-color: var(--kr-primary) !important;
+}
+
+/*
+ * Deluge often sets icon:/iconCls without .x-btn-text-icon (Create/Add/…).
+ * Always reserve left space whenever an icon class or bg is present.
+ */
+.x-btn-text-icon .x-btn-text,
+.x-btn .x-btn-text[class*="icon-"],
+.x-btn button[class*="icon-"],
+.x-btn-text-icon button {
+	padding-left: 22px !important;
+	background-position: 3px center !important;
+	background-repeat: no-repeat !important;
+}
+/* Preferences / Connection Manager: ::before mask icons (see chrome.js) — no extra bg padding. */
+.x-btn .x-btn-text.x-deluge-preferences,
+.x-btn .x-btn-text.x-deluge-connection-manager,
+.x-btn button.x-deluge-preferences,
+.x-btn button.x-deluge-connection-manager {
+	padding-left: 6px !important;
+	background-image: none !important;
+}
+.x-btn-icon .x-btn-text,
+.x-btn-icon button {
+	padding-left: 0 !important;
+	background-position: center !important;
+	width: 16px !important;
+	height: 16px !important;
+}
+.x-btn button > img,
+.x-btn .x-btn-text > img {
+	display: inline-block !important;
+	width: 16px !important;
+	height: 16px !important;
+	margin: 0 6px 0 0 !important;
+	padding: 0 !important;
+	vertical-align: -3px !important;
+	background: none !important;
+}
+
+.x-window-bbar .x-toolbar,
+.x-panel-bbar .x-toolbar {
+	background: var(--kr-surface-2) !important;
+	border-top: 1px solid var(--kr-border) !important;
+	padding: 8px 12px !important;
+}
+
+/* Hide ExtJS window chrome icon slot — we inject .kr-win-brand instead. */
+.x-window-header .x-window-icon,
+.x-window-tc .x-window-header img {
+	display: none !important;
+}
+
+/* ==========================================================================
+ * Tabs — underline active, no sprite caps
+ * ========================================================================== */
+.x-tab-strip-top,
+.x-tab-strip-wrap,
+.x-tab-panel-header {
+	background-color: var(--kr-chrome) !important;
+	background-image: none !important;
+	border-color: var(--kr-border-soft) !important;
+	border-bottom: 1px solid var(--kr-border) !important;
+	padding-top: 4px !important;
+}
+.x-tab-strip-active span.x-tab-strip-text {
+	color: var(--kr-primary-text) !important;
+	font-weight: 600 !important;
+}
+ul.x-tab-strip li {
+	background: transparent !important;
+	border-color: transparent !important;
+	margin-right: 2px !important;
+}
+ul.x-tab-strip li.x-tab-strip-active {
+	background: transparent !important;
+	border-radius: 0 !important;
+	border-bottom: 2px solid var(--kr-primary) !important;
+}
+ul.x-tab-strip li.x-tab-strip-over {
+	background: color-mix(in srgb, var(--kr-primary) 8%, transparent) !important;
+	border-radius: var(--kr-radius-sm) var(--kr-radius-sm) 0 0;
+}
+.x-tab-strip-top .x-tab-right,
+.x-tab-strip-top .x-tab-left,
+.x-tab-strip-top .x-tab-strip-inner {
+	background-color: transparent !important;
+	padding-bottom: 6px !important;
+}
+
+/*
+ * Grids / ListView — colors only.
+ * Never change padding, borders, or heights on rows/cells.
+ */
+.x-grid3,
+.x-grid3-header,
+.x-grid3-header-inner,
+.x-grid3-header-offset,
+.x-grid3-body,
+.x-grid3-scroller {
+	background-color: var(--kr-surface) !important;
+	background-image: none !important;
+	color: var(--kr-foreground) !important;
+	font-family: var(--kr-font) !important;
+}
+.x-grid3-hd-inner,
+.x-grid3-cell-inner {
+	color: var(--kr-foreground) !important;
+	font-family: var(--kr-font) !important;
+}
+.x-grid3-header,
+.x-grid3-hd {
+	background-color: var(--kr-surface-2) !important;
+	background-image: none !important;
+	color: var(--kr-fg-muted) !important;
+	border-color: var(--kr-border-soft) !important;
+}
+.x-grid3-row {
+	background-color: var(--kr-surface) !important;
+	background-image: none !important;
+	border-color: var(--kr-border-soft) !important;
+}
+.x-grid3-row-alt { background-color: var(--kr-surface-2) !important; }
+.x-grid3-row-over {
+	background-color: color-mix(in srgb, var(--kr-primary) 12%, transparent) !important;
+}
+.x-grid3-row-selected {
+	background-color: color-mix(in srgb, var(--kr-primary) 22%, transparent) !important;
+}
+
+/* Preferences sidebar + Edit Trackers ListView */
+.x-list-body,
+.x-list-body-inner,
+.x-list-wrap,
+.x-panel-body .x-list-body {
+	background: var(--kr-surface-2) !important;
+	color: var(--kr-foreground) !important;
+}
+.x-list-item,
+.x-list-body dl {
+	color: var(--kr-foreground) !important;
+}
+.x-list-selected,
+.x-list-item.x-list-selected {
+	background: color-mix(in srgb, var(--kr-primary) 18%, transparent) !important;
+	color: var(--kr-primary-text) !important;
+	/* No border/padding — Ext ListView row metrics (Edit Trackers). */
+}
+.x-list-over {
+	background: color-mix(in srgb, var(--kr-primary) 10%, transparent) !important;
+}
+.x-tree,
+.x-tree-node,
+.x-tree-node a span {
+	background: transparent !important;
+	color: var(--kr-foreground) !important;
+}
+.x-tree-node .x-tree-selected {
+	background: color-mix(in srgb, var(--kr-primary) 18%, transparent) !important;
+}
+.x-tree-node-over {
+	background: color-mix(in srgb, var(--kr-primary) 10%, transparent) !important;
+}
+
+/* ==========================================================================
+ * Windows / modals — flat 14px shell like ruTorrent dialogs
+ * (no overflow:hidden — Ext fit layouts clip otherwise)
+ * ========================================================================== */
+.x-window,
+.x-window-bwrap,
+.x-window-body,
+.x-window-mc,
+.x-window-plain .x-window-mc,
+.x-window-dlg .x-window-body {
+	background-color: var(--kr-surface) !important;
+	background-image: none !important;
+	color: var(--kr-foreground) !important;
+}
+.x-window {
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius-lg) !important;
+	box-shadow: var(--kr-shadow) !important;
+	background-color: var(--kr-surface) !important;
+}
+.x-window-tl,
+.x-window-tr,
+.x-window-tc,
+.x-window-ml,
+.x-window-mr,
+.x-window-mc,
+.x-window-bl,
+.x-window-br,
+.x-window-bc {
+	background-color: var(--kr-surface) !important;
+}
+.x-window-tl,
+.x-window-tr,
+.x-window-tc {
+	background-color: var(--kr-surface) !important;
+	border-bottom: 1px solid var(--kr-border) !important;
+}
+.x-window-header {
+	background: transparent !important;
+	background-image: none !important;
+}
+.x-window-header-text {
+	color: var(--kr-foreground) !important;
+	font-size: 15px !important;
+	font-weight: 600 !important;
+	font-family: var(--kr-font) !important;
+}
+.x-window-body {
+	border-top-color: transparent !important;
+}
+.x-tool {
+	filter: none !important;
+	opacity: 0.7;
+	background-color: transparent !important;
+}
+.x-tool:hover { opacity: 1; }
+
+/* Forms — Krate inputs */
+.x-form-textarea,
+textarea.x-form-field,
+.x-form-text,
+input.x-form-text,
+.x-form-field {
+	background: var(--kr-input) !important;
+	color: var(--kr-foreground) !important;
+	font-family: var(--kr-font) !important;
+	box-shadow: none !important;
+}
+
+.x-form-item .x-form-text:not(.x-form-field-wrap .x-form-text),
+.x-form-item input.x-form-text,
+.x-form-textarea,
+textarea.x-form-field {
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius-sm) !important;
+	padding: 5px 10px !important;
+	background-image: none !important;
+}
+.x-form-item .x-form-text:focus,
+.x-form-textarea:focus,
+textarea.x-form-field:focus {
+	border-color: var(--kr-ring) !important;
+	box-shadow: 0 0 0 2px var(--kr-focus) !important;
+}
+
+/*
+ * ExtJS combo: border on the INPUT; trigger overlays its right padding.
+ * Do NOT border the wrap — Ext sizes the wrap to the input only.
+ */
+.x-form-field-wrap {
+	position: relative !important;
+	border: none !important;
+	background: transparent !important;
+	overflow: visible !important;
+	padding: 0 !important;
+	vertical-align: middle;
+	display: inline-block;
+	box-shadow: none !important;
+}
+.x-form-field-wrap .x-form-text,
+.x-form-field-wrap input.x-form-text,
+.x-form-field-wrap .x-form-field {
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius-sm) !important;
+	background: var(--kr-input) !important;
+	background-image: none !important;
+	box-shadow: none !important;
+	padding: 4px 26px 4px 10px !important;
+	height: 26px !important;
+	line-height: 16px !important;
+	box-sizing: border-box !important;
+}
+.x-form-field-wrap-focus .x-form-text,
+.x-trigger-wrap-focus .x-form-text,
+.x-form-field-wrap .x-form-focus,
+.x-form-field-wrap input.x-form-focus {
+	border-color: var(--kr-ring) !important;
+	box-shadow: 0 0 0 2px var(--kr-focus) !important;
+}
+.x-form-field-wrap .x-form-trigger,
+.x-form-field-wrap img.x-form-trigger {
+	border: 0 !important;
+	border-bottom: 0 !important;
+	background-color: transparent !important;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23a3a3a3' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") !important;
+	background-repeat: no-repeat !important;
+	background-position: center center !important;
+	background-size: 10px 6px !important;
+	width: 22px !important;
+	height: 24px !important;
+	top: 1px !important;
+	right: 1px !important;
+	position: absolute !important;
+	opacity: 1 !important;
+}
+:root[data-kr-variant="light"] .x-form-field-wrap .x-form-trigger,
+:root[data-kr-variant="light"] .x-form-field-wrap img.x-form-trigger {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23334155' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") !important;
+}
+.x-form-field-wrap .x-form-trigger-over,
+.x-form-field-wrap .x-form-trigger-click {
+	background-color: transparent !important;
+	filter: brightness(1.25);
+}
+
+.x-window select.x-form-field,
+.x-form-item select,
+.x-form-select-one {
+	appearance: none;
+	-webkit-appearance: none;
+	background-color: var(--kr-input) !important;
+	background-image: linear-gradient(45deg, transparent 50%, var(--kr-fg-muted) 50%),
+		linear-gradient(135deg, var(--kr-fg-muted) 50%, transparent 50%) !important;
+	background-position: calc(100% - 14px) calc(50% - 1px), calc(100% - 10px) calc(50% - 1px) !important;
+	background-size: 4px 4px, 4px 4px !important;
+	background-repeat: no-repeat !important;
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius-sm) !important;
+	color: var(--kr-foreground) !important;
+	padding: 5px 28px 5px 10px !important;
+	font-family: var(--kr-font) !important;
+}
+.x-window select.x-form-field:focus,
+.x-form-item select:focus,
+.x-form-select-one:focus {
+	border-color: var(--kr-ring) !important;
+	box-shadow: 0 0 0 2px var(--kr-focus) !important;
+	outline: none !important;
+}
+
+.x-form-item-label,
+.x-form-item label,
+fieldset legend,
+.x-fieldset-header-text {
+	color: var(--kr-fg-muted) !important;
+	font-family: var(--kr-font) !important;
+}
+fieldset,
+.x-fieldset {
+	border: 1px solid var(--kr-border-soft) !important;
+	border-radius: var(--kr-radius) !important;
+	padding: 10px 12px 12px !important;
+	margin-bottom: 12px !important;
+	background: color-mix(in srgb, var(--kr-surface-2) 55%, transparent) !important;
+}
+.x-form-check-wrap input,
+.x-form-checkbox,
+input[type="checkbox"],
+input[type="radio"] {
+	accent-color: var(--kr-primary);
+	width: 15px;
+	height: 15px;
+}
+
+/* Combobox dropdown */
+.x-combo-list {
+	background: var(--kr-surface) !important;
+	background-image: none !important;
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius) !important;
+	box-shadow: var(--kr-shadow) !important;
+	padding: 4px !important;
+}
+.x-combo-list-inner {
+	background: var(--kr-surface) !important;
+	border: none !important;
+}
+.x-combo-list-item {
+	color: var(--kr-foreground) !important;
+	border-radius: 6px !important;
+	padding: 6px 8px !important;
+	border: none !important;
+}
+.x-combo-selected {
+	background: color-mix(in srgb, var(--kr-primary) 20%, transparent) !important;
+	color: var(--kr-primary-text) !important;
+	border: none !important;
+	outline: none !important;
+}
+.x-combo-list .x-combo-selected {
+	border: none !important;
+}
+
+/* Context menus — flat card */
+.x-menu,
+.x-menu-floating,
+.x-menu-list {
+	background: var(--kr-chrome) !important;
+	background-image: none !important;
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius) !important;
+	box-shadow: var(--kr-shadow);
+	padding: 6px !important;
+}
+.x-menu-item-text,
+.x-menu-list-item { color: var(--kr-foreground) !important; }
+.x-menu-item-active {
+	background: color-mix(in srgb, var(--kr-primary) 14%, transparent) !important;
+	background-image: none !important;
+	border-color: transparent !important;
+	border-radius: 6px !important;
+}
+.x-menu-sep {
+	border-top: 1px solid var(--kr-border-soft) !important;
+	background: transparent !important;
+	margin: 4px 6px !important;
+}
+
+.x-progress-wrap {
+	background: var(--kr-surface-3) !important;
+	border-color: var(--kr-border) !important;
+	border-radius: 999px;
+	overflow: hidden;
+}
+.x-progress-inner {
+	background: var(--kr-surface-3) !important;
+}
+.x-progress-bar {
+	background: linear-gradient(90deg, var(--kr-prg-start), var(--kr-prg-end)) !important;
+	border: none !important;
+}
+.x-progress-text,
+.x-progress-text-back {
+	color: var(--kr-foreground) !important;
+	font-family: var(--kr-font) !important;
+}
+
+.x-statusbar,
+.x-status-text {
+	background: var(--kr-chrome) !important;
+	background-image: none !important;
+	border-color: var(--kr-border) !important;
+	border-top: 1px solid var(--kr-border) !important;
+	color: var(--kr-fg-muted) !important;
+}
+
+.x-tip,
+.x-tip-mc,
+.x-tip-body {
+	background: var(--kr-surface-2) !important;
+	background-image: none !important;
+	border-color: var(--kr-border) !important;
+	color: var(--kr-foreground) !important;
+	border-radius: var(--kr-radius-sm) !important;
+}
+
+a { color: var(--kr-primary-text) !important; }
+a:hover { color: var(--kr-primary) !important; }
+
+.x-grid3-row.downloading .x-grid3-cell-inner,
+.torrent-downloading { color: var(--kr-state-downloading) !important; }
+.x-grid3-row.seeding .x-grid3-cell-inner,
+.torrent-seeding { color: var(--kr-state-seeding) !important; }
+.x-grid3-row.paused .x-grid3-cell-inner,
+.torrent-paused { color: var(--kr-state-paused) !important; }
+.x-grid3-row.error .x-grid3-cell-inner,
+.torrent-error { color: var(--kr-state-error) !important; }
+
+#login,
+.x-window-login,
+body.x-body-masked {
+	background: var(--kr-background) !important;
+}
+
+#deluge-toolbar .kr-tb-brand,
+.x-toolbar .kr-tb-brand {
+	display: none !important;
+}
+
+/*
+ * Stock "Deluge" toolbar button — Krate favicon (see chrome.js --kr-favicon-url).
+ * Beats deluge.css `.x-deluge-main-panel { background-image: deluge.png !important }`.
+ */
+#tbar-deluge-text .x-btn-text,
+#tbar-deluge-text button,
+#tbar-deluge-text .x-deluge-main-panel,
+.x-btn .x-btn-text.x-deluge-main-panel,
+.x-btn button.x-deluge-main-panel,
+.x-deluge-main-panel {
+	color: var(--kr-foreground) !important;
+	font-weight: 600 !important;
+	opacity: 1 !important;
+	padding-left: 28px !important;
+	background-image: var(--kr-favicon-url, var(--kr-mark-url)) !important;
+	background-size: 18px 18px !important;
+	background-position: 4px center !important;
+	background-repeat: no-repeat !important;
+	position: relative;
+}
+#tbar-deluge-text.x-btn-disabled,
+#tbar-deluge-text.x-item-disabled,
+#tbar-deluge-text.x-btn-disabled .x-btn-text,
+#tbar-deluge-text.x-item-disabled .x-btn-text {
+	color: var(--kr-foreground) !important;
+	opacity: 1 !important;
+}
+#tbar-deluge-text .x-btn-text.x-deluge-main-panel::before,
+#tbar-deluge-text button.x-deluge-main-panel::before,
+.x-btn .x-btn-text.x-deluge-main-panel::before,
+.x-btn button.x-deluge-main-panel::before {
+	display: none !important;
+	content: none !important;
+}

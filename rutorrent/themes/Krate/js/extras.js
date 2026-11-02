@@ -324,11 +324,6 @@
 			addPanelFilters(list, F, cl, "pstate");
 			addPanelFilters(list, F, cl, "plabel");
 		}
-		/* The about module owns the opener; the command appears only once it has
-		 * registered, and runs lazily so load order between the two never matters. */
-		if (typeof kr.openWhatsNew === "function") {
-			list.push({ group: lang("krPalHelp", "Help"), label: lang("kr_wn_title", "What's new in Krate"), icon: "toolbar-help", run: function () { kr.openWhatsNew(); } });
-		}
 		return list;
 	}
 

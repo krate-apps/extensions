@@ -1,0 +1,10 @@
+theUILang.krAppearance   = "Apariencia";
+theUILang.krVariantAuto  = "Auto (HarmonyUI)";
+theUILang.krVariantDark  = "Oscuro";
+theUILang.krVariantLight = "Claro";
+theUILang.kr_var_auto   = "Auto";
+theUILang.kr_wn_title   = "Novedades de Krate";
+theUILang.kr_wn_link    = "Novedades";
+theUILang.kr_wn_close   = "Cerrar";
+theUILang.kr_wn_none    = "Aún no hay notas de la versión.";
+theUILang.kr_wn_version = "Krate v{version}";

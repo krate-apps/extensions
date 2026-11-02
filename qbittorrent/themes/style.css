@@ -1,0 +1,702 @@
+/*
+ * Krate theme for qBittorrent WebUI — HarmonyUI override (Mocha desktop).
+ * Tokens + [data-kr-variant]; injected via Caddy (+ init.js fallback).
+ */
+
+:root,
+:root[data-kr-variant="dark"] {
+	--kr-background: #171519;
+	--kr-foreground: #f5f5f5;
+	--kr-surface: #1c1a1f;
+	--kr-surface-2: #222027;
+	--kr-surface-3: #2a272e;
+	--kr-chrome: #1c1a1f;
+	--kr-muted: #222027;
+	--kr-fg-muted: #a3a3a3;
+	--kr-border: #3f3f46;
+	--kr-border-soft: #2a2a30;
+	--kr-input: #141218;
+	--kr-primary: #0ea5e9;
+	--kr-primary-fg: #0b1220;
+	--kr-primary-text: #38bdf8;
+	--kr-accent: #38bdf8;
+	--kr-accent-rgb: 14, 165, 233;
+	--kr-destructive: #ef4444;
+	--kr-ring: #38bdf8;
+	--kr-focus: rgba(14, 165, 233, 0.35);
+	--kr-scrollbar-track: #141218;
+	--kr-scrollbar-thumb: #0ea5e9;
+	--kr-scrollbar-thumb-hover: #38bdf8;
+	--kr-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+	--kr-shadow-soft: 0 6px 16px rgba(0, 0, 0, 0.3);
+	--kr-prg-start: #0284c7;
+	--kr-prg-end: #38bdf8;
+	--kr-speed-down: #38bdf8;
+	--kr-speed-up: #22c55e;
+	--kr-state-downloading: #38bdf8;
+	--kr-state-seeding: #22c55e;
+	--kr-state-paused: #fbbf24;
+	--kr-state-error: #ef4444;
+	--kr-icon: #a3a3a3;
+	--kr-icon-hover: #f5f5f5;
+	--kr-mark-url: url("images/brand/krate-mark.svg");
+	color-scheme: dark;
+}
+
+:root[data-kr-variant="light"] {
+	--kr-background: #d8dee8;
+	--kr-foreground: #0f172a;
+	--kr-surface: #e8edf4;
+	--kr-surface-2: #dde3ec;
+	--kr-surface-3: #cfd6e0;
+	--kr-chrome: #ffffff;
+	--kr-muted: #dde3ec;
+	--kr-fg-muted: #334155;
+	--kr-border: #94a3b8;
+	--kr-border-soft: #cbd5e1;
+	--kr-input: #f8fafc;
+	--kr-primary: #0284c7;
+	--kr-primary-fg: #ffffff;
+	--kr-primary-text: #0369a1;
+	--kr-accent: #0369a1;
+	--kr-accent-rgb: 2, 132, 199;
+	--kr-destructive: #b91c1c;
+	--kr-ring: #0284c7;
+	--kr-focus: rgba(2, 132, 199, 0.32);
+	--kr-scrollbar-track: #dde3ec;
+	--kr-scrollbar-thumb: #0284c7;
+	--kr-scrollbar-thumb-hover: #0369a1;
+	--kr-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+	--kr-shadow-soft: 0 6px 16px rgba(15, 23, 42, 0.08);
+	--kr-prg-start: #0369a1;
+	--kr-prg-end: #0ea5e9;
+	--kr-speed-down: #0369a1;
+	--kr-speed-up: #15803d;
+	--kr-state-downloading: #0284c7;
+	--kr-state-seeding: #15803d;
+	--kr-state-paused: #b45309;
+	--kr-state-error: #b91c1c;
+	--kr-icon: #334155;
+	--kr-icon-hover: #0369a1;
+	color-scheme: light;
+}
+
+:root {
+	--kr-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+	--kr-radius: 10px;
+	--kr-radius-sm: 8px;
+	--kr-radius-lg: 14px;
+	--kr-bar-height: 56px;
+	accent-color: var(--kr-primary);
+}
+
+html,
+body,
+#desktop,
+#desktopHeader,
+#pageWrapper,
+.panel,
+#desktopFooter,
+#mainWindowTabs {
+	background: var(--kr-background) !important;
+	color: var(--kr-foreground) !important;
+	font-family: var(--kr-font) !important;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--kr-scrollbar-track); }
+::-webkit-scrollbar-thumb {
+	background: var(--kr-scrollbar-thumb);
+	border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--kr-scrollbar-thumb-hover); }
+
+a { color: var(--kr-primary-text) !important; }
+a:hover { color: var(--kr-primary) !important; }
+
+/* ==========================================================================
+ * App bar — HarmonyUI 56px chrome + sky accent (ruTorrent / Deluge parity)
+ * ========================================================================== */
+#desktopHeader {
+	background: var(--kr-chrome) !important;
+	border-bottom: 1px solid var(--kr-border) !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+}
+
+#desktopNavbar {
+	min-height: 36px !important;
+	padding: 4px 12px 0 !important;
+	background: var(--kr-chrome) !important;
+	border: 0 !important;
+}
+#desktopNavbar ul {
+	display: flex !important;
+	align-items: center !important;
+	gap: 2px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+#desktopNavbar ul li a {
+	color: var(--kr-fg-muted) !important;
+	border: 0 !important;
+	border-radius: 8px !important;
+	padding: 6px 10px !important;
+	font-size: 13px !important;
+	font-weight: 500 !important;
+}
+#desktopNavbar ul li a:hover,
+#desktopNavbar li ul li a:hover {
+	background: color-mix(in srgb, var(--kr-primary) 14%, transparent) !important;
+	color: var(--kr-primary-text) !important;
+}
+#desktopNavbar li ul {
+	background: var(--kr-surface) !important;
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius) !important;
+	box-shadow: var(--kr-shadow-soft) !important;
+	background-image: none !important;
+	padding: 6px !important;
+	min-width: 200px;
+}
+#desktopNavbar li ul .divider,
+#desktopNavbar li ul li.divider {
+	border-top: 1px solid var(--kr-border-soft) !important;
+	margin: 4px 0 !important;
+}
+#desktopNavbar .MyMenuIcon {
+	filter: none !important;
+	opacity: 0.85;
+}
+
+/* Main toolbar row */
+#mochaToolbar,
+.mochaToolbar {
+	position: relative !important;
+	display: flex !important;
+	align-items: center !important;
+	flex-wrap: wrap !important;
+	gap: 4px 6px !important;
+	min-height: var(--kr-bar-height) !important;
+	padding: 8px 14px !important;
+	background: var(--kr-chrome) !important;
+	background-image: linear-gradient(
+		to right,
+		var(--kr-primary),
+		var(--kr-primary)
+	) !important;
+	background-repeat: no-repeat !important;
+	background-position: left bottom !important;
+	background-size: 100% 2px !important;
+	border: 0 !important;
+	border-bottom: 1px solid var(--kr-border) !important;
+	color: var(--kr-foreground) !important;
+}
+#mochaToolbar .divider,
+#mochaToolbar a.divider {
+	background-image: none !important;
+	border-left: 1px solid var(--kr-border-soft) !important;
+	margin-left: 6px !important;
+	padding-left: 10px !important;
+}
+
+/* Icon action chips */
+#mochaToolbar .mochaToolButton,
+#mochaToolbar img.mochaToolButton,
+#mochaToolbar a > img,
+#mochaToolbar label > img {
+	width: 22px !important;
+	height: 22px !important;
+	padding: 8px !important;
+	box-sizing: content-box !important;
+	border-radius: 10px !important;
+	opacity: 0.9;
+	filter: none !important;
+	transition: background 0.12s ease, opacity 0.12s ease;
+}
+#mochaToolbar a:hover > img,
+#mochaToolbar label:hover > img,
+#mochaToolbar .mochaToolButton:hover {
+	background: color-mix(in srgb, var(--kr-primary) 16%, transparent) !important;
+	opacity: 1;
+}
+:root[data-kr-variant="dark"] #mochaToolbar img {
+	filter: invert(0.92) brightness(1.05);
+}
+:root[data-kr-variant="light"] #mochaToolbar img {
+	filter: none;
+}
+
+/* Brand mark injected by chrome.js */
+#mochaToolbar .kr-tb-brand,
+.mochaToolbar .kr-tb-brand {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 28px !important;
+	height: 28px !important;
+	margin: 0 4px 0 0 !important;
+	vertical-align: middle !important;
+	border-radius: 8px !important;
+	background-color: color-mix(in srgb, var(--kr-primary) 16%, transparent) !important;
+	-webkit-mask: none !important;
+	mask: none !important;
+	background-image: var(--kr-favicon-url, var(--kr-mark-url)) !important;
+	background-size: 16px 16px !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+	flex: none !important;
+}
+#mochaToolbar .kr-tb-wordmark {
+	display: inline-flex !important;
+	align-items: center !important;
+	margin-right: 10px !important;
+	padding: 0 4px 0 0 !important;
+	font-size: 14px !important;
+	font-weight: 600 !important;
+	color: var(--kr-foreground) !important;
+	letter-spacing: 0.01em !important;
+	user-select: none;
+}
+
+/* Theme switcher parked after brand */
+#mochaToolbar #kr-chrome,
+#kr-chrome[data-kr-mounted="toolbar"] {
+	position: static !important;
+	top: auto !important;
+	right: auto !important;
+	margin: 0 12px 0 0 !important;
+	box-shadow: none !important;
+	background: var(--kr-surface-2) !important;
+	flex: none !important;
+	order: 0;
+}
+
+/* Tabs sit naturally in the flex toolbar */
+#mochaToolbar #mainWindowTabs,
+#mainWindowTabs {
+	background: transparent !important;
+	border: 0 !important;
+	margin-left: 8px !important;
+}
+#mainWindowTabs .tab-menu,
+.toolbarTabs .tab-menu {
+	display: flex !important;
+	gap: 4px !important;
+	background: transparent !important;
+}
+.toolbarTabs li,
+.toolbarTabs li a,
+#mainWindowTabs li,
+#mainWindowTabs li a {
+	background-image: none !important;
+	background: transparent !important;
+	border: 0 !important;
+	border-radius: 8px !important;
+	color: var(--kr-fg-muted) !important;
+	font-weight: 500 !important;
+}
+.toolbarTabs li.selected,
+#mainWindowTabs li.selected {
+	background: color-mix(in srgb, var(--kr-primary) 16%, transparent) !important;
+}
+.toolbarTabs li.selected a,
+.toolbarTabs li a:hover,
+#mainWindowTabs li.selected a,
+#mainWindowTabs li a:hover {
+	color: var(--kr-primary-text) !important;
+}
+#mainWindowTabs img {
+	filter: none;
+	opacity: 0.85;
+	vertical-align: -3px;
+	margin-right: 4px;
+}
+
+/* Filter strip inside toolbar */
+#torrentsFilterToolbar {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	margin-left: auto !important;
+	padding: 0 !important;
+	background: transparent !important;
+}
+#torrentsFilterToolbar label {
+	color: var(--kr-fg-muted) !important;
+	font-size: 12px !important;
+	font-weight: 500 !important;
+}
+#pageWrapper {
+	border-top: 0 !important;
+}
+
+/* ==========================================================================
+ * Filters sidebar
+ * ========================================================================== */
+#Filters,
+#filtersColumn,
+.filterTitle {
+	background: var(--kr-chrome) !important;
+	color: var(--kr-foreground) !important;
+	border-color: var(--kr-border) !important;
+}
+.filterTitle {
+	font-size: 11px !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.04em !important;
+	text-transform: uppercase !important;
+	color: var(--kr-fg-muted) !important;
+	padding: 10px 12px 6px !important;
+}
+ul.filterList a,
+.filterList a {
+	color: var(--kr-foreground) !important;
+	border-radius: 8px !important;
+	padding: 6px 10px !important;
+}
+ul.filterList li:hover,
+#Filters ul li:hover a {
+	background: color-mix(in srgb, var(--kr-primary) 12%, transparent) !important;
+	color: var(--kr-primary-text) !important;
+}
+.selectedFilter,
+#Filters ul li.selectedFilter a {
+	background: color-mix(in srgb, var(--kr-primary) 22%, transparent) !important;
+	color: var(--kr-primary-text) !important;
+}
+
+/* ==========================================================================
+ * Tables
+ * ========================================================================== */
+.dynamicTable,
+.torrentTable,
+.dynamicTableDiv,
+#torrentsTableDiv,
+#transferList {
+	background: var(--kr-surface) !important;
+	border-color: var(--kr-border) !important;
+	color: var(--kr-foreground) !important;
+}
+.dynamicTable th,
+.torrentTable th,
+.dynamicTableHeader > th {
+	background: var(--kr-surface-2) !important;
+	color: var(--kr-fg-muted) !important;
+	border-right-color: var(--kr-border-soft) !important;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	font-size: 11px !important;
+	font-weight: 600 !important;
+}
+.dynamicTable tbody tr,
+.torrentTable tr {
+	background: var(--kr-surface) !important;
+	color: var(--kr-foreground) !important;
+}
+.dynamicTable tbody tr:nth-child(even),
+.dynamicTable tbody tr.alt,
+.torrentTable tr:nth-child(even) {
+	background: var(--kr-surface-2) !important;
+}
+.dynamicTable tbody tr:hover,
+.torrentTable tr:hover {
+	background: color-mix(in srgb, var(--kr-primary) 10%, transparent) !important;
+}
+.dynamicTable tbody tr.selected,
+.torrentTable tr.selected {
+	background: color-mix(in srgb, var(--kr-primary) 22%, transparent) !important;
+	color: var(--kr-foreground) !important;
+}
+
+.panel-header,
+.toolbarTabs,
+.bottomPanel,
+.mochaToolbarWrapper,
+#propertiesPanel_header,
+#propertiesPanel_headerContent,
+#desktopFooter,
+#statusBar {
+	background: var(--kr-chrome) !important;
+	border-color: var(--kr-border) !important;
+	color: var(--kr-foreground) !important;
+}
+#statusBar {
+	min-height: 36px !important;
+	border-top: 1px solid var(--kr-border) !important;
+	color: var(--kr-fg-muted) !important;
+	font-size: 12px !important;
+}
+#statusBar img { opacity: 0.85; }
+.columnHandle,
+.horizontalHandle,
+#filtersColumn_handle,
+#transferList_handle {
+	background: var(--kr-border-soft) !important;
+	border-color: transparent !important;
+}
+
+.tab-menu li a {
+	color: var(--kr-fg-muted) !important;
+	background: transparent !important;
+}
+.tab-menu li.selected a,
+.tab-menu li a:hover {
+	color: var(--kr-primary-text) !important;
+}
+
+.progressbar_wrapper {
+	border: 0 !important;
+	border-radius: 999px !important;
+	overflow: hidden !important;
+	background: var(--kr-surface-3) !important;
+	height: 14px !important;
+}
+.progressbar_light {
+	background: var(--kr-surface-3) !important;
+	color: var(--kr-fg-muted) !important;
+}
+.progressbar_dark {
+	background: linear-gradient(90deg, var(--kr-prg-start), var(--kr-prg-end)) !important;
+	color: var(--kr-primary-fg) !important;
+}
+
+/* ==========================================================================
+ * Context menus / dialogs
+ * ========================================================================== */
+.contextMenu,
+#contextCategoryList {
+	background: var(--kr-surface) !important;
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius) !important;
+	box-shadow: var(--kr-shadow) !important;
+	color: var(--kr-foreground) !important;
+	padding: 6px !important;
+}
+.contextMenu li a { color: var(--kr-foreground) !important; border-radius: 6px !important; }
+.contextMenu li a:hover {
+	background: color-mix(in srgb, var(--kr-primary) 12%, transparent) !important;
+	color: var(--kr-primary-text) !important;
+}
+.contextMenu .separator,
+li.divider { border-top-color: var(--kr-border) !important; }
+
+.mochaCanvas { display: none !important; }
+.mocha,
+.mochaOverlay {
+	background: var(--kr-surface) !important;
+	color: var(--kr-foreground) !important;
+	box-shadow: var(--kr-shadow);
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius-lg) !important;
+}
+.mochaTitlebar,
+.mochaTitlebar.replaced {
+	background: var(--kr-chrome) !important;
+	border-bottom: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius-lg) var(--kr-radius-lg) 0 0 !important;
+	padding: 10px 14px !important;
+}
+.mochaTitlebar h3,
+.mochaTitle,
+.mocha.isFocused .mochaTitlebar h3 {
+	color: var(--kr-foreground) !important;
+	font-family: var(--kr-font) !important;
+	font-size: 15px !important;
+	font-weight: 600 !important;
+}
+.mochaContentBorder { border-color: var(--kr-border) !important; }
+.mochaContentWrapper,
+.mochaContent {
+	background: var(--kr-surface) !important;
+	color: var(--kr-foreground) !important;
+}
+.mochaToolbarWrapper,
+.mocha .mochaToolbar {
+	background: var(--kr-surface-2) !important;
+	border-color: var(--kr-border) !important;
+	background-image: none !important;
+}
+fieldset,
+fieldset.settings {
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius-sm) !important;
+	color: var(--kr-foreground) !important;
+}
+fieldset.settings legend {
+	color: var(--kr-primary-text) !important;
+}
+
+/* ==========================================================================
+ * Forms
+ * ========================================================================== */
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="file"],
+input[type="search"],
+input[name="category"],
+textarea,
+select,
+#torrentsFilterInput,
+#torrentFilesFilterInput {
+	background: var(--kr-input) !important;
+	color: var(--kr-foreground) !important;
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius-sm) !important;
+	outline: none;
+	font-family: var(--kr-font) !important;
+	min-height: 32px !important;
+	padding: 4px 10px !important;
+}
+select {
+	appearance: none;
+	-webkit-appearance: none;
+	padding-right: 28px !important;
+	background-image: linear-gradient(45deg, transparent 50%, var(--kr-fg-muted) 50%),
+		linear-gradient(135deg, var(--kr-fg-muted) 50%, transparent 50%) !important;
+	background-position: calc(100% - 14px) calc(50% - 1px), calc(100% - 10px) calc(50% - 1px) !important;
+	background-size: 4px 4px, 4px 4px !important;
+	background-repeat: no-repeat !important;
+}
+input:focus,
+textarea:focus,
+select:focus {
+	border-color: var(--kr-ring) !important;
+	box-shadow: 0 0 0 2px var(--kr-focus);
+}
+
+.mochaContent button,
+.mochaContent input[type="button"],
+.mochaContent input[type="submit"],
+#loginform #login,
+#main button,
+.confirmButton,
+.saveButton {
+	background: var(--kr-primary) !important;
+	border: none !important;
+	color: var(--kr-primary-fg) !important;
+	border-radius: var(--kr-radius-sm) !important;
+	font-family: var(--kr-font) !important;
+	font-weight: 600 !important;
+	min-height: 36px !important;
+	padding: 6px 14px !important;
+}
+.mochaContent button:hover,
+.mochaContent input[type="button"]:hover,
+.mochaContent input[type="submit"]:hover,
+#loginform #login:hover {
+	background: var(--kr-accent) !important;
+	color: var(--kr-primary-fg) !important;
+}
+
+#main {
+	background: var(--kr-surface) !important;
+	color: var(--kr-foreground) !important;
+	box-shadow: var(--kr-shadow) !important;
+	border-radius: var(--kr-radius);
+	border: 1px solid var(--kr-border) !important;
+}
+#main h1 { color: var(--kr-foreground) !important; }
+
+/* Login */
+#loginpage,
+#loginform {
+	background: var(--kr-background) !important;
+	color: var(--kr-foreground) !important;
+}
+#loginform {
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius-lg) !important;
+	box-shadow: var(--kr-shadow) !important;
+	padding: 28px !important;
+	background: var(--kr-surface) !important;
+}
+
+/* ==========================================================================
+ * Injected chrome (floating fallback until mounted into toolbar)
+ * ========================================================================== */
+#kr-chrome {
+	position: fixed;
+	z-index: 100000;
+	top: 10px;
+	right: 14px;
+	display: flex;
+	align-items: center;
+	gap: 0;
+	padding: 4px;
+	background: var(--kr-chrome);
+	border: 1px solid var(--kr-border);
+	border-radius: 999px;
+	box-shadow: var(--kr-shadow-soft);
+	font-family: var(--kr-font);
+	font-size: 12px;
+	color: var(--kr-foreground);
+	pointer-events: auto;
+}
+#kr-chrome .kr-mark,
+#kr-chrome button.kr-wn {
+	display: none !important;
+}
+#kr-chrome select.kr-variant {
+	appearance: none;
+	background-color: var(--kr-input);
+	color: var(--kr-foreground);
+	border: 1px solid var(--kr-border);
+	border-radius: 999px;
+	padding: 5px 26px 5px 12px;
+	font: inherit;
+	cursor: pointer;
+	background-image: linear-gradient(45deg, transparent 50%, var(--kr-fg-muted) 50%),
+		linear-gradient(135deg, var(--kr-fg-muted) 50%, transparent 50%);
+	background-position: calc(100% - 12px) 55%, calc(100% - 8px) 55%;
+	background-size: 4px 4px, 4px 4px;
+	background-repeat: no-repeat;
+}
+#krWhatsNew {
+	position: fixed;
+	z-index: 100001;
+	inset: 0;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.45);
+}
+#krWhatsNew[data-open="1"] { display: flex; }
+#krWhatsNew .kr-wn-panel {
+	width: min(560px, 92vw);
+	max-height: min(70vh, 640px);
+	overflow: auto;
+	background: var(--kr-surface);
+	color: var(--kr-foreground);
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius-lg);
+	box-shadow: var(--kr-shadow);
+	padding: 16px 18px 20px;
+	font-family: var(--kr-font);
+}
+#krWhatsNew .kr-wn-title {
+	margin: 0 0 12px;
+	font-size: 16px;
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+}
+#krWhatsNew .kr-wn-close {
+	background: var(--kr-surface-2) !important;
+	border: 1px solid var(--kr-border) !important;
+	color: var(--kr-foreground) !important;
+	border-radius: 8px;
+	padding: 4px 10px;
+	cursor: pointer;
+}
+#krWhatsNew .kr-wn-head { margin: 12px 0 6px; font-size: 14px; color: var(--kr-primary-text); }
+#krWhatsNew .kr-wn-list { margin: 0 0 8px 18px; }
+#krWhatsNew .kr-wn-p,
+#krWhatsNew .kr-wn-empty { color: var(--kr-fg-muted); }
+#krWhatsNew .kr-wn-code {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	background: var(--kr-surface-2);
+	padding: 1px 4px;
+	border-radius: 4px;
+}
