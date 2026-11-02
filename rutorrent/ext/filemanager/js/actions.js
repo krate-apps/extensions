@@ -25,33 +25,34 @@ export function FileManagerActions() {
         filePaths = flm.ui.filenav.getSelectedTarget() ? flm.getFullPaths(filePaths) : filePaths;
 
         validation.then(() => {
-            self.notify(theUILang.fStarts.copy + ": " + filePaths.length + " files");
+            self.notify([theUILang.fStarts.copy, filePaths.length, theUILang.Files.toLowerCase()].join(" "));
             return flm.api.copy(filePaths, destination);
         }).done(function () {
             // refresh in case we are in destination
             flm.refreshIfCurrentPath(destination);
-            flm.actions.notify(theUILang.flm_popup_copy + ": " + filePaths.length, 'success', 10000);
+            self.notify(theUILang.flm_popup_copy + ": " + filePaths.length, 'success', 10000);
         });
 
         return validation;
     }
 
     self.doDelete = function (checklist) {
-        let paths = flm.ui.dialogs.getCheckedList(checklist);
+        let filePaths = flm.ui.dialogs.getCheckedList(checklist);
         const cPath = flm.getCurrentPath();
 
         let validation = self.doValidation([
-            [!$type(paths) || paths.length === 0, theUILang.flm_empty_selection, checklist.find('input').get(0)],
+            [!$type(filePaths) || filePaths.length === 0, theUILang.flm_empty_selection, checklist.find('input').get(0)],
         ]);
 
         validation.then(() => {
-            paths = flm.getFullPaths(paths);
-            flm.actions.notify(theUILang.fStarts.delete + ": " + paths.length + " files");
-            return flm.api.removeFiles(paths);
+            filePaths = flm.getFullPaths(filePaths);
+            self.logConsole([theUILang.fStarts.delete, filePaths.length, theUILang.Files.toLowerCase()].join(" "))
+            return flm.api.removeFiles(filePaths);
         }).done(() => {
             //TODO: create event listeners for flm.refreshIfCurrentPath
             flm.refreshIfCurrentPath(cPath);
-            $(document).trigger(flm.EVENTS.delete, [paths, cPath]);
+            $(document).trigger(flm.EVENTS.delete, [filePaths, cPath]);
+            self.notify(theUILang.flm_popup_delete + ": " + filePaths.length, 'success', 10000);
         });
 
         return validation;
@@ -71,12 +72,12 @@ export function FileManagerActions() {
         filePaths = flm.ui.filenav.getSelectedTarget() ? flm.getFullPaths(filePaths) : filePaths;
 
         validation.then(() => {
-            self.notify(theUILang.fStarts.move + " " + filePaths.length + " files");
+            self.notify([theUILang.fStarts.move, filePaths.length, theUILang.Files.toLowerCase()].join(" "));
             return flm.api.move(filePaths, destination);
         }).done(function () {
             flm.refreshIfCurrentPath(destination) || flm.refreshIfCurrentPath(cPath);
             $(document).trigger(flm.EVENTS.move, [filePaths, destination, cPath]);
-            flm.actions.notify(theUILang.flm_popup_move + ": " + filePaths.length, 'success', 10000);
+            self.notify(theUILang.flm_popup_move + ": " + filePaths.length, 'success', 10000);
         });
 
         return validation;
@@ -94,8 +95,14 @@ export function FileManagerActions() {
             fields: [{input: path, err: msg}]
         }));
 
-        validation.then(() => flm.api.mkDir(flm.getCurrentPath(dirName)))
-            .done(() => flm.refreshIfCurrentPath(flm.getCurrentPath(dirName)));
+        const dirPath = flm.getCurrentPath(dirName);
+
+        validation.then(() => flm.api.mkDir(dirPath))
+            .done((response) => {
+                self.logConsole([theUILang.flm_popup_mkdir, '->', dirPath].join(" "));
+                flm.refreshIfCurrentPath(dirPath);
+                return response;
+            });
 
         return validation;
     }
@@ -117,6 +124,7 @@ export function FileManagerActions() {
 
         validation.then(() => flm.api.rename(source, destination))
             .done((response) => {
+                self.logConsole([theUILang.flm_popup_rename, ':', source, '->', destination].join(" "));
                 flm.refreshIfCurrentPath(cPath);
                 $(document).trigger(flm.EVENTS.rename, [source, destination]);
                 return response;
@@ -143,10 +151,6 @@ export function FileManagerActions() {
 
         return errs || d.resolve();
     };
-
-    self.logAction = (action, text) => {
-        flm.ui.console.show(action + ': ' + text);
-    }
 
     self.logConsole = (text) => {
         const ts = Math.floor(Date.now() / 1000);
