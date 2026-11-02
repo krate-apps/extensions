@@ -1,0 +1,735 @@
+/*
+ *  Krate skin for ruTorrent -- settings surface.
+ *  The Settings dialog body (#stg): a two-column layout with a grouped,
+ *  filterable navigation rail and a single-scroll content pane whose
+ *  fieldsets read as cards under a page title, closed by a sticky action bar.
+ *  Every color reads from a --kr-* token. Selectors are scoped under #stg and
+ *  carry the dialog id so they win over the shared dialog chrome.
+ */
+
+/* ============================================================
+ * Shell: window, two-column body, single scroll container
+ * ============================================================ */
+#stg .kr-icon {
+	display: inline-block;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	mask-position: center;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+}
+
+#stg.dlg-window {
+	width: min(1040px, 92vw);
+	max-width: 92vw;
+	/* Grow to the taller column (usually the 23-item nav) so it need not
+	 * scroll, capped so a very long page still fits the viewport. */
+	height: auto;
+	max-height: min(940px, 92vh);
+}
+
+#stg #stg_c {
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+	flex: 1 1 auto;
+	gap: 0;
+	padding: 0;
+	min-height: 0;
+	overflow: hidden;
+	background-color: var(--kr-surface);
+	border-radius: 0 0 var(--kr-radius-lg) var(--kr-radius-lg);
+}
+
+/* ---- Navigation rail -------------------------------------- */
+#stg #stg_c .lm.list-group {
+	flex: 0 0 220px;
+	width: 220px;
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+	margin: 0;
+	padding: 0 8px 10px;
+	background-color: var(--kr-surface);
+	border: 0;
+	border-right: 1px solid var(--kr-border);
+	border-radius: 0;
+	overflow-x: hidden;
+	overflow-y: auto;
+	/* All 23 rows fit at 1080; shorter viewports scroll with a thumb that only
+	 * appears on hover, so there is never a permanent second scrollbar. */
+	scrollbar-width: thin;
+	scrollbar-color: transparent transparent;
+}
+
+#stg #stg_c .lm.list-group:hover {
+	scrollbar-color: var(--kr-scrollbar-thumb) transparent;
+}
+
+#stg #stg_c .lm.list-group::-webkit-scrollbar { width: 8px; }
+#stg #stg_c .lm.list-group::-webkit-scrollbar-track { background: transparent; border: 0; }
+#stg #stg_c .lm.list-group::-webkit-scrollbar-thumb { background: transparent; border-radius: var(--kr-radius-lg); }
+#stg #stg_c .lm.list-group:hover::-webkit-scrollbar-thumb { background: var(--kr-scrollbar-thumb); }
+
+/* Filter field pinned above the scrolling nav list */
+#stg .kr-stg-filter {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	margin: 0 -8px 6px;
+	padding: 8px;
+	background-color: var(--kr-surface);
+	border-bottom: 1px solid var(--kr-border);
+}
+
+#stg .kr-stg-filter .kr-icon {
+	position: absolute;
+	left: 17px;
+	width: 14px;
+	height: 14px;
+	pointer-events: none;
+	background-color: var(--kr-fg-muted);
+}
+
+#stg .kr-stg-filter input {
+	width: 100%;
+	height: 32px;
+	margin: 0;
+	padding: 0 8px 0 28px;
+	background-color: var(--kr-input);
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius);
+	color: var(--kr-foreground);
+	font-family: var(--kr-font);
+	font-size: 12px;
+}
+
+#stg .kr-stg-filter input:focus,
+#stg .kr-stg-filter input:focus-visible {
+	outline: none;
+	border-color: var(--kr-ring);
+	box-shadow: 0 0 0 2px var(--kr-focus);
+}
+
+/* Group headers ("ruTorrent" / "Plugins") */
+#stg .kr-stg-group {
+	padding: 12px 10px 4px;
+	color: var(--kr-fg-muted);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	user-select: none;
+}
+
+#stg .kr-stg-group:first-of-type { padding-top: 2px; }
+
+/* Filter-hidden rows/headers: these must out-rank the two-id base row rule. */
+#stg #stg_c .lm.list-group .kr-stg-group.kr-hidden,
+#stg #stg_c .lm.list-group .list-group-item.kr-hidden { display: none; }
+
+/* Nav rows */
+#stg #stg_c .lm.list-group .list-group-item {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 30px;
+	margin: 0;
+	padding: 0 10px;
+	border: 0;
+	border-radius: var(--kr-radius-lg);
+	background-color: transparent;
+	color: var(--kr-foreground);
+	font-family: var(--kr-font);
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 1.2;
+	text-decoration: none;
+	flex-grow: 0;
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+#stg #stg_c .lm.list-group .list-group-item .kr-icon {
+	flex: none;
+	width: 16px;
+	height: 16px;
+	background-color: var(--kr-icon);
+	transition: background-color 0.15s ease;
+}
+
+#stg #stg_c .lm.list-group .list-group-item .kr-stg-label {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#stg #stg_c .lm.list-group .list-group-item:hover {
+	background-color: var(--kr-surface-2);
+	color: var(--kr-foreground);
+}
+
+#stg #stg_c .lm.list-group .list-group-item:hover .kr-icon {
+	background-color: var(--kr-icon-hover);
+}
+
+#stg #stg_c .lm.list-group .list-group-item.active {
+	background-color: color-mix(in srgb, var(--kr-primary) 14%, transparent);
+	color: var(--kr-primary-text);
+	font-weight: 500;
+}
+
+#stg #stg_c .lm.list-group .list-group-item.active .kr-icon {
+	background-color: var(--kr-primary-text);
+}
+
+#stg #stg_c .lm.list-group .list-group-item:focus-visible {
+	outline: 2px solid var(--kr-ring);
+	outline-offset: -2px;
+	box-shadow: 0 0 0 2px var(--kr-focus);
+}
+
+/* ---- Content pane ----------------------------------------- */
+#stg #stg-pages {
+	flex: 1 1 auto;
+	min-width: 0;
+	height: auto;
+	display: flex;
+	flex-direction: column;
+	padding: 0;
+	overflow: hidden;
+	background-color: var(--kr-background);
+	border: 0;
+}
+
+/* The ONE scroll container: the active page */
+#stg .stg_con {
+	display: none;
+	margin: 0;
+	background: none;
+	overflow: visible;
+}
+
+#stg .stg_con.active {
+	display: block;
+	flex: 1 1 auto;
+	min-height: 0;
+	padding: 18px 20px 20px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	scrollbar-gutter: stable;
+}
+
+/* Page title + description */
+#stg .kr-stg-head {
+	margin: 0 0 16px;
+}
+
+#stg .kr-stg-head .kr-stg-title {
+	margin: 0;
+	color: var(--kr-foreground);
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 1.25;
+}
+
+#stg .kr-stg-head .kr-stg-desc {
+	margin: 3px 0 0;
+	color: var(--kr-fg-muted);
+	font-size: 13px;
+	line-height: 1.4;
+}
+
+/* Fieldset sections rendered as cards */
+#stg .stg_con fieldset {
+	margin: 0 0 16px;
+	padding: 16px;
+	background-color: var(--kr-surface);
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius-lg);
+}
+
+#stg .stg_con fieldset:last-child { margin-bottom: 0; }
+
+/* Float the legend so it sits INSIDE the card's top padding and the card
+ * border stays unbroken (the standard fieldset-legend trick). */
+#stg .stg_con legend {
+	float: left;
+	width: 100%;
+	margin: 0 0 12px;
+	padding: 0;
+	background: none;
+	border: 0;
+	color: var(--kr-foreground);
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+#stg .stg_con fieldset > .row { clear: both; }
+
+/* A legend may wrap its text in a link (the PushBullet heading points at
+ * pushbullet.com). Keep it reading as every other card heading -- the theme
+ * link color must not leak a stray accent into the title. */
+#stg .stg_con legend a {
+	color: var(--kr-foreground);
+	font: inherit;
+	text-decoration: none;
+}
+
+#stg .stg_con legend a:hover,
+#stg .stg_con legend a:focus-visible {
+	color: var(--kr-primary-text);
+	text-decoration: underline;
+}
+
+/* Field rhythm + controls (12px between adjacent rows) */
+#stg .stg_con .row > [class*="col"] {
+	padding-top: 6px;
+	padding-bottom: 6px;
+}
+
+#stg .stg_con label {
+	color: var(--kr-foreground);
+	font-size: 12px;
+	white-space: normal;
+}
+
+#stg .stg_con input[type="checkbox"],
+#stg .stg_con input[type="radio"] {
+	accent-color: var(--kr-primary);
+	width: 15px;
+	height: 15px;
+	margin-right: 6px;
+	vertical-align: -2px;
+}
+
+#stg .stg_con input[type="text"],
+#stg .stg_con input[type="number"],
+#stg .stg_con input[type="password"],
+#stg .stg_con select {
+	min-height: 30px;
+	max-width: 100%;
+}
+
+#stg .stg_con textarea { max-width: 100%; }
+
+/* ---- Sticky action bar ------------------------------------ */
+#stg #stg-pages #st_btns.buttons-list {
+	flex: 0 0 auto;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+	padding: 12px 20px;
+	background-color: var(--kr-surface);
+	border-top: 1px solid var(--kr-border);
+}
+
+#stg #stg-pages #st_btns.buttons-list button {
+	width: auto;
+	min-width: 88px;
+	min-height: 34px;
+	margin: 0;
+	padding: 0 16px;
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius);
+	font-family: var(--kr-font);
+	font-size: 13px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+/* Primary (Save) sits right of secondary (Cancel) */
+#stg #stg-pages #st_btns.buttons-list button:not(.Cancel) {
+	order: 2;
+	background-color: var(--kr-primary);
+	border-color: var(--kr-primary);
+	color: var(--kr-primary-fg);
+}
+
+#stg #stg-pages #st_btns.buttons-list button:not(.Cancel):hover {
+	background-color: var(--kr-accent);
+	border-color: var(--kr-accent);
+	color: var(--kr-accent-fg);
+}
+
+#stg #stg-pages #st_btns.buttons-list button.Cancel {
+	order: 1;
+	background-color: var(--kr-surface-2);
+	border-color: var(--kr-border);
+	color: var(--kr-foreground);
+}
+
+#stg #stg-pages #st_btns.buttons-list button.Cancel:hover {
+	background-color: var(--kr-surface-3);
+}
+
+#stg #stg-pages #st_btns.buttons-list button:focus-visible {
+	outline: 2px solid var(--kr-ring);
+	outline-offset: 1px;
+	box-shadow: 0 0 0 2px var(--kr-focus);
+}
+
+/* Empty filter result hint */
+#stg .kr-stg-empty {
+	display: none;
+	padding: 12px 10px;
+	color: var(--kr-fg-muted);
+	font-size: 12px;
+	text-align: center;
+}
+
+#stg .kr-stg-empty.kr-show { display: block; }
+
+/* ============================================================
+ * Shared layout primitives (reused by the plugin-pages module)
+ * ============================================================ */
+
+/* Field grid: short controls flow as tiles, label above the control. */
+#stg .kr-field-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 12px 20px;
+	margin: 0;
+	align-items: start;
+}
+
+#stg .kr-field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+}
+
+/* Tiles in a row stretch to equal height; pin the control to the bottom so a
+ * wrapping label never drops its input below its neighbors. */
+#stg .kr-field > .kr-control,
+#stg .kr-field > .kr-input-group { margin-top: auto; }
+
+#stg .kr-field > label,
+#stg .kr-field > .kr-field-label {
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+	line-height: 1.3;
+	color: var(--kr-fg-muted);
+	font-family: var(--kr-font);
+	white-space: normal;
+}
+
+/* Control wrapper: holds the input plus an optional right unit adornment. */
+#stg .kr-control {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+#stg .kr-control > input,
+#stg .kr-control > select,
+#stg .kr-control > textarea {
+	width: 100%;
+	min-height: 32px;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+#stg .kr-control.kr-has-unit > input { padding-right: 46px; }
+
+#stg .kr-unit {
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	bottom: 1px;
+	display: flex;
+	align-items: center;
+	padding: 0 8px;
+	font-size: 11px;
+	color: var(--kr-fg-muted);
+	background-color: var(--kr-surface-2);
+	border-left: 1px solid var(--kr-border);
+	border-radius: 0 var(--kr-radius) var(--kr-radius) 0;
+	pointer-events: none;
+	white-space: nowrap;
+}
+
+/* Wide field: full-width control with the label above it. */
+#stg .kr-field-wide {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	margin: 0 0 12px;
+}
+
+#stg .kr-field-wide:last-child { margin-bottom: 0; }
+
+#stg .kr-field-wide > label,
+#stg .kr-field-wide > .kr-field-label {
+	margin: 0;
+	font-size: 12px;
+	line-height: 1.3;
+	color: var(--kr-fg-muted);
+}
+
+#stg .kr-field-wide input,
+#stg .kr-field-wide select,
+#stg .kr-field-wide textarea {
+	width: 100%;
+	box-sizing: border-box;
+	margin: 0;
+}
+
+/* input + trailing icon button (browse, etc.) */
+#stg .kr-input-row {
+	display: flex;
+	gap: 8px;
+	align-items: stretch;
+}
+
+#stg .kr-input-row > input,
+#stg .kr-input-row > select { flex: 1 1 auto; min-width: 0; }
+
+/* Checkbox grid: 2 columns when wide, 1 when narrow; boxes aligned. */
+#stg .kr-check-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 8px 20px;
+	margin: 0;
+}
+
+#stg .kr-check {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	margin: 0;
+	min-width: 0;
+}
+
+#stg .kr-check input[type="checkbox"] {
+	flex: none;
+	margin: 1px 0 0;
+}
+
+#stg .kr-check label {
+	margin: 0;
+	font-size: 12px;
+	line-height: 1.35;
+	color: var(--kr-foreground);
+	white-space: normal;
+}
+
+/* Vertical rhythm between stacked blocks in a reshaped card: a check grid and
+ * an adjacent field block must not hug, or a checkbox caption reads as the
+ * label of the field below it (the XMPP/History/Retrackers crowding). Grids
+ * carry no margin of their own, so add the gap only on these transitions --
+ * the wide field already supplies its own bottom margin, so it is left out to
+ * avoid doubling. */
+#stg .stg_con .kr-check-grid + .kr-field-grid,
+#stg .stg_con .kr-check-grid + .kr-field-wide,
+#stg .stg_con .kr-check-grid + .kr-retrackers,
+#stg .stg_con .kr-field-grid + .kr-check-grid { margin-top: 12px; }
+
+/* One muted helper line under a field or card. */
+#stg .kr-help {
+	margin: 8px 0 0;
+	font-size: 12px;
+	line-height: 1.4;
+	color: var(--kr-fg-muted);
+}
+
+#stg .kr-field .kr-help,
+#stg .kr-field-wide .kr-help { margin-top: 4px; }
+
+/* Settings table: the torrent-table language, no boxed cells. */
+#stg .kr-table-wrap { overflow-x: auto; }
+
+#stg .kr-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 12px;
+	font-family: var(--kr-font);
+}
+
+#stg .kr-table th {
+	padding: 6px 10px;
+	text-align: left;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--kr-fg-muted);
+	border-bottom: 1px solid var(--kr-border);
+	white-space: nowrap;
+}
+
+#stg .kr-table td {
+	padding: 4px 10px;
+	text-align: left;
+	vertical-align: middle;
+	border-bottom: 1px solid var(--kr-border-soft);
+	color: var(--kr-foreground);
+}
+
+#stg .kr-table tbody tr:hover > td { background-color: var(--kr-surface-2); }
+
+#stg .kr-table input[type="text"],
+#stg .kr-table input[type="number"],
+#stg .kr-table input[type="password"],
+#stg .kr-table select {
+	width: 100%;
+	min-height: 28px;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+#stg .kr-table .kr-num input { width: 58px; text-align: center; }
+
+#stg .kr-table th.kr-col-num,
+#stg .kr-table td.kr-num { width: 64px; text-align: center; }
+
+/* One non-fieldset heading style (matches the card legend). */
+#stg .kr-heading {
+	margin: 0 0 10px;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.3;
+	color: var(--kr-foreground);
+	text-transform: none;
+}
+
+/* Monospace key labels (Advanced page) + spacing for grouped subsections. */
+#stg .kr-field label.kr-mono {
+	font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+	font-size: 12px;
+	color: var(--kr-fg-muted);
+	text-transform: none;
+}
+
+#stg .kr-subhead {
+	margin: 16px 0 8px;
+	padding-top: 12px;
+	border-top: 1px solid var(--kr-border-soft);
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--kr-fg-muted);
+}
+
+#stg .kr-subhead:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+
+/* Accounts page: one compact table with a tracker filter. */
+#stg .kr-acct-filter {
+	position: relative;
+	display: flex;
+	align-items: center;
+	max-width: 320px;
+	margin: 0 0 12px;
+}
+
+#stg .kr-acct-filter .kr-icon {
+	position: absolute;
+	left: 9px;
+	width: 14px;
+	height: 14px;
+	pointer-events: none;
+	background-color: var(--kr-fg-muted);
+}
+
+#stg .kr-acct-filter input {
+	width: 100%;
+	height: 32px;
+	margin: 0;
+	padding: 0 8px 0 28px;
+	background-color: var(--kr-input);
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius);
+	color: var(--kr-foreground);
+	font-family: var(--kr-font);
+	font-size: 12px;
+}
+
+#stg .kr-acct-filter input:focus,
+#stg .kr-acct-filter input:focus-visible {
+	outline: none;
+	border-color: var(--kr-ring);
+	box-shadow: 0 0 0 2px var(--kr-focus);
+}
+
+#stg .kr-accounts td.kr-acct-name {
+	font-weight: 500;
+	color: var(--kr-foreground);
+	white-space: nowrap;
+}
+
+#stg .kr-accounts th.kr-col-en,
+#stg .kr-accounts td.kr-acct-en { width: 74px; text-align: center; }
+
+#stg .kr-accounts td.kr-acct-en input { width: auto; margin: 0; }
+
+#stg .kr-accounts th.kr-col-auto,
+#stg .kr-accounts td.kr-col-auto { width: 150px; }
+
+/* Advanced key tiles: human label, raw-key subtext, byte hint. */
+#stg .kr-ao-field > label {
+	margin-bottom: 1px;
+	color: var(--kr-foreground);
+	font-size: 12px;
+}
+
+#stg .kr-ao-field > .kr-ao-key {
+	margin: 0 0 4px;
+	font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+	font-size: 11px;
+	line-height: 1.2;
+	color: var(--kr-fg-muted);
+}
+
+/* Header is uniform (label + key), so align controls by top, not bottom. */
+#stg .kr-ao-field > .kr-control { margin-top: 0; }
+
+#stg .kr-ao-hint {
+	margin-top: 3px;
+	font-size: 11px;
+	color: var(--kr-fg-muted);
+}
+
+/* Accounts: 36px rows, toggle switch, status dot, subtle credential inputs. */
+#stg .kr-accounts tbody tr { height: 36px; }
+
+#stg .kr-acct-name { white-space: nowrap; }
+
+#stg .kr-acct-dot {
+	display: inline-block;
+	width: 7px;
+	height: 7px;
+	margin-right: 8px;
+	border-radius: 50%;
+	background-color: var(--kr-fg-muted);
+	vertical-align: middle;
+}
+
+#stg .kr-acct-dot.kr-on { background-color: var(--kr-primary); }
+
+#stg .kr-accounts input[type="text"],
+#stg .kr-accounts input[type="password"] {
+	background-color: transparent;
+	border: 1px solid transparent;
+	transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+#stg .kr-accounts input[type="text"]:hover,
+#stg .kr-accounts input[type="password"]:hover { border-color: var(--kr-border); }
+
+#stg .kr-accounts input[type="text"]:focus,
+#stg .kr-accounts input[type="password"]:focus {
+	background-color: var(--kr-input);
+	border-color: var(--kr-ring);
+	box-shadow: 0 0 0 2px var(--kr-focus);
+}

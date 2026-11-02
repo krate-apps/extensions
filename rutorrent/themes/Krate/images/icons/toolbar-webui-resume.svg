@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	<!-- WebUI resume: monitor + play triangle. -->
+	<path d="M3 3.5h18a1.5 1.5 0 0 1 1.5 1.5v10A1.5 1.5 0 0 1 21 16.5h-5.2l.7 2H7.5l.7-2H3A1.5 1.5 0 0 1 1.5 15V5A1.5 1.5 0 0 1 3 3.5zm1.2 1.7v8.6h15.6V5.2H4.2z"/>
+	<path d="M10 7.1v5.8L15.2 10z"/>
+</svg>

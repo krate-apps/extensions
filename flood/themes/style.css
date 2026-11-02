@@ -1,0 +1,486 @@
+/*
+ * Krate theme for Flood (jesec) — override layer on built-in light/dark.
+ * Tokens + [data-kr-variant]; also styles under html.dark / .dark for stock Flood.
+ */
+
+:root,
+:root[data-kr-variant="dark"],
+html.dark {
+	--kr-background: #171519;
+	--kr-foreground: #f5f5f5;
+	--kr-surface: #1c1a1f;
+	--kr-surface-2: #222027;
+	--kr-surface-3: #2a272e;
+	--kr-chrome: #1c1a1f;
+	--kr-muted: #222027;
+	--kr-fg-muted: #a3a3a3;
+	--kr-border: #3f3f46;
+	--kr-border-soft: #2a2a30;
+	--kr-input: #141218;
+	--kr-primary: #0ea5e9;
+	--kr-primary-fg: #0b1220;
+	--kr-primary-text: #38bdf8;
+	--kr-accent: #38bdf8;
+	--kr-accent-rgb: 14, 165, 233;
+	--kr-destructive: #ef4444;
+	--kr-ring: #38bdf8;
+	--kr-focus: rgba(14, 165, 233, 0.35);
+	--kr-scrollbar-track: #141218;
+	--kr-scrollbar-thumb: #0ea5e9;
+	--kr-scrollbar-thumb-hover: #38bdf8;
+	--kr-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+	--kr-speed-down: #38bdf8;
+	--kr-speed-up: #22c55e;
+	--kr-prg-start: #0284c7;
+	--kr-prg-end: #38bdf8;
+	--kr-state-downloading: #38bdf8;
+	--kr-state-seeding: #22c55e;
+	--kr-state-paused: #fbbf24;
+	--kr-state-stopped: #a3a3a3;
+	--kr-state-error: #ef4444;
+	color-scheme: dark;
+}
+
+:root[data-kr-variant="light"],
+html[data-kr-variant="light"] {
+	--kr-background: #d8dee8;
+	--kr-foreground: #0f172a;
+	--kr-surface: #e8edf4;
+	--kr-surface-2: #dde3ec;
+	--kr-surface-3: #cfd6e0;
+	--kr-chrome: #ffffff;
+	--kr-muted: #dde3ec;
+	--kr-fg-muted: #334155;
+	--kr-border: #94a3b8;
+	--kr-border-soft: #cbd5e1;
+	--kr-input: #f8fafc;
+	--kr-primary: #0284c7;
+	--kr-primary-fg: #ffffff;
+	--kr-primary-text: #0369a1;
+	--kr-accent: #0369a1;
+	--kr-accent-rgb: 2, 132, 199;
+	--kr-destructive: #b91c1c;
+	--kr-ring: #0284c7;
+	--kr-focus: rgba(2, 132, 199, 0.32);
+	--kr-scrollbar-track: #dde3ec;
+	--kr-scrollbar-thumb: #0284c7;
+	--kr-scrollbar-thumb-hover: #0369a1;
+	--kr-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+	--kr-speed-down: #0369a1;
+	--kr-speed-up: #15803d;
+	--kr-prg-start: #0369a1;
+	--kr-prg-end: #0ea5e9;
+	--kr-state-downloading: #0284c7;
+	--kr-state-seeding: #15803d;
+	--kr-state-paused: #b45309;
+	--kr-state-stopped: #475569;
+	--kr-state-error: #b91c1c;
+	color-scheme: light;
+}
+
+:root {
+	--kr-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+	--kr-radius: 10px;
+	accent-color: var(--kr-primary);
+}
+
+html,
+body,
+.application,
+.application__content,
+.view--torrent-list,
+.torrents,
+.dark .torrents,
+.action-bar,
+.application__view--auth-form {
+	background: var(--kr-background) !important;
+	color: var(--kr-foreground) !important;
+	font-family: var(--kr-font) !important;
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+::-webkit-scrollbar-track {
+	background: var(--kr-scrollbar-track);
+}
+::-webkit-scrollbar-thumb {
+	background: var(--kr-scrollbar-thumb);
+	border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: var(--kr-scrollbar-thumb-hover);
+}
+
+.application__sidebar,
+.dark .application__sidebar {
+	background: var(--kr-chrome) !important;
+	color: var(--kr-foreground) !important;
+	box-shadow: 1px 0 0 var(--kr-border) !important;
+}
+
+.action-bar,
+.dark .action-bar {
+	background: var(--kr-chrome) !important;
+	border-bottom: 1px solid var(--kr-border) !important;
+	color: var(--kr-foreground) !important;
+}
+
+.action .icon,
+.dark .action .icon,
+.sidebar__icon-button .icon,
+.dark .sidebar__icon-button .icon {
+	fill: var(--kr-fg-muted) !important;
+}
+.action:hover,
+.action:focus-visible,
+.sidebar__icon-button:hover,
+.sidebar__icon-button:focus-visible {
+	background: color-mix(in srgb, var(--kr-primary) 12%, transparent) !important;
+}
+.action:hover .icon,
+.action:focus-visible .icon,
+.sidebar__icon-button:hover .icon,
+.sidebar__icon-button:focus-visible .icon {
+	fill: var(--kr-primary) !important;
+}
+
+.sidebar-filter__item,
+.dark .sidebar-filter__item {
+	color: var(--kr-fg-muted) !important;
+}
+.sidebar-filter__item.is-active,
+.dark .sidebar-filter__item.is-active,
+.sidebar-filter__item--heading,
+.dark .sidebar-filter__item--heading {
+	color: var(--kr-primary-text) !important;
+}
+.sidebar-filter__item.is-active .icon,
+.dark .sidebar-filter__item.is-active .icon,
+.sidebar-filter__item .icon,
+.dark .sidebar-filter__item .icon {
+	fill: rgb(var(--kr-accent-rgb)) !important;
+}
+.sidebar-filter .badge,
+.dark .sidebar-filter .badge,
+.sidebar-filter__item.is-active .badge {
+	background: rgb(var(--kr-accent-rgb)) !important;
+	color: var(--kr-primary-fg) !important;
+}
+
+.search .textbox,
+.search.is-in-use .textbox {
+	background: var(--kr-input) !important;
+	border: 1px solid var(--kr-border) !important;
+	color: var(--kr-foreground) !important;
+}
+.search.is-in-use .textbox {
+	border-color: var(--kr-primary) !important;
+}
+.search .icon,
+.search.is-in-use .icon {
+	fill: var(--kr-primary) !important;
+}
+
+.table__row--heading,
+.dark .table__row--heading {
+	background: var(--kr-surface-2) !important;
+	color: var(--kr-fg-muted) !important;
+	box-shadow: 0 1px 0 var(--kr-border) !important;
+}
+.table__heading,
+.dark .table__heading {
+	border-right: 1px solid var(--kr-border-soft) !important;
+	color: var(--kr-fg-muted) !important;
+}
+.table__heading--is-sorted,
+.table__heading:hover {
+	color: var(--kr-primary-text) !important;
+}
+
+.torrent--is-condensed,
+.dark .torrent--is-condensed {
+	border-top: 1px solid var(--kr-border-soft) !important;
+}
+.torrent__detail,
+.dark .torrent__detail {
+	color: var(--kr-fg-muted) !important;
+}
+.torrent__detail--name,
+.dark .torrent__detail--name {
+	color: var(--kr-foreground) !important;
+}
+.torrent--is-downloading--actively .torrent__detail--downRate {
+	color: var(--kr-speed-down) !important;
+}
+.torrent--is-selected:after,
+.torrent--is-selected:hover:after,
+.dark .torrent--is-selected:after {
+	background: rgba(var(--kr-accent-rgb), 0.7) !important;
+}
+.torrent--is-condensed.torrent--is-selected,
+.torrent--is-condensed.torrent--is-selected + .torrent {
+	border-color: rgba(var(--kr-accent-rgb), 0.7) !important;
+}
+
+.progress-bar__fill__wrapper,
+.dark .sidebar__diskusage .progress-bar__fill__wrapper {
+	background: var(--kr-surface-3) !important;
+}
+.progress-bar__fill,
+.dark .sidebar__diskusage .progress-bar__fill {
+	background: linear-gradient(90deg, var(--kr-prg-start), var(--kr-prg-end)) !important;
+}
+
+.button--primary,
+.inverse .button--primary {
+	background: var(--kr-primary) !important;
+	border-color: var(--kr-primary) !important;
+	color: var(--kr-primary-fg) !important;
+	box-shadow: none !important;
+	text-shadow: none !important;
+}
+.button--primary:hover,
+.inverse .button--primary:hover,
+.button--primary:focus {
+	background: var(--kr-accent) !important;
+	border-color: var(--kr-accent) !important;
+}
+.button--quaternary,
+.inverse .button--quaternary,
+.button--tertiary,
+.inverse .button--tertiary {
+	background: var(--kr-surface-2) !important;
+	border-color: var(--kr-border) !important;
+	color: var(--kr-foreground) !important;
+	box-shadow: none !important;
+	text-shadow: none !important;
+}
+
+.input,
+.inverse .input,
+.textbox {
+	background: var(--kr-input) !important;
+	color: var(--kr-foreground) !important;
+	border: 1px solid var(--kr-border) !important;
+	box-shadow: none !important;
+}
+.input:focus,
+.inverse .input:focus,
+.textbox:focus {
+	border-color: var(--kr-ring) !important;
+	box-shadow: 0 0 0 2px var(--kr-focus) !important;
+}
+
+.modal__body,
+.modal__content__wrapper,
+.modal__header,
+.modal--vertical.modal--tabs-in-header .modal__header,
+.modal--vertical.modal--tabs-in-body .modal__tabs {
+	background: var(--kr-surface) !important;
+	color: var(--kr-foreground) !important;
+}
+.modal__header {
+	box-shadow: inset 0 -1px 0 var(--kr-border) !important;
+}
+/* Inactive settings tabs: Flood's stock muted color disappears on light surfaces. */
+.modal__tabs .modal__tab,
+.modal__tabs button.modal__tab {
+	color: var(--kr-foreground) !important;
+	opacity: 1 !important;
+}
+.modal__tabs .modal__tab:not(.is-active),
+.modal__tabs button.modal__tab:not(.is-active) {
+	color: var(--kr-fg-muted) !important;
+}
+.modal__tabs .modal__tab.is-active,
+.modal__tabs button.modal__tab.is-active {
+	color: var(--kr-primary-text) !important;
+	background: color-mix(in srgb, var(--kr-primary) 12%, transparent) !important;
+}
+.modal__tabs .modal__tab.is-active:after {
+	background: var(--kr-primary) !important;
+}
+.modal__tabs .modal__tab:hover:not(.is-active),
+.modal__tabs button.modal__tab:hover:not(.is-active) {
+	color: var(--kr-primary-text) !important;
+}
+
+/* Stock Flood theme toggle — replaced by #kr-chrome (auto/dark/light). */
+.application__sidebar .sidebar__actions:has(.icon--theme-switch) {
+	display: none !important;
+}
+
+.context-menu__items,
+.menu,
+.panel,
+.panel--light {
+	background: var(--kr-surface) !important;
+	color: var(--kr-foreground) !important;
+	border: 1px solid var(--kr-border) !important;
+	box-shadow: var(--kr-shadow) !important;
+}
+.menu__item.is-selectable:hover,
+.menu__item.is-selectable.is-selected,
+.select__item--is-selected,
+.context-menu__items .select__item:hover {
+	background: color-mix(in srgb, var(--kr-primary) 12%, transparent) !important;
+	color: var(--kr-primary-text) !important;
+}
+.select__item--is-selected .icon {
+	fill: var(--kr-primary) !important;
+}
+
+.dropzone__icon .icon--files {
+	fill: rgba(var(--kr-accent-rgb), 0.55) !important;
+}
+.dropzone__browse-button {
+	color: var(--kr-primary-text) !important;
+}
+.interactive-list,
+.sortable-list__item {
+	background: var(--kr-surface-2) !important;
+	border: 1px solid var(--kr-border) !important;
+	color: var(--kr-foreground) !important;
+}
+
+.torrent-details__table__heading--primary,
+.torrent-details__detail__label,
+.torrent-details__sub-heading__secondary {
+	color: var(--kr-fg-muted) !important;
+}
+.torrent-details__section .badge {
+	background: var(--kr-primary) !important;
+	color: var(--kr-primary-fg) !important;
+}
+.torrent-details__action.is-active {
+	color: var(--kr-primary-text) !important;
+}
+.diskusage__details-list__label {
+	color: var(--kr-primary-text) !important;
+}
+.tooltip__content {
+	background: var(--kr-surface-2) !important;
+	color: var(--kr-foreground) !important;
+	border: 1px solid var(--kr-border);
+}
+
+.error {
+	background: var(--kr-destructive) !important;
+	color: #fff !important;
+}
+
+/* Injected chrome — sits in .action-bar; body fallback until Flood mounts */
+#kr-chrome {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	align-self: center;
+	flex: 0 0 auto;
+	gap: 8px;
+	height: 32px;
+	margin: 0 12px 0 4px;
+	padding: 0 10px;
+	background: var(--kr-chrome);
+	border: 1px solid var(--kr-border);
+	border-radius: 8px;
+	box-shadow: none;
+	font-family: var(--kr-font);
+	font-size: 12px;
+	color: var(--kr-foreground);
+}
+/* Before .action-bar exists, park top-right without covering torrent actions once mounted */
+body > #kr-chrome {
+	position: fixed;
+	top: 10px;
+	right: 14px;
+	z-index: 100000;
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+	border-radius: 999px;
+	height: auto;
+	padding: 4px 8px;
+	margin: 0;
+}
+.action-bar #kr-chrome,
+.action-bar__item--krate {
+	position: relative;
+	top: auto;
+	right: auto;
+	z-index: 2;
+	box-shadow: none;
+	border-radius: 8px;
+}
+#kr-chrome .kr-mark,
+#kr-chrome button.kr-wn {
+	display: none !important;
+}
+#kr-chrome select.kr-variant {
+	appearance: none;
+	background: var(--kr-input);
+	color: var(--kr-foreground);
+	border: 1px solid var(--kr-border);
+	border-radius: 999px;
+	padding: 5px 26px 5px 12px;
+	font: inherit;
+	cursor: pointer;
+}
+
+#krWhatsNew {
+	position: fixed;
+	z-index: 100001;
+	inset: 0;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.45);
+}
+#krWhatsNew[data-open="1"] {
+	display: flex;
+}
+#krWhatsNew .kr-wn-panel {
+	width: min(560px, 92vw);
+	max-height: min(70vh, 640px);
+	overflow: auto;
+	background: var(--kr-surface);
+	color: var(--kr-foreground);
+	border: 1px solid var(--kr-border);
+	border-radius: 14px;
+	box-shadow: var(--kr-shadow);
+	padding: 16px 18px 20px;
+	font-family: var(--kr-font);
+}
+#krWhatsNew .kr-wn-title {
+	margin: 0 0 12px;
+	font-size: 16px;
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+}
+#krWhatsNew .kr-wn-close {
+	background: var(--kr-surface-2);
+	border: 1px solid var(--kr-border);
+	color: var(--kr-foreground);
+	border-radius: 8px;
+	padding: 4px 10px;
+	cursor: pointer;
+}
+#krWhatsNew .kr-wn-head {
+	margin: 12px 0 6px;
+	font-size: 14px;
+	color: var(--kr-primary-text);
+}
+#krWhatsNew .kr-wn-list {
+	margin: 0 0 8px 18px;
+}
+#krWhatsNew .kr-wn-p,
+#krWhatsNew .kr-wn-empty {
+	color: var(--kr-fg-muted);
+}
+#krWhatsNew .kr-wn-code {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	background: var(--kr-surface-2);
+	padding: 1px 4px;
+	border-radius: 4px;
+}
