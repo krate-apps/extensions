@@ -1,13 +1,29 @@
 /*
- * Krate theme for Deluge — English strings (injected chrome).
+ * Krate theme for Deluge — English strings.
  */
-theUILang.krAppearance   = "Appearance";
-theUILang.krVariantAuto  = "Auto (HarmonyUI)";
-theUILang.krVariantDark  = "Dark";
+theUILang.krAppearance = "Appearance";
+theUILang.krVariantAuto = "Auto";
+theUILang.krVariantDark = "Dark";
 theUILang.krVariantLight = "Light";
-theUILang.kr_var_auto   = "Auto";
-theUILang.kr_wn_title   = "What's new in Krate";
-theUILang.kr_wn_link    = "What's new";
-theUILang.kr_wn_close   = "Close";
-theUILang.kr_wn_none    = "No release notes yet.";
-theUILang.kr_wn_version = "Krate v{version}";
+theUILang.kr_tb_add = "Add";
+theUILang.kr_det_copy = "Copy";
+theUILang.kr_det_download = "Download";
+theUILang.kr_det_upload = "Upload";
+theUILang.kr_det_ratio = "Ratio";
+theUILang.kr_det_eta = "ETA";
+theUILang.kr_det_elapsed = "Elapsed";
+theUILang.kr_det_seeding = "Seeding";
+theUILang.kr_det_swarm = "Swarm";
+theUILang.kr_det_seeds = "Seeds";
+theUILang.kr_det_peers = "Peers";
+theUILang.kr_det_tracker = "Tracker";
+theUILang.kr_det_status = "Status";
+theUILang.kr_det_url = "Tracker";
+theUILang.kr_det_storage = "Storage";
+theUILang.kr_det_save_path = "Save path";
+theUILang.kr_det_hash = "Hash";
+theUILang.kr_det_comment = "Comment";
+theUILang.kr_det_pieces = "Pieces";
+theUILang.kr_det_updown = "{up} up / {down} down";
+theUILang.kr_det_no_comment = "No comment";
+theUILang.kr_det_empty_general = "Select a torrent to see its overview";

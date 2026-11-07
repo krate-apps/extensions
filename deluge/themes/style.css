@@ -1,0 +1,1674 @@
+/*
+ * Krate Deluge — design tokens + chrome + Status overview (ruTorrent look).
+ * Ext skin lives in themes/css/xtheme-krate.css (vendor-copied).
+ */
+/*
+ *  Krate theme for ruTorrent
+ *  Token-driven Dark / Light variants aligned with HarmonyUI.
+ *  Variant selection and progress-bar colors are driven from init.js.
+ *  No external fonts, no @import: a self-hosted system UI stack only.
+ *
+ *  KRATE Krate palette tokens (Unlicense).
+ */
+
+/* ============================================================
+ * 1. Variant tokens  (Dark is the default; Light overrides)
+ * ============================================================ */
+:root,
+:root[data-kr-variant="dark"] {
+	--kr-background: #171519;
+	--kr-foreground: #f5f5f5;
+	--kr-surface: #1c1a1f;
+	--kr-surface-2: #222027;
+	--kr-surface-3: #2a272e;
+	--kr-chrome: var(--kr-surface);
+	--kr-chrome-border: var(--kr-border);
+	--kr-muted: #222027;
+	--kr-fg-muted: #a3a3a3;
+	--kr-border: #3f3f46;
+	--kr-border-soft: #2a2a30;
+	--kr-input: #141218;
+	/* HarmonyUI sky: sky-500 / sky-400 / sky-600 */
+	--kr-primary: #0ea5e9;
+	--kr-primary-fg: #0b1220;
+	--kr-primary-text: #38bdf8;
+	--kr-accent: #38bdf8;
+	--kr-accent-fg: #0b1220;
+	--kr-accent-text: #7dd3fc;
+	--kr-destructive: #ef4444;
+	--kr-destructive-text: #f87171;
+	--kr-ring: #38bdf8;
+	--kr-focus: rgba(14, 165, 233, 0.35);
+	--kr-header-gradient: linear-gradient(to right, #0ea5e9, #0284c7);
+	--kr-scrollbar-track: #141218;
+	--kr-scrollbar-thumb: #0ea5e9;
+	--kr-scrollbar-thumb-hover: #38bdf8;
+	--kr-tooltip-bg: rgba(28, 26, 31, 0.96);
+	--kr-tooltip-fg: #f5f5f5;
+	--kr-tooltip-border: rgba(63, 63, 70, 0.55);
+	--kr-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+	--kr-shadow-soft: 0 6px 16px rgba(0, 0, 0, 0.3);
+	--kr-speed-down: #38bdf8;
+	--kr-speed-up: #22c55e;
+	--kr-speed-total: #7dd3fc;
+	/* Torrent completion bar: deep sky -> bright sky. */
+	--kr-prg-start: #0284c7;
+	--kr-prg-end: #38bdf8;
+	--kr-pill-bg: rgba(0, 0, 0, 0.28);
+	--kr-icon: #a3a3a3;
+	--kr-icon-hover: #f5f5f5;
+	--kr-state-downloading: #38bdf8;
+	--kr-state-seeding: #22c55e;
+	--kr-state-paused: #fbbf24;
+	--kr-state-stopped: #a3a3a3;
+	--kr-state-error: #ef4444;
+}
+
+/* Light variant. color-scheme + bs-theme flip to light from init.js.
+ * Cool slate surfaces (not near-white) + darker type for readable contrast;
+ * sky accents stay on HarmonyUI sky-600 / sky-700. */
+:root[data-kr-variant="light"] {
+	--kr-background: #d8dee8;
+	--kr-foreground: #0f172a;
+	--kr-surface: #e8edf4;
+	--kr-surface-2: #dde3ec;
+	--kr-surface-3: #cfd6e0;
+	/* HarmonyUI chrome: pure white for top bar + left sidebar only. */
+	--kr-chrome: #ffffff;
+	--kr-chrome-border: #e2e8f0;
+	--kr-muted: #dde3ec;
+	--kr-fg-muted: #334155;
+	--kr-border: #94a3b8;
+	--kr-border-soft: #cbd5e1;
+	--kr-input: #f8fafc;
+	--kr-primary: #0284c7;
+	--kr-primary-fg: #ffffff;
+	--kr-primary-text: #0369a1;
+	--kr-accent: #0369a1;
+	--kr-accent-fg: #ffffff;
+	--kr-accent-text: #0c4a6e;
+	--kr-destructive: #b91c1c;
+	--kr-destructive-text: #991b1b;
+	--kr-ring: #0284c7;
+	--kr-focus: rgba(2, 132, 199, 0.32);
+	--kr-header-gradient: linear-gradient(to right, #0ea5e9, #0369a1);
+	--kr-scrollbar-track: #dde3ec;
+	--kr-scrollbar-thumb: #0284c7;
+	--kr-scrollbar-thumb-hover: #0369a1;
+	--kr-tooltip-bg: rgba(232, 237, 244, 0.98);
+	--kr-tooltip-fg: #0f172a;
+	--kr-tooltip-border: rgba(148, 163, 184, 0.7);
+	--kr-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+	--kr-shadow-soft: 0 6px 16px rgba(15, 23, 42, 0.08);
+	--kr-speed-down: #0369a1;
+	--kr-speed-up: #15803d;
+	--kr-speed-total: #0284c7;
+	--kr-prg-start: #0369a1;
+	--kr-prg-end: #0ea5e9;
+	--kr-pill-bg: rgba(15, 23, 42, 0.1);
+	--kr-icon: #334155;
+	--kr-icon-hover: #0369a1;
+	--kr-state-downloading: #0284c7;
+	--kr-state-seeding: #15803d;
+	--kr-state-paused: #b45309;
+	--kr-state-stopped: #475569;
+	--kr-state-error: #b91c1c;
+}
+
+/* ============================================================
+ * 2. Shared primitives + ruTorrent core var mapping
+ * ============================================================ */
+:root {
+	--kr-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+	--kr-radius: 10px;
+	--kr-radius-sm: 8px;
+	--kr-radius-lg: 14px;
+	--kr-overlay: #000000;
+	--kr-destructive-fg: #ffffff;
+
+	/* Native controls (checkboxes, radios) follow the active variant accent. */
+	accent-color: var(--kr-primary);
+
+	/* ruTorrent core contract (css/style.css) -> tokens */
+	--text-color: var(--kr-foreground);
+	--text-header-color: var(--kr-foreground);
+	--menu-color: var(--kr-foreground);
+
+
+/* ---- One brand row: stock #tbar-deluge-text + palette cell (no double mark) ---- */
+td.x-toolbar-cell[data-kr-palette-cell] {
+	vertical-align: middle !important;
+	padding: 0 6px 0 2px !important;
+	overflow: visible !important;
+}
+#kr-chrome {
+	display: inline-flex;
+	align-items: center;
+	height: 36px;
+	vertical-align: middle;
+}
+/* Kill any leftover injected wordmark from older builds */
+#kr-chrome .kr-brand { display: none !important; }
+
+#tbar-deluge-text.kr-brand-host,
+#tbar-deluge-text.kr-brand-host.x-item-disabled,
+#tbar-deluge-text.kr-brand-host.x-btn-disabled {
+	opacity: 1 !important;
+}
+/*
+ * Beat deluge.css `.x-deluge-main-panel { background-image: deluge.png !important }`.
+ * Keep the word "Deluge"; swap silk icon → Krate logo.
+ */
+#tbar-deluge-text .x-btn-text.x-deluge-main-panel,
+#tbar-deluge-text button.x-deluge-main-panel,
+#tbar-deluge-text .x-deluge-main-panel,
+body.kr-deluge #tbar-deluge-text .x-btn-text,
+body.kr-deluge #tbar-deluge-text button {
+	color: var(--kr-foreground) !important;
+	font-family: var(--kr-font) !important;
+	font-size: 14px !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.01em !important;
+	opacity: 1 !important;
+	line-height: 36px !important;
+	height: 36px !important;
+	padding-left: 32px !important;
+	background-image: var(--kr-logo-url, url(images/brand/krate-logo.png)) !important;
+	background-size: 22px 22px !important;
+	background-position: 4px center !important;
+	background-repeat: no-repeat !important;
+}
+#tbar-deluge-text .x-deluge-main-panel::before,
+#tbar-deluge-text .kr-brand-label::before {
+	display: none !important;
+	content: none !important;
+}
+.kr-palette { position: relative; display: inline-flex; flex: none; }
+.kr-palette-btn {
+	width: 36px;
+	height: 36px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	border-radius: var(--kr-radius);
+	background: transparent;
+	color: var(--kr-icon);
+	cursor: pointer;
+}
+.kr-palette-btn:hover,
+.kr-palette-btn.open {
+	background: var(--kr-surface-2);
+	color: var(--kr-icon-hover);
+}
+.kr-palette-glyph {
+	width: 18px;
+	height: 18px;
+	background-color: currentColor;
+	-webkit-mask: url(images/icons/palette-switch.svg) center / 18px no-repeat;
+	mask: url(images/icons/palette-switch.svg) center / 18px no-repeat;
+}
+/* Menu lives on document.body (fixed) — never clipped by Ext overflow */
+#kr-palette-menu.kr-palette-menu {
+	position: fixed;
+	z-index: 100000;
+	min-width: 160px;
+	padding: 5px;
+	background: var(--kr-surface);
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius-lg);
+	box-shadow: var(--kr-shadow);
+	font-family: var(--kr-font);
+}
+#kr-palette-menu.kr-palette-menu[hidden] { display: none !important; }
+.kr-palette-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	height: 32px;
+	padding: 0 10px;
+	border: 0;
+	border-radius: var(--kr-radius);
+	background: transparent;
+	color: var(--kr-foreground);
+	font-family: var(--kr-font);
+	font-size: 13px;
+	text-align: left;
+	cursor: pointer;
+}
+.kr-palette-item:hover { background: var(--kr-surface-2); }
+.kr-palette-item.active {
+	background: color-mix(in srgb, var(--kr-primary) 14%, transparent);
+	color: var(--kr-primary-text, var(--kr-primary));
+}
+.kr-palette-check {
+	width: 14px;
+	height: 14px;
+	margin-left: auto;
+	flex: none;
+	background-color: var(--kr-primary);
+	-webkit-mask: url(images/icons/menu-check.svg) center / 14px no-repeat;
+	mask: url(images/icons/menu-check.svg) center / 14px no-repeat;
+	visibility: hidden;
+}
+.kr-palette-item.active .kr-palette-check { visibility: visible; }
+
+/* Ext toolbar: single horizontal row, allow palette dropdown */
+body.kr-deluge #deluge-toolbar,
+body.kr-deluge #deluge-toolbar .x-toolbar-ct,
+body.kr-deluge #deluge-toolbar .x-toolbar-left,
+body.kr-deluge #deluge-toolbar .x-toolbar-right,
+body.kr-deluge #deluge-toolbar .x-toolbar-left-ct,
+body.kr-deluge #deluge-toolbar table {
+	overflow: visible !important;
+}
+body.kr-deluge #deluge-toolbar td.x-toolbar-cell {
+	vertical-align: middle !important;
+	overflow: visible !important;
+}
+body.kr-deluge #deluge-toolbar .xtb-sep {
+	height: 22px !important;
+	margin: 0 8px !important;
+}
+
+/* ---- Primary Add chip ---- */
+body.kr-deluge .x-toolbar #add.kr-add-primary {
+	min-height: 36px !important;
+	margin: 0 6px 0 4px !important;
+	padding: 0 14px !important;
+	border: 0 !important;
+	border-radius: var(--kr-radius-lg) !important;
+	background: var(--kr-primary) !important;
+	background-image: none !important;
+}
+body.kr-deluge .x-toolbar #add.kr-add-primary .x-btn-tl,
+body.kr-deluge .x-toolbar #add.kr-add-primary .x-btn-tr,
+body.kr-deluge .x-toolbar #add.kr-add-primary .x-btn-tc,
+body.kr-deluge .x-toolbar #add.kr-add-primary .x-btn-ml,
+body.kr-deluge .x-toolbar #add.kr-add-primary .x-btn-mr,
+body.kr-deluge .x-toolbar #add.kr-add-primary .x-btn-mc,
+body.kr-deluge .x-toolbar #add.kr-add-primary .x-btn-bl,
+body.kr-deluge .x-toolbar #add.kr-add-primary .x-btn-br,
+body.kr-deluge .x-toolbar #add.kr-add-primary .x-btn-bc {
+	background: transparent !important;
+	background-image: none !important;
+}
+body.kr-deluge .x-toolbar #add.kr-add-primary .x-btn-text,
+body.kr-deluge .x-toolbar #add.kr-add-primary button {
+	color: var(--kr-primary-fg) !important;
+	font-weight: 600 !important;
+	background-image: none !important;
+}
+body.kr-deluge .x-toolbar #add.kr-add-primary:hover { filter: brightness(1.06); }
+
+/* Mono icons via ::before masks (toolbar + window bars + Options) */
+body.kr-deluge .x-btn-text.kr-ico-mask,
+body.kr-deluge button.kr-ico-mask,
+body.kr-deluge .x-btn .kr-ico-mask {
+	position: relative !important;
+	background-image: none !important;
+	padding-left: 26px !important;
+}
+body.kr-deluge .x-btn-text.kr-ico-mask::before,
+body.kr-deluge button.kr-ico-mask::before,
+body.kr-deluge .x-btn .kr-ico-mask::before {
+	content: "" !important;
+	position: absolute !important;
+	left: 4px !important;
+	top: 50% !important;
+	width: 18px !important;
+	height: 18px !important;
+	transform: translateY(-50%) !important;
+	background-color: currentColor !important;
+	background-image: none !important;
+	-webkit-mask: var(--kr-ico) center / contain no-repeat !important;
+	mask: var(--kr-ico) center / contain no-repeat !important;
+}
+body.kr-deluge .x-btn .kr-ico-mask img,
+body.kr-deluge .x-btn-text.kr-ico-mask img {
+	display: none !important;
+}
+
+
+/* ---- Details drawer shell (ruTorrent #tdetails look) ---- */
+body.kr-deluge #torrentDetails {
+	background: var(--kr-surface) !important;
+	border-top: 1px solid var(--kr-border) !important;
+}
+body.kr-deluge #torrentDetails .x-tab-panel-header {
+	background: var(--kr-surface) !important;
+	border: 0 !important;
+	padding: 10px 12px 8px !important;
+}
+body.kr-deluge #torrentDetails ul.x-tab-strip {
+	display: flex !important;
+	flex-wrap: nowrap !important;
+	gap: 6px !important;
+	background: transparent !important;
+	border: 0 !important;
+	padding: 0 !important;
+}
+body.kr-deluge #torrentDetails ul.x-tab-strip li {
+	margin: 0 !important;
+	padding: 0 !important;
+	background: transparent !important;
+	border: 0 !important;
+}
+body.kr-deluge #torrentDetails ul.x-tab-strip li .x-tab-right,
+body.kr-deluge #torrentDetails ul.x-tab-strip li .x-tab-left,
+body.kr-deluge #torrentDetails ul.x-tab-strip li .x-tab-strip-inner {
+	background: transparent !important;
+	background-image: none !important;
+	padding: 0 !important;
+}
+body.kr-deluge #torrentDetails ul.x-tab-strip .x-tab-strip-text {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 7px !important;
+	height: 32px !important;
+	margin: 0 !important;
+	padding: 0 12px 0 10px !important;
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius) !important;
+	background: var(--kr-surface) !important;
+	color: var(--kr-fg-muted) !important;
+	font-family: var(--kr-font) !important;
+	font-size: 13px !important;
+	font-weight: 500 !important;
+	line-height: 32px !important;
+}
+body.kr-deluge #torrentDetails ul.x-tab-strip .x-tab-strip-text::before {
+	content: "" !important;
+	width: 16px !important;
+	height: 16px !important;
+	flex: none !important;
+	background-color: currentColor !important;
+	-webkit-mask: center / contain no-repeat !important;
+	mask: center / contain no-repeat !important;
+}
+/* Status ≈ Général */
+body.kr-deluge #torrentDetails ul.x-tab-strip li:nth-child(1) .x-tab-strip-text::before {
+	-webkit-mask-image: url(images/icons/tab-general.svg) !important;
+	mask-image: url(images/icons/tab-general.svg) !important;
+}
+body.kr-deluge #torrentDetails ul.x-tab-strip li:nth-child(2) .x-tab-strip-text::before {
+	-webkit-mask-image: url(images/icons/tab-general.svg) !important;
+	mask-image: url(images/icons/tab-general.svg) !important;
+}
+body.kr-deluge #torrentDetails ul.x-tab-strip li:nth-child(3) .x-tab-strip-text::before {
+	-webkit-mask-image: url(images/icons/tab-files.svg) !important;
+	mask-image: url(images/icons/tab-files.svg) !important;
+}
+body.kr-deluge #torrentDetails ul.x-tab-strip li:nth-child(4) .x-tab-strip-text::before {
+	-webkit-mask-image: url(images/icons/tab-peers.svg) !important;
+	mask-image: url(images/icons/tab-peers.svg) !important;
+}
+body.kr-deluge #torrentDetails ul.x-tab-strip li:nth-child(5) .x-tab-strip-text::before {
+	-webkit-mask-image: url(images/icons/toolbar-settings.svg) !important;
+	mask-image: url(images/icons/toolbar-settings.svg) !important;
+}
+body.kr-deluge #torrentDetails ul.x-tab-strip li.x-tab-strip-active .x-tab-strip-text {
+	color: var(--kr-primary-text) !important;
+	border-color: color-mix(in srgb, var(--kr-primary) 45%, var(--kr-border)) !important;
+	background: color-mix(in srgb, var(--kr-primary) 12%, var(--kr-surface)) !important;
+}
+body.kr-deluge #torrentDetails ul.x-tab-strip li.x-tab-strip-active .x-tab-strip-text::before {
+	background-color: var(--kr-primary) !important;
+}
+body.kr-deluge #torrentDetails .x-tab-panel-body {
+	background: var(--kr-surface) !important;
+	border: 0 !important;
+	padding: 0 !important;
+}
+
+/* Options / Details form cards */
+body.kr-deluge #torrentDetails .x-fieldset,
+body.kr-deluge #torrentDetails fieldset {
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius-lg) !important;
+	background: var(--kr-surface) !important;
+	padding: 12px 14px !important;
+	margin: 8px !important;
+	box-shadow: var(--kr-shadow-soft);
+}
+body.kr-deluge #torrentDetails .x-fieldset legend,
+body.kr-deluge #torrentDetails fieldset legend {
+	color: var(--kr-foreground) !important;
+	font-weight: 700 !important;
+	font-size: 13px !important;
+	padding: 0 6px !important;
+}
+
+/* Hide stock Deluge Status markup when overview is mounted */
+.x-deluge-status-host.kr-prop-overview > *:not(.kr-ov),
+.x-deluge-status-host.kr-prop-overview .x-deluge-status-progressbar,
+.x-deluge-status-host.kr-prop-overview .x-progress-wrap,
+.x-deluge-status-host.kr-prop-overview #deluge-details-status,
+.x-deluge-status-host.kr-prop-overview .x-deluge-status,
+.x-deluge-status-host.kr-prop-overview [data-kr-stock-hidden] {
+	display: none !important;
+	visibility: hidden !important;
+	height: 0 !important;
+	overflow: hidden !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+}
+.x-deluge-status-host.kr-prop-overview {
+	display: block !important;
+	box-sizing: border-box;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: 12px 14px 16px !important;
+	background: var(--kr-surface) !important;
+	color: var(--kr-foreground);
+	font-family: var(--kr-font);
+	scrollbar-width: thin;
+}
+.x-deluge-status-host.kr-prop-overview > .kr-ov {
+	display: flex !important;
+	flex-direction: column !important;
+	visibility: visible !important;
+	height: auto !important;
+	overflow: visible !important;
+}
+.kr-icon {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	flex: none;
+	background-color: currentColor;
+	-webkit-mask: center / contain no-repeat;
+	mask: center / contain no-repeat;
+}
+.kr-ov-empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 140px;
+	padding: 24px;
+	color: var(--kr-fg-muted);
+	font-size: 13px;
+	text-align: center;
+}
+.kr-ov-empty[hidden], .kr-ov-body[hidden] { display: none !important; }
+
+.kr-muted { color: var(--kr-fg-muted) !important; }
+.kr-mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+
+/* The General pane scrolls within the drawer so a card is never cut mid-row. */
+.x-deluge-status-host.kr-prop-overview {
+	overflow-y: auto;
+	overflow-x: hidden;
+	scrollbar-width: thin;
+}
+
+.kr-ov {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+/* ---- Hero row ---- */
+.kr-ov-hero {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.kr-hero-cell {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 8px;
+	min-width: 0;
+	flex: 1 1 220px;
+	padding: 14px 16px;
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius-lg);
+	background: var(--kr-surface-2);
+}
+
+/* The composed overview card (ring + identity) gets the most room. */
+.kr-hero-overview {
+	flex: 2.2 1 340px;
+	flex-direction: row;
+	align-items: center;
+	gap: 16px;
+}
+.kr-overview-info {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+	min-width: 0;
+	flex: 1 1 auto;
+}
+.kr-ov-name {
+	display: flex;
+	min-width: 0;
+	width: 100%;
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--kr-foreground);
+}
+.kr-ov-name .kr-mid-a {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	flex: 0 1 auto;
+	min-width: 0;
+}
+.kr-ov-name .kr-mid-b { white-space: nowrap; flex: none; }
+.kr-ov-metaline {
+	font-size: 11px;
+	color: var(--kr-fg-muted);
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 100%;
+}
+
+/* Stacked time mini-stats (label over value, side by side). */
+.kr-ministats {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+.kr-ministat {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+.kr-ministat-label {
+	color: var(--kr-fg-muted);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+.kr-ministat-value {
+	color: var(--kr-foreground);
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.1;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.kr-hero-label {
+	color: var(--kr-fg-muted);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.kr-hero-sub {
+	color: var(--kr-fg-muted);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Completion ring */
+.kr-ring { display: block; flex: none; }
+.kr-ring-track {
+	fill: none;
+	stroke: var(--kr-border);
+	stroke-width: 6;
+}
+.kr-ring-arc {
+	fill: none;
+	stroke: url(#kr-ring-grad);
+	stroke-width: 6;
+	stroke-linecap: round;
+	transition: stroke-dashoffset 0.4s ease;
+}
+.kr-ring-s1 { stop-color: var(--kr-prg-start); }
+.kr-ring-s2 { stop-color: var(--kr-prg-end); }
+.kr-ring-label {
+	fill: var(--kr-foreground);
+	font-family: var(--kr-font);
+	font-size: 19px;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+
+.kr-state-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 3px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	background: var(--kr-pill-bg);
+	color: var(--kr-fg-muted);
+}
+.kr-state-pill::before {
+	content: "";
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	flex: none;
+	background: currentColor;
+}
+.kr-state-pill[data-tone="downloading"] { color: var(--kr-state-downloading); }
+.kr-state-pill[data-tone="seeding"] { color: var(--kr-state-seeding); }
+.kr-state-pill[data-tone="paused"],
+.kr-state-pill[data-tone="checking"] { color: var(--kr-state-paused); }
+.kr-state-pill[data-tone="stopped"] { color: var(--kr-state-stopped); }
+.kr-state-pill[data-tone="error"] { color: var(--kr-destructive-text); }
+
+/* Live speed + sparkline */
+.kr-hero-speed { gap: 10px; }
+.kr-spd {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+}
+.kr-spd-icon { width: 18px; height: 18px; flex: none; }
+.kr-dir-down .kr-spd-icon,
+.kr-dir-down.kr-spd .kr-spd-icon { background-color: var(--kr-speed-down); }
+.kr-dir-up .kr-spd-icon,
+.kr-dir-up.kr-spd .kr-spd-icon { background-color: var(--kr-speed-up); }
+.kr-spd-text { min-width: 0; flex: none; }
+.kr-spd-num {
+	font-size: 17px;
+	font-weight: 700;
+	line-height: 1.1;
+	font-variant-numeric: tabular-nums;
+	color: var(--kr-foreground);
+	white-space: nowrap;
+}
+.kr-spd-lab {
+	font-size: 11px;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: var(--kr-fg-muted);
+}
+.kr-spark {
+	flex: 1 1 auto;
+	min-width: 48px;
+	height: 26px;
+	align-self: center;
+}
+.kr-spark-line { fill: none; stroke-width: 1.75; vector-effect: non-scaling-stroke; }
+.kr-spark-area { stroke: none; }
+.kr-dir-down .kr-spark-line { stroke: var(--kr-speed-down); }
+.kr-dir-down .kr-spark-area { fill: var(--kr-speed-down); fill-opacity: 0.14; }
+.kr-dir-up .kr-spark-line { stroke: var(--kr-speed-up); }
+.kr-dir-up .kr-spark-area { fill: var(--kr-speed-up); fill-opacity: 0.14; }
+
+/* Ratio gauge */
+.kr-ratio-value {
+	font-size: 22px;
+	font-weight: 700;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+	color: var(--kr-primary-text);
+}
+.kr-ratio-value[data-met="0"] { color: var(--kr-destructive-text); }
+.kr-ratio-track {
+	position: relative;
+	height: 6px;
+	border-radius: 999px;
+	background: var(--kr-border-soft);
+	overflow: hidden;
+}
+.kr-ratio-fill {
+	height: 100%;
+	width: 100%;
+	border-radius: 999px;
+	background: var(--kr-primary);
+	transform: scaleX(var(--kr-p, 0));
+	transform-origin: left center;
+	transition: transform 0.4s ease;
+	will-change: transform;
+}
+.kr-ratio-fill[data-met="0"] { background: var(--kr-destructive); }
+.kr-ratio-tick {
+	position: absolute;
+	top: -2px;
+	bottom: -2px;
+	left: 100%;
+	width: 0;
+}
+
+/* Time block */
+.kr-meta {
+	display: flex;
+	align-items: baseline;
+	gap: 10px;
+	min-width: 0;
+	padding: 3px 0;
+}
+.kr-meta-wide { flex-direction: column; align-items: stretch; gap: 3px; }
+.kr-meta-label {
+	flex: none;
+	color: var(--kr-fg-muted);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.kr-hero-time .kr-meta-label { width: 72px; }
+.kr-meta-value {
+	flex: 1 1 auto;
+	min-width: 0;
+	color: var(--kr-foreground);
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.kr-meta-wide .kr-meta-value { text-align: left; }
+
+/* ---- Cards ---- */
+.kr-ov-cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+	gap: 12px;
+}
+.kr-card {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	min-width: 0;
+	padding: 12px 14px;
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius-lg);
+	background: var(--kr-surface);
+	box-shadow: var(--kr-shadow-soft);
+}
+.kr-card-head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding-bottom: 7px;
+	border-bottom: 1px solid var(--kr-border-soft);
+}
+.kr-card-icon { width: 16px; height: 16px; flex: none; background-color: var(--kr-primary-text); }
+.kr-card-title {
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.03em;
+	color: var(--kr-foreground);
+}
+.kr-card-body { display: flex; flex-direction: column; gap: 6px; }
+
+/* Swarm */
+.kr-swarm-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.kr-swarm-key {
+	color: var(--kr-fg-muted);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.kr-swarm-val {
+	color: var(--kr-foreground);
+	font-size: 13px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+.kr-swarm-bar {
+	height: 5px;
+	border-radius: 999px;
+	background: var(--kr-border-soft);
+	overflow: hidden;
+	margin-bottom: 2px;
+}
+.kr-swarm-fill {
+	height: 100%;
+	width: 100%;
+	border-radius: 999px;
+	transform: scaleX(var(--kr-p, 0));
+	transform-origin: left center;
+	transition: transform 0.4s ease;
+	will-change: transform;
+}
+.kr-swarm-fill.kr-dir-up { background: var(--kr-speed-up); }
+.kr-swarm-fill.kr-dir-down { background: var(--kr-speed-down); }
+
+/* Truncating value row with trailing copy / action buttons */
+.kr-trunc-wrap {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	min-width: 0;
+}
+.kr-trunc {
+	display: flex;
+	flex: 1 1 auto;
+	min-width: 0;
+	color: var(--kr-foreground);
+	font-size: 13px;
+}
+.kr-trunc .kr-mid-a {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	flex: 0 1 auto;
+	min-width: 0;
+}
+.kr-trunc .kr-mid-b { white-space: nowrap; flex: none; }
+.kr-trunc.kr-mono { font-size: 12px; letter-spacing: 0.01em; }
+
+/* Card inline actions (Tracker URL / Save-path copy + open, Hash copy) are
+ * 28px icon squares (.kr-icon-btn--md); only the copied-flash tint is
+ * specific to them. They sit flex-centered on the value line (gap in
+ * .kr-trunc-wrap) so they never push or overlap the value. */
+.kr-copy-btn.kr-copied { color: var(--kr-primary-text); }
+
+.kr-comment {
+	text-align: left;
+	white-space: normal;
+	overflow: visible;
+	line-height: 1.5;
+	word-break: break-word;
+	overflow-wrap: anywhere;
+}
+.kr-comment a { color: var(--kr-accent-text); }
+
+/* Free-disk meter (mirrors the footer disk meter + its threshold tint). */
+.kr-disk-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 10px;
+}
+.kr-disk-val {
+	color: var(--kr-foreground);
+	font-size: 13px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+.kr-disk-track {
+	height: 4px;
+	border-radius: 999px;
+	background: var(--kr-border-soft);
+	overflow: hidden;
+}
+.kr-disk-fill {
+	height: 100%;
+	width: 100%;
+	border-radius: 999px;
+	background: var(--kr-primary);
+	transform: scaleX(var(--kr-p, 0));
+	transform-origin: left center;
+	transition: transform 0.4s ease;
+	will-change: transform;
+}
+
+/* Tracker status pill: dot + label, toned by state. */
+.kr-status-cell { display: flex; justify-content: flex-end; }
+.kr-status-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 2px 9px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	background: var(--kr-pill-bg);
+	color: var(--kr-fg-muted);
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.kr-status-pill::before {
+	content: "";
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	flex: none;
+	background: currentColor;
+}
+.kr-status-pill[data-tone="ok"] { color: var(--kr-primary-text); }
+.kr-status-pill[data-tone="updating"] { color: var(--kr-fg-muted); }
+.kr-status-pill[data-tone="error"] { color: var(--kr-destructive-text); }
+
+/* ============================================================
+ * Table / graph panes
+ * ============================================================ */
+div.tab,
+div.graph_tab,
+div.table_tab {
+	background-color: var(--kr-chrome);
+	color: var(--kr-foreground);
+	font-family: var(--kr-font);
+}
+
+/* ============================================================
+ * Files + Trackers + Plugins cards -- polished cells inside the
+ * inset table cards (css/table.css). js/table.js tags data-kr-col /
+ * data-kr-prio / data-kr-on / data-kr-plg / data-kr-launch so
+ * priority, enabled, and plugin status/launch read as pills.
+ * ============================================================ */
+#FileList thead td,
+#TrackerList thead td,
+#PluginList thead td {
+	background: var(--kr-surface-2) !important;
+}
+
+#FileList td[data-kr-col="size"] > div,
+#FileList td[data-kr-col="done"] > div,
+#FileList td[data-kr-col="percent"] > div,
+#TrackerList td[data-kr-col="seeds"] > div,
+#TrackerList td[data-kr-col="peers"] > div,
+#TrackerList td[data-kr-col="downloaded"] > div,
+#TrackerList td[data-kr-col="interval"] > div {
+	font-variant-numeric: tabular-nums;
+}
+
+#FileList td[data-kr-col="name"] > div,
+#TrackerList td[data-kr-col="name"] > div {
+	font-weight: 500;
+}
+
+/* Priority pill (Don't download / Low / Normal / High). */
+#FileList td[data-kr-col="priority"] > div {
+	display: inline-flex;
+	align-items: center;
+	max-width: 100%;
+	box-sizing: border-box;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 16px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: var(--kr-fg-muted);
+	background: var(--kr-pill-bg);
+}
+
+#FileList td[data-kr-col="priority"][data-kr-prio="0"] > div {
+	color: var(--kr-fg-muted);
+	background: var(--kr-pill-bg);
+}
+
+#FileList td[data-kr-col="priority"][data-kr-prio="1"] > div {
+	color: var(--kr-fg-muted);
+	background: color-mix(in srgb, var(--kr-fg-muted) 14%, transparent);
+}
+
+#FileList td[data-kr-col="priority"][data-kr-prio="2"] > div {
+	color: var(--kr-primary-text);
+	background: color-mix(in srgb, var(--kr-primary) 14%, transparent);
+}
+
+#FileList td[data-kr-col="priority"][data-kr-prio="3"] > div {
+	color: var(--kr-state-seeding);
+	background: color-mix(in srgb, var(--kr-state-seeding) 14%, transparent);
+}
+
+/* Tracker enabled pill. */
+#TrackerList td[data-kr-col="enabled"] > div,
+#TrackerList td[data-kr-col="enable"] > div {
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 16px;
+	color: var(--kr-fg-muted);
+	background: var(--kr-pill-bg);
+}
+
+#TrackerList td[data-kr-col="enabled"][data-kr-on="1"] > div,
+#TrackerList td[data-kr-col="enable"][data-kr-on="1"] > div {
+	color: var(--kr-state-seeding);
+	background: color-mix(in srgb, var(--kr-state-seeding) 14%, transparent);
+}
+
+#TrackerList td[data-kr-col="enabled"][data-kr-on="0"] > div,
+#TrackerList td[data-kr-col="enable"][data-kr-on="0"] > div {
+	color: var(--kr-fg-muted);
+	background: var(--kr-pill-bg);
+}
+
+#TrackerList td[data-kr-col="private"] > div {
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 16px;
+	color: var(--kr-fg-muted);
+	background: var(--kr-pill-bg);
+}
+
+/* Plugins tab -- name emphasis, version tabular, status/launch pills. */
+#PluginList td[data-kr-col="name"] > div {
+	font-weight: 600;
+}
+
+#PluginList td[data-kr-col="version"] > div,
+#PluginList td[data-kr-col="author"] > div {
+	font-variant-numeric: tabular-nums;
+	color: var(--kr-fg-muted);
+}
+
+#PluginList td[data-kr-col="descr"] > div {
+	color: var(--kr-fg-muted);
+	font-size: 12px;
+	line-height: 1.4;
+}
+
+#PluginList td[data-kr-col="status"] > div,
+#PluginList td[data-kr-col="launch"] > div {
+	display: inline-flex;
+	align-items: center;
+	max-width: 100%;
+	box-sizing: border-box;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 16px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: var(--kr-fg-muted);
+	background: var(--kr-pill-bg);
+}
+
+#PluginList td[data-kr-col="status"][data-kr-plg="on"] > div {
+	color: var(--kr-state-seeding);
+	background: color-mix(in srgb, var(--kr-state-seeding) 14%, transparent);
+}
+
+#PluginList td[data-kr-col="status"][data-kr-plg="off"] > div {
+	color: var(--kr-fg-muted);
+	background: var(--kr-pill-bg);
+}
+
+#PluginList td[data-kr-col="launch"][data-kr-launch="on"] > div {
+	color: var(--kr-primary-text);
+	background: color-mix(in srgb, var(--kr-primary) 14%, transparent);
+}
+
+#PluginList td[data-kr-col="launch"][data-kr-launch="locked"] > div {
+	color: var(--kr-accent-text);
+	background: color-mix(in srgb, var(--kr-accent-text) 14%, transparent);
+}
+
+#PluginList td[data-kr-col="launch"][data-kr-launch="off"] > div {
+	color: var(--kr-fg-muted);
+	background: var(--kr-pill-bg);
+}
+
+/* ============================================================
+ * Modals / Ext windows — wider HarmonyUI shell (ruTorrent dialog feel)
+ * ============================================================ */
+.ext-el-mask {
+	background: rgba(0, 0, 0, 0.55) !important;
+	opacity: 1 !important;
+}
+
+body.kr-deluge .x-window {
+	border: 1px solid var(--kr-border) !important;
+	border-radius: 14px !important;
+	box-shadow: var(--kr-shadow) !important;
+	overflow: hidden !important;
+	background: var(--kr-surface) !important;
+}
+body.kr-deluge .x-window .x-window-tl,
+body.kr-deluge .x-window .x-window-tr,
+body.kr-deluge .x-window .x-window-tc,
+body.kr-deluge .x-window .x-window-ml,
+body.kr-deluge .x-window .x-window-mr,
+body.kr-deluge .x-window .x-window-mc,
+body.kr-deluge .x-window .x-window-bl,
+body.kr-deluge .x-window .x-window-br,
+body.kr-deluge .x-window .x-window-bc {
+	background: var(--kr-surface) !important;
+	background-image: none !important;
+	padding: 0 !important;
+}
+body.kr-deluge .x-window .x-window-tl {
+	padding-top: 0 !important;
+}
+body.kr-deluge .x-window .x-window-header {
+	display: flex !important;
+	align-items: center !important;
+	min-height: 48px !important;
+	padding: 12px 16px !important;
+	border-bottom: 1px solid var(--kr-border) !important;
+	background: transparent !important;
+	background-image: none !important;
+}
+body.kr-deluge .x-window .x-window-header-text {
+	font-family: var(--kr-font) !important;
+	font-size: 15px !important;
+	font-weight: 600 !important;
+	color: var(--kr-foreground) !important;
+	line-height: 1.3 !important;
+	padding-left: 4px !important;
+}
+body.kr-deluge .x-window .x-tool {
+	margin-left: 8px !important;
+	opacity: 0.65;
+}
+body.kr-deluge .x-window .x-tool:hover { opacity: 1; }
+
+body.kr-deluge .x-window .x-window-body,
+body.kr-deluge .x-window .x-window-mc {
+	background: var(--kr-surface) !important;
+	color: var(--kr-foreground) !important;
+	padding: 16px !important;
+}
+body.kr-deluge .x-window .x-window-bwrap {
+	background: var(--kr-surface) !important;
+}
+
+/* Footer bar */
+body.kr-deluge .x-window .x-window-bbar,
+body.kr-deluge .x-window .x-panel-bbar {
+	background: var(--kr-surface-2) !important;
+	border-top: 1px solid var(--kr-border) !important;
+	padding: 12px 16px !important;
+}
+body.kr-deluge .x-window .x-window-bbar .x-toolbar,
+body.kr-deluge .x-window .x-panel-bbar .x-toolbar {
+	background: transparent !important;
+	border: 0 !important;
+	padding: 0 !important;
+}
+body.kr-deluge .x-window .x-window-bbar .x-btn,
+body.kr-deluge .x-window .x-panel-btns .x-btn {
+	min-height: 36px !important;
+	margin: 0 0 0 8px !important;
+	padding: 0 14px !important;
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius) !important;
+	background: var(--kr-surface) !important;
+	background-image: none !important;
+}
+body.kr-deluge .x-window .x-window-bbar .x-btn .x-btn-tl,
+body.kr-deluge .x-window .x-window-bbar .x-btn .x-btn-tr,
+body.kr-deluge .x-window .x-window-bbar .x-btn .x-btn-tc,
+body.kr-deluge .x-window .x-window-bbar .x-btn .x-btn-ml,
+body.kr-deluge .x-window .x-window-bbar .x-btn .x-btn-mr,
+body.kr-deluge .x-window .x-window-bbar .x-btn .x-btn-mc,
+body.kr-deluge .x-window .x-window-bbar .x-btn .x-btn-bl,
+body.kr-deluge .x-window .x-window-bbar .x-btn .x-btn-br,
+body.kr-deluge .x-window .x-window-bbar .x-btn .x-btn-bc,
+body.kr-deluge .x-window .x-panel-btns .x-btn .x-btn-tl,
+body.kr-deluge .x-window .x-panel-btns .x-btn .x-btn-tr,
+body.kr-deluge .x-window .x-panel-btns .x-btn .x-btn-tc,
+body.kr-deluge .x-window .x-panel-btns .x-btn .x-btn-ml,
+body.kr-deluge .x-window .x-panel-btns .x-btn .x-btn-mr,
+body.kr-deluge .x-window .x-panel-btns .x-btn .x-btn-mc,
+body.kr-deluge .x-window .x-panel-btns .x-btn .x-btn-bl,
+body.kr-deluge .x-window .x-panel-btns .x-btn .x-btn-br,
+body.kr-deluge .x-window .x-panel-btns .x-btn .x-btn-bc {
+	background: transparent !important;
+	background-image: none !important;
+}
+body.kr-deluge .x-window .x-window-bbar .x-btn .x-btn-text,
+body.kr-deluge .x-window .x-window-bbar .x-btn button,
+body.kr-deluge .x-window .x-panel-btns .x-btn .x-btn-text,
+body.kr-deluge .x-window .x-panel-btns .x-btn button {
+	color: var(--kr-foreground) !important;
+	font-family: var(--kr-font) !important;
+	font-size: 13px !important;
+	font-weight: 500 !important;
+	padding: 0 4px !important;
+	background-image: none !important;
+}
+body.kr-deluge .x-window .x-window-bbar .x-btn-over,
+body.kr-deluge .x-window .x-panel-btns .x-btn-over {
+	border-color: color-mix(in srgb, var(--kr-primary) 45%, var(--kr-border)) !important;
+	background: color-mix(in srgb, var(--kr-primary) 12%, var(--kr-surface)) !important;
+}
+
+/* Primary action = last footer button (OK / Connect / Add / Apply) */
+body.kr-deluge .x-window .x-window-bbar .x-toolbar-cell:last-child .x-btn,
+body.kr-deluge .x-window .x-panel-btns .x-toolbar-cell:last-child .x-btn,
+body.kr-deluge .x-window .x-btn.kr-btn-primary {
+	border-color: transparent !important;
+	background: var(--kr-primary) !important;
+	background-image: none !important;
+}
+body.kr-deluge .x-window .x-window-bbar .x-toolbar-cell:last-child .x-btn .x-btn-text,
+body.kr-deluge .x-window .x-window-bbar .x-toolbar-cell:last-child .x-btn button,
+body.kr-deluge .x-window .x-panel-btns .x-toolbar-cell:last-child .x-btn .x-btn-text,
+body.kr-deluge .x-window .x-panel-btns .x-toolbar-cell:last-child .x-btn button,
+body.kr-deluge .x-window .x-btn.kr-btn-primary .x-btn-text,
+body.kr-deluge .x-window .x-btn.kr-btn-primary button {
+	color: var(--kr-primary-fg) !important;
+	font-weight: 600 !important;
+}
+body.kr-deluge .x-window .x-window-bbar .x-toolbar-cell:last-child .x-btn-over,
+body.kr-deluge .x-window .x-btn.kr-btn-primary.x-btn-over {
+	filter: brightness(1.06);
+	background: var(--kr-primary) !important;
+}
+
+/* Preferences category list */
+body.kr-deluge .x-window .x-list-body-inner .x-list-item {
+	padding: 8px 12px !important;
+	border-radius: var(--kr-radius) !important;
+	margin: 2px 6px !important;
+	border: 0 !important;
+	color: var(--kr-fg-muted) !important;
+}
+body.kr-deluge .x-window .x-list-body-inner .x-list-selected,
+body.kr-deluge .x-window .x-list-body-inner .x-list-item-selected {
+	background: color-mix(in srgb, var(--kr-primary) 14%, transparent) !important;
+	color: var(--kr-primary-text) !important;
+	font-weight: 600 !important;
+}
+body.kr-deluge .x-window .x-list-over {
+	background: var(--kr-surface-2) !important;
+}
+
+/* Fieldsets inside windows as soft cards */
+body.kr-deluge .x-window .x-fieldset,
+body.kr-deluge .x-window fieldset {
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius-lg) !important;
+	background: var(--kr-surface) !important;
+	padding: 10px 12px 8px !important;
+	margin: 0 0 10px !important;
+}
+body.kr-deluge .x-window .x-fieldset-header-text,
+body.kr-deluge .x-window fieldset legend {
+	color: var(--kr-fg-muted) !important;
+	font-size: 11px !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.06em !important;
+	text-transform: uppercase !important;
+}
+
+/* Form controls inside windows — taller touch targets */
+body.kr-deluge .x-window .x-form-text,
+body.kr-deluge .x-window input.x-form-text,
+body.kr-deluge .x-window .x-form-field-wrap .x-form-text {
+	box-sizing: border-box !important;
+	min-height: 34px !important;
+	height: 34px !important;
+	padding: 6px 12px !important;
+	border-radius: var(--kr-radius) !important;
+	font-size: 13px !important;
+}
+
+/*
+ * LoginWindow — stock is 300×120 with Ext plain-frame borders + right-aligned
+ * labelWidth:120. Kill nested frame borders; stack label above a full-width field.
+ */
+body.kr-deluge .x-window:has(#_password) {
+	width: 380px !important;
+	min-height: 240px !important;
+	height: 240px !important;
+}
+body.kr-deluge .x-window:has(#_password) .x-window-tl,
+body.kr-deluge .x-window:has(#_password) .x-window-tr,
+body.kr-deluge .x-window:has(#_password) .x-window-tc,
+body.kr-deluge .x-window:has(#_password) .x-window-ml,
+body.kr-deluge .x-window:has(#_password) .x-window-mr,
+body.kr-deluge .x-window:has(#_password) .x-window-mc,
+body.kr-deluge .x-window:has(#_password) .x-window-bl,
+body.kr-deluge .x-window:has(#_password) .x-window-br,
+body.kr-deluge .x-window:has(#_password) .x-window-bc,
+body.kr-deluge .x-window:has(#_password) .x-window-body,
+body.kr-deluge .x-window:has(#_password) .x-window-bwrap,
+body.kr-deluge .x-window:has(#_password) .x-panel-body,
+body.kr-deluge .x-window:has(#_password) .x-plain,
+body.kr-deluge .x-window:has(#_password) .x-form,
+body.kr-deluge .x-window:has(#_password) .x-panel,
+body.kr-deluge .x-window:has(#_password) .x-panel-bwrap {
+	border: 0 !important;
+	border-color: transparent !important;
+	background-image: none !important;
+	box-shadow: none !important;
+	height: auto !important;
+}
+body.kr-deluge .x-window:has(#_password) .x-window-header {
+	min-height: 44px !important;
+	padding: 10px 16px !important;
+}
+body.kr-deluge .x-window:has(#_password) .x-window-body,
+body.kr-deluge .x-window:has(#_password) .x-window-mc {
+	padding: 16px 16px 8px !important;
+	overflow: visible !important;
+	background: var(--kr-surface) !important;
+}
+/* Stack label above field, flush left (override Ext float + padding-left) */
+body.kr-deluge .x-window:has(#_password) .x-form-item {
+	display: block !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	overflow: visible !important;
+}
+body.kr-deluge .x-window:has(#_password) .x-form-item-label,
+body.kr-deluge .x-window:has(#_password) label.x-form-item-label {
+	display: block !important;
+	float: none !important;
+	clear: both !important;
+	position: static !important;
+	width: auto !important;
+	text-align: left !important;
+	padding: 0 0 8px !important;
+	margin: 0 !important;
+	font-size: 13px !important;
+	font-weight: 500 !important;
+	color: var(--kr-fg-muted) !important;
+	line-height: 1.3 !important;
+}
+body.kr-deluge .x-window:has(#_password) .x-form-element {
+	padding: 0 !important;
+	margin: 0 !important;
+	position: static !important;
+	left: auto !important;
+	width: 100% !important;
+}
+body.kr-deluge .x-window:has(#_password) #_password,
+body.kr-deluge .x-window:has(#_password) input.x-form-text {
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	margin: 0 !important;
+}
+body.kr-deluge .x-window .x-form-field-wrap .x-form-text {
+	padding-right: 28px !important;
+}
+body.kr-deluge .x-window .x-form-field-wrap .x-form-trigger:not(.x-form-spinner-trigger) {
+	height: 32px !important;
+	top: 1px !important;
+}
+body.kr-deluge .x-window .x-form-field-wrap .x-form-spinner-trigger {
+	height: 32px !important;
+	top: 1px !important;
+	background-position: center 5px, center calc(100% - 5px) !important;
+}
+body.kr-deluge .x-window .x-form-check-wrap,
+body.kr-deluge .x-window .x-form-cb-label {
+	font-size: 13px !important;
+	color: var(--kr-foreground) !important;
+}
+
+/* ---- Preferences: tighter cards + scrollable pages ---- */
+body.kr-deluge .x-window .x-form-item {
+	margin-bottom: 6px !important;
+	min-height: 0 !important;
+}
+/* Stock Downloads checkboxes use height:22 — wrap OK, keep box+label aligned */
+body.kr-deluge .x-window .x-form-check-wrap {
+	display: inline-flex !important;
+	align-items: center !important;
+	height: auto !important;
+	min-height: 22px !important;
+	line-height: 1.3 !important;
+	padding: 3px 0 !important;
+	margin: 0 !important;
+	gap: 6px;
+}
+body.kr-deluge .x-window .x-form-item .x-form-element {
+	height: auto !important;
+	min-height: 0 !important;
+	padding: 0 !important;
+}
+body.kr-deluge .x-window .x-form-check-wrap input {
+	margin: 0 !important;
+	flex: none;
+}
+body.kr-deluge .x-window .x-form-cb-label,
+body.kr-deluge .x-window label.x-form-cb-label {
+	display: inline !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	line-height: 1.3 !important;
+	white-space: normal !important;
+	font-size: 13px !important;
+	vertical-align: middle;
+}
+body.kr-deluge .x-window .x-list-body .x-list-item {
+	display: flex !important;
+	align-items: center !important;
+	min-height: 34px !important;
+	padding: 6px 10px !important;
+	font-size: 13px !important;
+}
+body.kr-deluge .x-window .x-fieldset {
+	padding: 10px 12px 8px !important;
+	margin-bottom: 10px !important;
+	box-sizing: border-box !important;
+	max-width: 100% !important;
+}
+body.kr-deluge .x-window .x-form-text,
+body.kr-deluge .x-window input.x-form-text,
+body.kr-deluge .x-window .x-form-field-wrap {
+	min-height: 34px !important;
+	height: 34px !important;
+	font-size: 13px !important;
+}
+body.kr-deluge .x-window .x-form-field-wrap .x-form-trigger:not(.x-form-spinner-trigger) {
+	height: 32px !important;
+}
+body.kr-deluge .x-window .x-form-field-wrap .x-form-spinner-trigger {
+	height: 32px !important;
+	top: 1px !important;
+	background-position: center 5px, center calc(100% - 5px) !important;
+}
+/* Preferences center: pages fill width; body scrolls when tall */
+body.kr-deluge .x-window .x-panel-body > .x-panel,
+body.kr-deluge .x-window .x-panel-body > .x-form-panel,
+body.kr-deluge .x-window .x-card-layout-ct > .x-panel {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+body.kr-deluge .x-window .x-card-layout-ct,
+body.kr-deluge .x-window .x-card-layout-ct > .x-panel,
+body.kr-deluge .x-window .x-card-layout-ct > .x-panel .x-panel-bwrap,
+body.kr-deluge .x-window .x-card-layout-ct > .x-panel .x-panel-body,
+body.kr-deluge .x-window .x-form-panel .x-panel-body {
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+}
+body.kr-deluge .x-window .x-form-label-top .x-form-item label.x-form-item-label {
+	font-size: 12px !important;
+	padding-bottom: 2px !important;
+}
+
+/* ---- Torrent details Options tab ---- */
+body.kr-deluge .x-deluge-options,
+body.kr-deluge .x-deluge-options.kr-options-wide {
+	padding: 12px 14px !important;
+}
+body.kr-deluge .x-deluge-options .x-fieldset {
+	min-width: 240px !important;
+	padding: 12px 14px 10px !important;
+	margin: 6px !important;
+	box-sizing: border-box !important;
+}
+body.kr-deluge .x-deluge-options .x-deluge-options-label {
+	font-size: 13px !important;
+	color: var(--kr-fg-muted) !important;
+	padding: 6px 8px 6px 0 !important;
+	line-height: 1.35 !important;
+}
+body.kr-deluge .x-deluge-options .x-form-text,
+body.kr-deluge .x-deluge-options input.x-form-text,
+body.kr-deluge .x-deluge-options .x-form-field {
+	min-height: 34px !important;
+	height: 34px !important;
+	font-size: 13px !important;
+	padding: 6px 10px !important;
+	border-radius: var(--kr-radius) !important;
+}
+body.kr-deluge .x-deluge-options .x-form-field-wrap .x-form-spinner-trigger {
+	height: 32px !important;
+	width: 18px !important;
+	top: 1px !important;
+	right: 1px !important;
+	background-position: center 5px, center calc(100% - 5px) !important;
+	background-size: 9px 5px, 9px 5px !important;
+}
+body.kr-deluge .x-deluge-options .x-form-field-wrap .x-form-text {
+	padding-right: 22px !important;
+}
+body.kr-deluge .x-deluge-options .x-form-spinner-splitter {
+	top: 50% !important;
+	margin-top: -1px !important;
+	right: 4px !important;
+}
+/* Checkboxes: keep input+label on one baseline (no extra label padding) */
+body.kr-deluge .x-deluge-options .x-form-check-wrap {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 8px;
+	font-size: 13px !important;
+	line-height: 1.25 !important;
+	padding: 3px 0 !important;
+	margin: 0 !important;
+	height: auto !important;
+	min-height: 22px !important;
+	color: var(--kr-foreground) !important;
+}
+body.kr-deluge .x-deluge-options .x-form-check-wrap input[type="checkbox"],
+body.kr-deluge .x-deluge-options .x-form-check-wrap input.x-form-checkbox {
+	margin: 0 !important;
+	flex: 0 0 15px !important;
+	width: 15px !important;
+	height: 15px !important;
+	align-self: center !important;
+}
+body.kr-deluge .x-deluge-options .x-form-cb-label,
+body.kr-deluge .x-deluge-options label.x-form-cb-label {
+	display: inline !important;
+	font-size: 13px !important;
+	line-height: 1.25 !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	height: auto !important;
+	color: var(--kr-foreground) !important;
+	vertical-align: middle;
+}
+body.kr-deluge .x-deluge-options .x-form-item {
+	margin-bottom: 4px !important;
+}
+body.kr-deluge .x-deluge-options .x-table-layout-ct td,
+body.kr-deluge .x-deluge-options .x-fieldset td {
+	vertical-align: middle !important;
+	padding: 3px 4px !important;
+}
+/* Move Completed path sits under its checkbox (stock table), full-ish width */
+body.kr-deluge .x-deluge-options #move_completed_path {
+	margin-top: 2px !important;
+}
+
+/*
+ * Edit Trackers / Apply — kill Ext hbox absolute positioning that caused overlap,
+ * render as a real flex button row.
+ */
+body.kr-deluge .x-deluge-options .x-box-layout-ct,
+body.kr-deluge .x-deluge-options .x-box-inner {
+	display: flex !important;
+	flex-wrap: wrap !important;
+	align-items: center !important;
+	gap: 8px !important;
+	height: auto !important;
+	position: relative !important;
+	margin-top: 8px !important;
+}
+body.kr-deluge .x-deluge-options .x-box-item,
+body.kr-deluge .x-deluge-options #edit_trackers,
+body.kr-deluge .x-deluge-options #apply {
+	position: relative !important;
+	left: auto !important;
+	top: auto !important;
+	float: none !important;
+}
+body.kr-deluge .x-deluge-options #edit_trackers,
+body.kr-deluge .x-deluge-options #apply,
+body.kr-deluge .x-deluge-options .kr-opts-action {
+	border: 1px solid var(--kr-border) !important;
+	border-radius: var(--kr-radius) !important;
+	background: var(--kr-surface-2) !important;
+	background-image: none !important;
+	min-height: 34px !important;
+	height: auto !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	box-shadow: none !important;
+}
+body.kr-deluge .x-deluge-options #edit_trackers table,
+body.kr-deluge .x-deluge-options #apply table,
+body.kr-deluge .x-deluge-options #edit_trackers .x-btn-tl,
+body.kr-deluge .x-deluge-options #edit_trackers .x-btn-tr,
+body.kr-deluge .x-deluge-options #edit_trackers .x-btn-tc,
+body.kr-deluge .x-deluge-options #edit_trackers .x-btn-ml,
+body.kr-deluge .x-deluge-options #edit_trackers .x-btn-mr,
+body.kr-deluge .x-deluge-options #edit_trackers .x-btn-mc,
+body.kr-deluge .x-deluge-options #edit_trackers .x-btn-bl,
+body.kr-deluge .x-deluge-options #edit_trackers .x-btn-br,
+body.kr-deluge .x-deluge-options #edit_trackers .x-btn-bc,
+body.kr-deluge .x-deluge-options #apply .x-btn-tl,
+body.kr-deluge .x-deluge-options #apply .x-btn-tr,
+body.kr-deluge .x-deluge-options #apply .x-btn-tc,
+body.kr-deluge .x-deluge-options #apply .x-btn-ml,
+body.kr-deluge .x-deluge-options #apply .x-btn-mr,
+body.kr-deluge .x-deluge-options #apply .x-btn-mc,
+body.kr-deluge .x-deluge-options #apply .x-btn-bl,
+body.kr-deluge .x-deluge-options #apply .x-btn-br,
+body.kr-deluge .x-deluge-options #apply .x-btn-bc {
+	background: transparent !important;
+	background-image: none !important;
+}
+body.kr-deluge .x-deluge-options #edit_trackers .x-btn-text,
+body.kr-deluge .x-deluge-options #apply .x-btn-text {
+	color: var(--kr-foreground) !important;
+	font-size: 13px !important;
+	font-weight: 500 !important;
+	padding: 0 12px 0 28px !important;
+	height: 32px !important;
+	line-height: 32px !important;
+}
+body.kr-deluge .x-deluge-options #apply,
+body.kr-deluge .x-deluge-options #apply.kr-btn-primary {
+	border-color: transparent !important;
+	background: var(--kr-primary) !important;
+}
+body.kr-deluge .x-deluge-options #apply .x-btn-text {
+	color: var(--kr-primary-fg) !important;
+	font-weight: 600 !important;
+}
+body.kr-deluge .x-deluge-options #edit_trackers:hover {
+	border-color: color-mix(in srgb, var(--kr-primary) 45%, var(--kr-border)) !important;
+	background: color-mix(in srgb, var(--kr-primary) 12%, var(--kr-surface-2)) !important;
+}
+body.kr-deluge .x-deluge-options #apply:hover {
+	filter: brightness(1.06);
+	background: var(--kr-primary) !important;
+}
+
+/* Connection Manager / Edit Trackers toolbars */
+body.kr-deluge .x-window .x-panel-bbar .x-btn,
+body.kr-deluge .x-window .x-toolbar .x-btn {
+	min-height: 34px !important;
+	margin: 2px 4px !important;
+}
+body.kr-deluge .x-window .x-panel-bbar .x-btn .x-btn-text.kr-ico-mask,
+body.kr-deluge .x-window .x-toolbar .x-btn .x-btn-text.kr-ico-mask {
+	padding-left: 26px !important;
+	background-image: none !important;
+}

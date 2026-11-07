@@ -258,12 +258,4 @@ theUILang.kr_peerFlagIncoming  = "Eingehende Verbindung";
 theUILang.kr_peerFlagEncrypted = "Verschlüsselt";
 theUILang.kr_peerFlagSnubbed   = "Abgewiesen";
 
-/* About / What's new (js/about.js; the palette command in js/extras.js). */
-theUILang.kr_wn_title         = "Neuigkeiten in Krate";
-theUILang.kr_wn_link          = "Neuigkeiten";
-theUILang.kr_wn_version       = "Krate v{version}";
-theUILang.kr_wn_update        = "Update verfügbar: v{version}";
-theUILang.kr_wn_update_hint = "KRATE: aktualisieren Sie ruTorrent über HarmonyUI oder führen Sie {cmd} aus.";
-theUILang.kr_wn_update_manual = "Manuelle Installation: {cmd} im Theme-Ordner ausführen.";
-theUILang.kr_wn_none          = "Noch keine Versionshinweise.";
 theUILang.krPalHelp            = "Hilfe";

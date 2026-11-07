@@ -7,7 +7,7 @@
 	/* var: scripts/release.sh rewrites this literal on bump. Also used as ?kr= cache-bust. */
 	var KR_VERSION = "0.0.1";
 	var OVERRIDE_KEY = "kr-flood-variant";
-	var LIBS = ["variants", "i18n", "dom", "markdown"];
+	var LIBS = ["variants", "i18n", "dom"];
 	var LANGS = ["en", "fr", "de", "es", "da", "pt-br", "zh-cn"];
 
 	function scriptBase() {

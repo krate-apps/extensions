@@ -36,9 +36,12 @@
 	--kr-state-downloading: #38bdf8;
 	--kr-state-seeding: #22c55e;
 	--kr-state-paused: #fbbf24;
+	--kr-state-stopped: #a3a3a3;
 	--kr-state-error: #ef4444;
+	--kr-destructive-text: #f87171;
 	--kr-icon: #a3a3a3;
 	--kr-icon-hover: #f5f5f5;
+	--kr-pill-bg: color-mix(in srgb, var(--kr-primary) 12%, var(--kr-surface-2));
 	--kr-mark-url: url("images/brand/krate-mark.svg");
 	color-scheme: dark;
 }
@@ -75,9 +78,12 @@
 	--kr-state-downloading: #0284c7;
 	--kr-state-seeding: #15803d;
 	--kr-state-paused: #b45309;
+	--kr-state-stopped: #475569;
 	--kr-state-error: #b91c1c;
+	--kr-destructive-text: #991b1b;
 	--kr-icon: #334155;
 	--kr-icon-hover: #0369a1;
+	--kr-pill-bg: color-mix(in srgb, var(--kr-primary) 10%, var(--kr-surface));
 	color-scheme: light;
 }
 
@@ -90,6 +96,54 @@
 	accent-color: var(--kr-primary);
 }
 
+/*
+ * Bridge stock qBittorrent WebUI palette vars → HarmonyUI tokens.
+ * Selected rows / hovers / borders all key off these.
+ */
+:root,
+:root[data-kr-variant="dark"],
+html.dark,
+html[data-theme="dark"] {
+	--color-accent-blue: var(--kr-primary);
+	--color-text-blue: var(--kr-primary-text);
+	--color-text-orange: var(--kr-state-paused);
+	--color-text-red: var(--kr-destructive);
+	--color-text-green: var(--kr-state-seeding);
+	--color-text-white: var(--kr-foreground);
+	--color-text-disabled: var(--kr-fg-muted);
+	--color-text-default: var(--kr-foreground);
+	--color-background-primary: var(--kr-background);
+	--color-background-blue: color-mix(in srgb, var(--kr-primary) 28%, var(--kr-surface));
+	--color-background-popup: var(--kr-surface);
+	--color-background-default: var(--kr-surface-2);
+	--color-background-hover: color-mix(in srgb, var(--kr-primary) 16%, var(--kr-surface));
+	--color-border-blue: var(--kr-primary);
+	--color-border-default: var(--kr-border);
+	/* White-ish glyphs on primary/hover chips (stock qBit imgs). */
+	--color-icon-hover: brightness(0) invert(1);
+}
+
+:root[data-kr-variant="light"],
+html[data-kr-variant="light"],
+html[data-theme="light"] {
+	--color-accent-blue: var(--kr-primary);
+	--color-text-blue: var(--kr-primary-text);
+	--color-text-orange: var(--kr-state-paused);
+	--color-text-red: var(--kr-destructive);
+	--color-text-green: var(--kr-state-seeding);
+	--color-text-white: var(--kr-foreground);
+	--color-text-disabled: var(--kr-fg-muted);
+	--color-text-default: var(--kr-foreground);
+	--color-background-primary: var(--kr-background);
+	--color-background-blue: color-mix(in srgb, var(--kr-primary) 22%, var(--kr-surface));
+	--color-background-popup: var(--kr-chrome);
+	--color-background-default: var(--kr-surface-2);
+	--color-background-hover: color-mix(in srgb, var(--kr-primary) 14%, var(--kr-surface));
+	--color-border-blue: var(--kr-primary);
+	--color-border-default: var(--kr-border);
+	--color-icon-hover: brightness(0) invert(1);
+}
+
 html,
 body,
 #desktop,
@@ -97,7 +151,9 @@ body,
 #pageWrapper,
 .panel,
 #desktopFooter,
-#mainWindowTabs {
+#mainWindowTabs,
+#mochaDesktop,
+.desktop {
 	background: var(--kr-background) !important;
 	color: var(--kr-foreground) !important;
 	font-family: var(--kr-font) !important;
@@ -119,9 +175,15 @@ a:hover { color: var(--kr-primary) !important; }
  * ========================================================================== */
 #desktopHeader {
 	background: var(--kr-chrome) !important;
+	/* ruTorrent-style sky accent line under the app bar */
+	background-image: linear-gradient(to right, var(--kr-primary), var(--kr-primary)) !important;
+	background-repeat: no-repeat !important;
+	background-position: left bottom !important;
+	background-size: 100% 2px !important;
 	border-bottom: 1px solid var(--kr-border) !important;
 	box-shadow: none !important;
 	padding: 0 !important;
+	overflow: visible !important;
 }
 
 #desktopNavbar {
@@ -165,20 +227,20 @@ a:hover { color: var(--kr-primary) !important; }
 	margin: 4px 0 !important;
 }
 #desktopNavbar .MyMenuIcon {
-	filter: none !important;
-	opacity: 0.85;
+	opacity: 0.9;
 }
 
-/* Main toolbar row */
-#mochaToolbar,
-.mochaToolbar {
+/* Main app toolbar only — keyed by data-kr-bar (works if #mochaToolbar is nested). */
+#mochaToolbar[data-kr-bar="1"],
+#desktopHeader #mochaToolbar {
 	position: relative !important;
 	display: flex !important;
 	align-items: center !important;
 	flex-wrap: wrap !important;
 	gap: 4px 6px !important;
+	overflow: visible !important;
 	min-height: var(--kr-bar-height) !important;
-	padding: 8px 14px !important;
+	padding: 6px 14px !important;
 	background: var(--kr-chrome) !important;
 	background-image: linear-gradient(
 		to right,
@@ -191,45 +253,172 @@ a:hover { color: var(--kr-primary) !important; }
 	border: 0 !important;
 	border-bottom: 1px solid var(--kr-border) !important;
 	color: var(--kr-foreground) !important;
+	overflow: visible !important;
 }
-#mochaToolbar .divider,
-#mochaToolbar a.divider {
+/*
+ * Stock uses class="divider" on the FIRST tool button of each group
+ * (start, topPrio, torrentCreator, preferences) — never display:none those.
+ * Only strip the left-border / spacer background look.
+ */
+#mochaToolbar[data-kr-bar="1"] a.divider,
+#mochaToolbar[data-kr-bar="1"] .divider,
+#desktopHeader #mochaToolbar a.divider,
+#desktopHeader #mochaToolbar .divider {
+	border-left: 0 !important;
 	background-image: none !important;
-	border-left: 1px solid var(--kr-border-soft) !important;
-	margin-left: 6px !important;
-	padding-left: 10px !important;
+	background-position: left center !important;
+	background-repeat: no-repeat !important;
+	padding-left: 0 !important;
+	margin-left: 1px !important;
 }
 
-/* Icon action chips */
-#mochaToolbar .mochaToolButton,
-#mochaToolbar img.mochaToolButton,
-#mochaToolbar a > img,
-#mochaToolbar label > img {
-	width: 22px !important;
-	height: 22px !important;
-	padding: 8px !important;
-	box-sizing: content-box !important;
+/*
+ * Tool icon chips only — NEVER size #mainWindowTabs / filter links
+ * (those are also <a> inside #mochaToolbar; 36×36 collapsed Transfers/Search/RSS).
+ * #queueingButtons wraps queue icons — include nested > a.
+ */
+#mochaToolbar[data-kr-bar="1"] > a,
+#mochaToolbar[data-kr-bar="1"] > label,
+#mochaToolbar[data-kr-bar="1"] > #uploadButton,
+#mochaToolbar[data-kr-bar="1"] #queueingButtons > a {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 36px !important;
+	height: 36px !important;
+	min-width: 36px !important;
+	min-height: 36px !important;
+	padding: 0 !important;
+	margin: 0 1px !important;
+	box-sizing: border-box !important;
+	border: 0 !important;
+	border-left: 0 !important;
+	border-right: 0 !important;
+	outline: none !important;
+	box-shadow: none !important;
 	border-radius: 10px !important;
-	opacity: 0.9;
-	filter: none !important;
-	transition: background 0.12s ease, opacity 0.12s ease;
+	vertical-align: middle !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	flex: none !important;
+	pointer-events: auto !important;
+	background-image: none !important;
+	transition: background 0.12s ease;
 }
-#mochaToolbar a:hover > img,
-#mochaToolbar label:hover > img,
-#mochaToolbar .mochaToolButton:hover {
+#mochaToolbar[data-kr-bar="1"] #queueingButtons {
+	display: inline-flex !important;
+	align-items: center !important;
+	vertical-align: middle !important;
+	flex: none !important;
+}
+#mochaToolbar[data-kr-bar="1"] > a:hover,
+#mochaToolbar[data-kr-bar="1"] > label:hover,
+#mochaToolbar[data-kr-bar="1"] > #uploadButton:hover,
+#mochaToolbar[data-kr-bar="1"] #queueingButtons > a:hover {
 	background: color-mix(in srgb, var(--kr-primary) 16%, transparent) !important;
-	opacity: 1;
 }
-:root[data-kr-variant="dark"] #mochaToolbar img {
-	filter: invert(0.92) brightness(1.05);
+
+/* Explicit Options gear — stock id + class="divider". */
+#mochaToolbar #preferencesButton,
+#desktopHeader #mochaToolbar #preferencesButton,
+#mochaToolbar[data-kr-bar="1"] #preferencesButton {
+	display: inline-flex !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	width: 36px !important;
+	height: 36px !important;
+	min-width: 36px !important;
+	min-height: 36px !important;
+	flex: none !important;
+	pointer-events: auto !important;
 }
-:root[data-kr-variant="light"] #mochaToolbar img {
-	filter: none;
+#mochaToolbar[data-kr-bar="1"] > a > img,
+#mochaToolbar[data-kr-bar="1"] > label > img,
+#mochaToolbar[data-kr-bar="1"] > #uploadButton img,
+#mochaToolbar[data-kr-bar="1"] > a > .mochaToolButton,
+#mochaToolbar[data-kr-bar="1"] #queueingButtons > a > img,
+#mochaToolbar[data-kr-bar="1"] #queueingButtons img.mochaToolButton,
+#mochaToolbar[data-kr-bar="1"] img.mochaToolButton {
+	width: 20px !important;
+	height: 20px !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	box-sizing: border-box !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	outline: none !important;
+	vertical-align: middle !important;
+}
+ul.filterList img,
+.filterList img,
+#Filters img {
+	border: 0 !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+/*
+ * Safety net: never blank stock icons (Deluge-style opacity:0 + mask broke
+ * the whole toolbar when SVG paths 404'd). Keep <img> visible; chrome.js
+ * applies mono tint. Palette glyph is a real <img>, not a CSS mask.
+ */
+#mochaToolbar img,
+#Filters img,
+ul.filterList img,
+.filterList img,
+#statusBar img,
+.contextMenu img,
+#desktopNavbar img,
+#mainWindowTabs img,
+.MyMenuIcon,
+img.mochaToolButton,
+.propertiesTabContent img {
+	opacity: 1 !important;
+	visibility: visible !important;
+	-webkit-mask: none !important;
+	mask: none !important;
+	-webkit-mask-image: none !important;
+	mask-image: none !important;
+}
+#Filters,
+#filtersColumn,
+#filtersColumn_pad,
+.filterWrapper,
+ul.filterList,
+.filterList,
+ul.filterList li,
+ul.filterList a,
+.filterList a,
+ul.filterList .link,
+.filterList .link {
+	opacity: 1 !important;
+	visibility: visible !important;
+}
+ul.filterList a,
+.filterList a,
+ul.filterList .link,
+.filterList .link {
+	color: var(--kr-foreground) !important;
+}
+.filterTitle {
+	opacity: 1 !important;
+	visibility: visible !important;
+}
+/* Tabs keep natural width */
+#mochaToolbar[data-kr-bar="1"] #mainWindowTabs,
+#mochaToolbar[data-kr-bar="1"] #mainWindowTabs a,
+#mochaToolbar[data-kr-bar="1"] #torrentsFilterToolbar,
+#mochaToolbar[data-kr-bar="1"] #torrentsFilterToolbar a,
+#mochaToolbar[data-kr-bar="1"] #torrentsFilterToolbar label {
+	width: auto !important;
+	min-width: 0 !important;
+	height: auto !important;
+	min-height: 0 !important;
 }
 
 /* Brand mark injected by chrome.js */
-#mochaToolbar .kr-tb-brand,
-.mochaToolbar .kr-tb-brand {
+#mochaToolbar[data-kr-bar="1"] .kr-tb-brand {
 	display: inline-flex !important;
 	align-items: center !important;
 	justify-content: center !important;
@@ -238,16 +427,24 @@ a:hover { color: var(--kr-primary) !important; }
 	margin: 0 4px 0 0 !important;
 	vertical-align: middle !important;
 	border-radius: 8px !important;
-	background-color: color-mix(in srgb, var(--kr-primary) 16%, transparent) !important;
+	background: transparent !important;
 	-webkit-mask: none !important;
 	mask: none !important;
-	background-image: var(--kr-favicon-url, var(--kr-mark-url)) !important;
-	background-size: 16px 16px !important;
-	background-position: center !important;
-	background-repeat: no-repeat !important;
+	background-image: none !important;
 	flex: none !important;
 }
-#mochaToolbar .kr-tb-wordmark {
+#mochaToolbar[data-kr-bar="1"] .kr-tb-brand-img {
+	display: block !important;
+	width: 20px !important;
+	height: 20px !important;
+	object-fit: contain !important;
+	opacity: 1 !important;
+	visibility: visible !important;
+	filter: none !important;
+	-webkit-mask: none !important;
+	mask: none !important;
+}
+#mochaToolbar[data-kr-bar="1"] .kr-tb-wordmark {
 	display: inline-flex !important;
 	align-items: center !important;
 	margin-right: 10px !important;
@@ -257,33 +454,68 @@ a:hover { color: var(--kr-primary) !important; }
 	color: var(--kr-foreground) !important;
 	letter-spacing: 0.01em !important;
 	user-select: none;
+	flex: none !important;
 }
 
-/* Theme switcher parked after brand */
-#mochaToolbar #kr-chrome,
+/* Theme switcher parked after brand — inline, not floating pill */
+#mochaToolbar[data-kr-bar="1"] #kr-chrome,
 #kr-chrome[data-kr-mounted="toolbar"] {
 	position: static !important;
 	top: auto !important;
 	right: auto !important;
-	margin: 0 12px 0 0 !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	width: auto !important;
+	height: auto !important;
+	min-width: 36px !important;
+	min-height: 36px !important;
+	margin: 0 8px 0 0 !important;
+	padding: 0 !important;
 	box-shadow: none !important;
-	background: var(--kr-surface-2) !important;
+	background: transparent !important;
+	border: 0 !important;
+	border-radius: 0 !important;
 	flex: none !important;
 	order: 0;
+	overflow: visible !important;
+	z-index: 5;
 }
 
-/* Tabs sit naturally in the flex toolbar */
-#mochaToolbar #mainWindowTabs,
+/* Tabs sit naturally in the flex toolbar — never force 36×36 */
+#mochaToolbar[data-kr-bar="1"] #mainWindowTabs,
 #mainWindowTabs {
 	background: transparent !important;
 	border: 0 !important;
 	margin-left: 8px !important;
+	flex: none !important;
+	width: auto !important;
 }
 #mainWindowTabs .tab-menu,
 .toolbarTabs .tab-menu {
 	display: flex !important;
 	gap: 4px !important;
 	background: transparent !important;
+	align-items: center !important;
+}
+#mainWindowTabs li,
+#mainWindowTabs li a {
+	width: auto !important;
+	min-width: 0 !important;
+	height: auto !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	padding: 6px 10px !important;
+	pointer-events: auto !important;
+	cursor: pointer !important;
+	z-index: 2;
+	position: relative;
+}
+#mainWindowTabs {
+	pointer-events: auto !important;
+	z-index: 2;
+	position: relative;
 }
 .toolbarTabs li,
 .toolbarTabs li a,
@@ -307,8 +539,7 @@ a:hover { color: var(--kr-primary) !important; }
 	color: var(--kr-primary-text) !important;
 }
 #mainWindowTabs img {
-	filter: none;
-	opacity: 0.85;
+	opacity: 0.9;
 	vertical-align: -3px;
 	margin-right: 4px;
 }
@@ -327,8 +558,53 @@ a:hover { color: var(--kr-primary) !important; }
 	font-size: 12px !important;
 	font-weight: 500 !important;
 }
+/*
+ * Mocha Desktop.setDesktopSize / panelHeight do border-*.toInt().
+ * A bare `border-top: 0` / `none` makes toInt() → NaN → `height: NaN`
+ * (drops the panel, Execution Log looks empty). Keep parseable px solids.
+ */
 #pageWrapper {
-	border-top: 0 !important;
+	border-top: 0px solid transparent !important;
+	border-bottom: 1px solid var(--kr-border) !important;
+}
+#pageWrapper .column,
+#pageWrapper .panel,
+#logTabColumn,
+#LogPanel {
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+}
+
+/*
+ * Stock .invisible is display:none without !important. Our toolbar rules use
+ * display:… !important and would keep hidden columns/toolbars painted.
+ */
+.invisible {
+	display: none !important;
+}
+#torrentsFilterToolbar.invisible,
+#mochaToolbar.invisible,
+#mainWindowTabs.invisible,
+#desktopFooterWrapper.invisible,
+#filtersColumn.invisible,
+#filtersColumn_handle.invisible,
+#mainColumn.invisible,
+#searchTabColumn.invisible,
+#rssTabColumn.invisible,
+#logTabColumn.invisible {
+	display: none !important;
+}
+
+/* When Log is the active main column, keep it laying out. */
+#logTabColumn:not(.invisible) {
+	display: block !important;
+	visibility: visible !important;
+	min-height: 120px;
+}
+#logTabColumn:not(.invisible) #LogPanel,
+#logTabColumn:not(.invisible) .panelWrapper,
+#logTabColumn:not(.invisible) .panel-content {
+	visibility: visible !important;
 }
 
 /* ==========================================================================
@@ -336,34 +612,71 @@ a:hover { color: var(--kr-primary) !important; }
  * ========================================================================== */
 #Filters,
 #filtersColumn,
-.filterTitle {
-	background: var(--kr-chrome) !important;
+#filtersColumn_pad,
+.filterWrapper {
+	background: var(--kr-surface) !important;
 	color: var(--kr-foreground) !important;
 	border-color: var(--kr-border) !important;
 }
+.filterWrapper {
+	margin: 8px 8px 12px !important;
+	padding: 4px 0 8px !important;
+	border-radius: var(--kr-radius) !important;
+	border: 1px solid var(--kr-border-soft) !important;
+	background: var(--kr-surface) !important;
+	overflow: hidden;
+}
 .filterTitle {
+	display: flex !important;
+	align-items: center !important;
+	gap: 6px !important;
 	font-size: 11px !important;
 	font-weight: 600 !important;
 	letter-spacing: 0.04em !important;
 	text-transform: uppercase !important;
 	color: var(--kr-fg-muted) !important;
 	padding: 10px 12px 6px !important;
+	background: transparent !important;
+	border: 0 !important;
+}
+.filterTitle img {
+	width: 12px !important;
+	height: 12px !important;
+	opacity: 0.75;
+}
+ul.filterList,
+.filterList {
+	padding: 0 6px 4px !important;
+	margin: 0 !important;
 }
 ul.filterList a,
-.filterList a {
+.filterList a,
+ul.filterList .link,
+.filterList .link {
 	color: var(--kr-foreground) !important;
 	border-radius: 8px !important;
 	padding: 6px 10px !important;
 }
 ul.filterList li:hover,
-#Filters ul li:hover a {
+#Filters ul li:hover a,
+ul.filterList li:hover > .link,
+.filterList li:hover > .link {
 	background: color-mix(in srgb, var(--kr-primary) 12%, transparent) !important;
 	color: var(--kr-primary-text) !important;
 }
 .selectedFilter,
-#Filters ul li.selectedFilter a {
+#Filters ul li.selectedFilter a,
+.selectedFilter > span.link,
+ul.filterList li.selectedFilter > .link {
 	background: color-mix(in srgb, var(--kr-primary) 22%, transparent) !important;
 	color: var(--kr-primary-text) !important;
+}
+ul.filterList img,
+.filterList img {
+	width: 16px !important;
+	height: 16px !important;
+	margin-right: 6px !important;
+	vertical-align: -3px;
 }
 
 /* ==========================================================================
@@ -372,42 +685,61 @@ ul.filterList li:hover,
 .dynamicTable,
 .torrentTable,
 .dynamicTableDiv,
+.dynamicTableFixedHeaderDiv,
+.dynamicTableFixedHeaderDiv table,
 #torrentsTableDiv,
-#transferList {
+#torrentsTableFixedHeaderDiv,
+#transferList,
+#transferList_pad {
 	background: var(--kr-surface) !important;
 	border-color: var(--kr-border) !important;
 	color: var(--kr-foreground) !important;
 }
 .dynamicTable th,
 .torrentTable th,
-.dynamicTableHeader > th {
-	background: var(--kr-surface-2) !important;
+.dynamicTableHeader > th,
+.dynamicTableFixedHeaderDiv th,
+#torrentsTableFixedHeaderDiv th {
+	background: var(--kr-chrome) !important;
+	background-image: none !important;
 	color: var(--kr-fg-muted) !important;
-	border-right-color: var(--kr-border-soft) !important;
+	border-right: 1px solid var(--kr-border-soft) !important;
+	border-bottom: 1px solid var(--kr-border) !important;
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
 	font-size: 11px !important;
 	font-weight: 600 !important;
 }
+.dynamicTable th.sorted,
+.dynamicTable th.sorted.reverse {
+	background-color: var(--kr-surface-2) !important;
+	color: var(--kr-primary-text) !important;
+}
 .dynamicTable tbody tr,
-.torrentTable tr {
+.torrentTable tr,
+.altRowColors tbody tr {
 	background: var(--kr-surface) !important;
 	color: var(--kr-foreground) !important;
 }
 .dynamicTable tbody tr:nth-child(even),
 .dynamicTable tbody tr.alt,
+.altRowColors tbody tr:nth-child(odd of :not(.invisible)),
 .torrentTable tr:nth-child(even) {
 	background: var(--kr-surface-2) !important;
 }
 .dynamicTable tbody tr:hover,
+.dynamicTableDiv table.dynamicTable tbody tr:hover,
 .torrentTable tr:hover {
-	background: color-mix(in srgb, var(--kr-primary) 10%, transparent) !important;
-}
-.dynamicTable tbody tr.selected,
-.torrentTable tr.selected {
-	background: color-mix(in srgb, var(--kr-primary) 22%, transparent) !important;
+	background: color-mix(in srgb, var(--kr-primary) 12%, var(--kr-surface)) !important;
 	color: var(--kr-foreground) !important;
 }
+.dynamicTable tbody tr.selected,
+.dynamicTableDiv table.dynamicTable tbody tr.selected,
+.torrentTable tr.selected {
+	background: color-mix(in srgb, var(--kr-primary) 26%, var(--kr-surface)) !important;
+	color: var(--kr-foreground) !important;
+}
+/* Let qBit --color-icon-hover (restored above) tint row imgs on hover/select. */
 
 .panel-header,
 .toolbarTabs,
@@ -421,13 +753,23 @@ ul.filterList li:hover,
 	border-color: var(--kr-border) !important;
 	color: var(--kr-foreground) !important;
 }
+#desktopFooter,
 #statusBar {
 	min-height: 36px !important;
-	border-top: 1px solid var(--kr-border) !important;
+	border-top: 2px solid var(--kr-primary) !important;
+	box-shadow: inset 0 1px 0 var(--kr-border-soft);
 	color: var(--kr-fg-muted) !important;
 	font-size: 12px !important;
+	padding: 4px 10px !important;
 }
-#statusBar img { opacity: 0.85; }
+#statusBar img,
+#statusBar #connectionStatus {
+	opacity: 1;
+	vertical-align: middle;
+}
+#statusBar .speedLabel {
+	color: var(--kr-foreground) !important;
+}
 .columnHandle,
 .horizontalHandle,
 #filtersColumn_handle,
@@ -445,18 +787,22 @@ ul.filterList li:hover,
 	color: var(--kr-primary-text) !important;
 }
 
-.progressbar_wrapper {
+.progressbar_wrapper,
+.progressBar,
+td .progressbar_wrapper {
 	border: 0 !important;
 	border-radius: 999px !important;
 	overflow: hidden !important;
 	background: var(--kr-surface-3) !important;
 	height: 14px !important;
 }
-.progressbar_light {
+.progressbar_light,
+.progressBar .progressbar_light {
 	background: var(--kr-surface-3) !important;
 	color: var(--kr-fg-muted) !important;
 }
-.progressbar_dark {
+.progressbar_dark,
+.progressBar .progressbar_dark {
 	background: linear-gradient(90deg, var(--kr-prg-start), var(--kr-prg-end)) !important;
 	color: var(--kr-primary-fg) !important;
 }
@@ -481,41 +827,70 @@ ul.filterList li:hover,
 .contextMenu .separator,
 li.divider { border-top-color: var(--kr-border) !important; }
 
+/*
+ * Mocha dialogs — color/token only. Do NOT restyle titlebar as flex or
+ * rewrite form layout: Mocha uses absolute title + table/float forms;
+ * flex overrides clipped titles and crushed upload/options rows.
+ */
 .mochaCanvas { display: none !important; }
 .mocha,
-.mochaOverlay {
+.mochaOverlay,
+.mochaWindow {
 	background: var(--kr-surface) !important;
 	color: var(--kr-foreground) !important;
-	box-shadow: var(--kr-shadow);
+	opacity: 1 !important;
+	box-shadow: var(--kr-shadow) !important;
 	border: 1px solid var(--kr-border) !important;
 	border-radius: var(--kr-radius-lg) !important;
 }
 .mochaTitlebar,
 .mochaTitlebar.replaced {
 	background: var(--kr-chrome) !important;
+	background-image: none !important;
 	border-bottom: 1px solid var(--kr-border) !important;
 	border-radius: var(--kr-radius-lg) var(--kr-radius-lg) 0 0 !important;
-	padding: 10px 14px !important;
+	/* Keep Mocha's absolute layout; only ensure room for the title */
+	min-height: 32px !important;
+	overflow: visible !important;
 }
 .mochaTitlebar h3,
 .mochaTitle,
 .mocha.isFocused .mochaTitlebar h3 {
 	color: var(--kr-foreground) !important;
 	font-family: var(--kr-font) !important;
-	font-size: 15px !important;
+	font-size: 14px !important;
 	font-weight: 600 !important;
+	line-height: 32px !important;
+	overflow: visible !important;
+	text-indent: 0 !important;
+	opacity: 1 !important;
 }
-.mochaContentBorder { border-color: var(--kr-border) !important; }
+.mochaContentBorder {
+	border-color: var(--kr-border) !important;
+	background: var(--kr-surface) !important;
+}
 .mochaContentWrapper,
-.mochaContent {
+.mochaContent,
+.mochaContent .panel,
+.mocha .panel-content {
 	background: var(--kr-surface) !important;
 	color: var(--kr-foreground) !important;
+	opacity: 1 !important;
 }
 .mochaToolbarWrapper,
-.mocha .mochaToolbar {
+.mocha .mochaToolbar,
+.mochaWindow .mochaToolbar,
+.mochaOverlay .mochaToolbar {
 	background: var(--kr-surface-2) !important;
 	border-color: var(--kr-border) !important;
 	background-image: none !important;
+}
+.mochaControls,
+.mochaMinimizeButton,
+.mochaMaximizeButton,
+.mochaCloseButton {
+	filter: none !important;
+	opacity: 0.85;
 }
 fieldset,
 fieldset.settings {
@@ -590,6 +965,13 @@ select:focus {
 	color: var(--kr-primary-fg) !important;
 }
 
+/* Dialog forms: tokens only — leave Mocha/qBit geometry alone */
+.mochaContent label,
+.mochaContent legend,
+#upload label {
+	color: var(--kr-foreground) !important;
+}
+
 #main {
 	background: var(--kr-surface) !important;
 	color: var(--kr-foreground) !important;
@@ -614,89 +996,723 @@ select:focus {
 }
 
 /* ==========================================================================
- * Injected chrome (floating fallback until mounted into toolbar)
+ * Injected chrome — hidden until toolbar mount; palette when mounted
  * ========================================================================== */
 #kr-chrome {
-	position: fixed;
-	z-index: 100000;
-	top: 10px;
-	right: 14px;
-	display: flex;
+	display: none;
 	align-items: center;
 	gap: 0;
-	padding: 4px;
-	background: var(--kr-chrome);
-	border: 1px solid var(--kr-border);
-	border-radius: 999px;
-	box-shadow: var(--kr-shadow-soft);
+	padding: 0;
+	background: transparent;
+	border: 0;
+	box-shadow: none;
 	font-family: var(--kr-font);
 	font-size: 12px;
 	color: var(--kr-foreground);
 	pointer-events: auto;
 }
-#kr-chrome .kr-mark,
-#kr-chrome button.kr-wn {
+#kr-chrome[data-kr-mounted="toolbar"] {
+	display: inline-flex !important;
+}
+#kr-chrome .kr-mark {
 	display: none !important;
 }
-#kr-chrome select.kr-variant {
-	appearance: none;
-	background-color: var(--kr-input);
-	color: var(--kr-foreground);
-	border: 1px solid var(--kr-border);
-	border-radius: 999px;
-	padding: 5px 26px 5px 12px;
-	font: inherit;
-	cursor: pointer;
-	background-image: linear-gradient(45deg, transparent 50%, var(--kr-fg-muted) 50%),
-		linear-gradient(135deg, var(--kr-fg-muted) 50%, transparent 50%);
-	background-position: calc(100% - 12px) 55%, calc(100% - 8px) 55%;
-	background-size: 4px 4px, 4px 4px;
-	background-repeat: no-repeat;
+
+/* Variant palette — glyph button + token menu (ruTorrent pattern) */
+.kr-palette {
+	position: relative;
+	display: inline-flex;
+	flex: none;
 }
-#krWhatsNew {
-	position: fixed;
-	z-index: 100001;
-	inset: 0;
-	display: none;
+#kr-chrome .kr-palette-btn {
+	width: 36px;
+	height: 36px;
+	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	background: rgba(0, 0, 0, 0.45);
+	border: 0;
+	border-radius: var(--kr-radius);
+	background-color: transparent;
+	cursor: pointer;
+	transition: background-color 0.15s ease;
+	padding: 0;
+	margin: 0;
 }
-#krWhatsNew[data-open="1"] { display: flex; }
-#krWhatsNew .kr-wn-panel {
-	width: min(560px, 92vw);
-	max-height: min(70vh, 640px);
-	overflow: auto;
-	background: var(--kr-surface);
-	color: var(--kr-foreground);
+#kr-chrome .kr-palette-btn:hover,
+#kr-chrome .kr-palette-btn.open {
+	background-color: var(--kr-surface-2);
+}
+#kr-chrome .kr-palette-glyph {
+	width: 18px;
+	height: 18px;
+	display: block;
+	flex: none;
+	color: var(--kr-primary-text, #38bdf8);
+	fill: currentColor;
+	opacity: 1 !important;
+	visibility: visible !important;
+	pointer-events: none;
+}
+#kr-chrome .kr-palette-btn:hover .kr-palette-glyph,
+#kr-chrome .kr-palette-btn.open .kr-palette-glyph {
+	color: var(--kr-icon-hover, #f5f5f5);
+}
+.kr-palette-menu {
+	position: absolute;
+	top: 40px;
+	left: 0;
+	z-index: 10000;
+	min-width: 176px;
+	padding: 5px;
+	background-color: var(--kr-surface);
 	border: 1px solid var(--kr-border);
 	border-radius: var(--kr-radius-lg);
-	box-shadow: var(--kr-shadow);
-	padding: 16px 18px 20px;
-	font-family: var(--kr-font);
+	box-shadow: var(--kr-shadow-soft);
 }
-#krWhatsNew .kr-wn-title {
-	margin: 0 0 12px;
-	font-size: 16px;
+.kr-palette-menu[hidden] {
+	display: none;
+}
+.kr-palette-item {
 	display: flex;
-	justify-content: space-between;
-	gap: 12px;
-}
-#krWhatsNew .kr-wn-close {
-	background: var(--kr-surface-2) !important;
-	border: 1px solid var(--kr-border) !important;
-	color: var(--kr-foreground) !important;
-	border-radius: 8px;
-	padding: 4px 10px;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	height: 32px;
+	padding: 0 10px;
+	border: 0;
+	border-radius: var(--kr-radius);
+	background: transparent;
+	color: var(--kr-foreground);
+	font-family: var(--kr-font);
+	font-size: 13px;
+	text-align: left;
 	cursor: pointer;
 }
-#krWhatsNew .kr-wn-head { margin: 12px 0 6px; font-size: 14px; color: var(--kr-primary-text); }
-#krWhatsNew .kr-wn-list { margin: 0 0 8px 18px; }
-#krWhatsNew .kr-wn-p,
-#krWhatsNew .kr-wn-empty { color: var(--kr-fg-muted); }
-#krWhatsNew .kr-wn-code {
-	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+.kr-palette-item:hover {
+	background-color: var(--kr-surface-2);
+}
+.kr-palette-item.active {
+	background-color: color-mix(in srgb, var(--kr-primary) 14%, transparent);
+	color: var(--kr-primary-text, var(--kr-primary));
+}
+.kr-palette-check {
+	width: 14px;
+	height: 14px;
+	margin-left: auto;
+	flex: none;
+	background-color: var(--kr-primary);
+	-webkit-mask: var(--kr-menu-check-url, url(images/icons/menu-check.svg)) center / 14px no-repeat;
+	mask: var(--kr-menu-check-url, url(images/icons/menu-check.svg)) center / 14px no-repeat;
+	visibility: hidden;
+}
+.kr-palette-item.active .kr-palette-check {
+	visibility: visible;
+}
+
+/* ===== General overview + properties pills (was css/details.css) ===== */
+/*
+ * Krate qBittorrent — General-tab overview + properties tab pills.
+ * Built by js/details.js into #propGeneral; stock fieldsets stay in DOM
+ * (hidden) so prop-general.js can keep writing them.
+ */
+
+:root,
+:root[data-kr-variant="dark"],
+html.dark {
+	--kr-pill-bg: color-mix(in srgb, var(--kr-primary) 12%, var(--kr-surface-2));
+	--kr-state-stopped: #a3a3a3;
+}
+
+:root[data-kr-variant="light"],
+html[data-kr-variant="light"] {
+	--kr-pill-bg: color-mix(in srgb, var(--kr-primary) 10%, var(--kr-surface));
+	--kr-state-stopped: #475569;
+}
+
+/* Hide stock General markup once the overview is mounted. */
+#propGeneral.kr-prop-overview > *:not(.kr-ov),
+#propGeneral.kr-prop-overview #propBarsWrapper,
+#propGeneral.kr-prop-overview fieldset,
+#propGeneral.kr-prop-overview hr,
+#propGeneral.kr-prop-overview > [data-kr-stock-hidden] {
+	display: none !important;
+}
+
+#propGeneral.kr-prop-overview {
+	display: block !important;
+	box-sizing: border-box;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: 12px 14px 16px !important;
+	background: var(--kr-surface) !important;
+	color: var(--kr-foreground);
+	font-family: var(--kr-font);
+	scrollbar-width: thin;
+}
+
+.kr-muted { color: var(--kr-fg-muted) !important; }
+.kr-mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+
+.kr-icon {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	flex: none;
+	background-color: currentColor;
+	-webkit-mask: center / contain no-repeat;
+	mask: center / contain no-repeat;
+}
+
+.kr-ov {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	min-height: 100%;
+	padding-top: 8px;
+}
+
+.kr-ov-empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 140px;
+	padding: 24px;
+	color: var(--kr-fg-muted);
+	font-size: 13px;
+	text-align: center;
+}
+.kr-ov-empty[hidden] { display: none !important; }
+.kr-ov-body[hidden] { display: none !important; }
+
+.kr-ov-hero {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-bottom: 4px;
+}
+
+.kr-hero-cell {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 8px;
+	min-width: 0;
+	flex: 1 1 220px;
+	padding: 14px 16px;
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius-lg);
 	background: var(--kr-surface-2);
-	padding: 1px 4px;
-	border-radius: 4px;
+}
+
+.kr-hero-overview {
+	flex: 2.2 1 340px;
+	flex-direction: row;
+	align-items: center;
+	gap: 16px;
+}
+.kr-overview-info {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+	min-width: 0;
+	flex: 1 1 auto;
+}
+.kr-ov-name {
+	display: flex;
+	min-width: 0;
+	width: 100%;
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--kr-foreground);
+}
+.kr-ov-name .kr-mid-a {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	flex: 0 1 auto;
+	min-width: 0;
+}
+.kr-ov-name .kr-mid-b { white-space: nowrap; flex: none; }
+.kr-ov-metaline {
+	font-size: 11px;
+	color: var(--kr-fg-muted);
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 100%;
+}
+
+.kr-ministats {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+.kr-ministat {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+.kr-ministat-label {
+	color: var(--kr-fg-muted);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+.kr-ministat-value {
+	color: var(--kr-foreground);
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.1;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.kr-hero-label {
+	color: var(--kr-fg-muted);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+.kr-hero-sub {
+	color: var(--kr-fg-muted);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.kr-ring { display: block; flex: none; }
+.kr-ring-track {
+	fill: none;
+	stroke: var(--kr-border);
+	stroke-width: 6;
+}
+.kr-ring-arc {
+	fill: none;
+	stroke: url(#kr-ring-grad);
+	stroke-width: 6;
+	stroke-linecap: round;
+	transition: stroke-dashoffset 0.4s ease;
+}
+.kr-ring-s1 { stop-color: var(--kr-prg-start); }
+.kr-ring-s2 { stop-color: var(--kr-prg-end); }
+.kr-ring-label {
+	fill: var(--kr-foreground);
+	font-family: var(--kr-font);
+	font-size: 19px;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+
+.kr-state-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 3px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	background: var(--kr-pill-bg);
+	color: var(--kr-fg-muted);
+}
+.kr-state-pill::before {
+	content: "";
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	flex: none;
+	background: currentColor;
+}
+.kr-state-pill[data-tone="downloading"] { color: var(--kr-state-downloading); }
+.kr-state-pill[data-tone="seeding"] { color: var(--kr-state-seeding); }
+.kr-state-pill[data-tone="paused"],
+.kr-state-pill[data-tone="checking"] { color: var(--kr-state-paused); }
+.kr-state-pill[data-tone="stopped"] { color: var(--kr-state-stopped); }
+.kr-state-pill[data-tone="error"] { color: var(--kr-state-error, var(--kr-destructive)); }
+
+.kr-hero-speed { gap: 10px; }
+.kr-spd {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+}
+.kr-spd-icon { width: 18px; height: 18px; flex: none; }
+.kr-dir-down .kr-spd-icon { background-color: var(--kr-speed-down); }
+.kr-dir-up .kr-spd-icon { background-color: var(--kr-speed-up); }
+.kr-spd-text { min-width: 0; flex: none; }
+.kr-spd-num {
+	font-size: 17px;
+	font-weight: 700;
+	line-height: 1.1;
+	font-variant-numeric: tabular-nums;
+	color: var(--kr-foreground);
+	white-space: nowrap;
+}
+.kr-spd-lab {
+	font-size: 11px;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: var(--kr-fg-muted);
+}
+.kr-spark {
+	flex: 1 1 auto;
+	min-width: 48px;
+	height: 26px;
+	align-self: center;
+}
+.kr-spark-line { fill: none; stroke-width: 1.75; vector-effect: non-scaling-stroke; }
+.kr-spark-area { stroke: none; }
+.kr-dir-down .kr-spark-line { stroke: var(--kr-speed-down); }
+.kr-dir-down .kr-spark-area { fill: var(--kr-speed-down); fill-opacity: 0.14; }
+.kr-dir-up .kr-spark-line { stroke: var(--kr-speed-up); }
+.kr-dir-up .kr-spark-area { fill: var(--kr-speed-up); fill-opacity: 0.14; }
+
+.kr-ratio-value {
+	font-size: 22px;
+	font-weight: 700;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+	color: var(--kr-primary-text);
+}
+.kr-ratio-value[data-met="0"] { color: var(--kr-destructive-text, var(--kr-destructive)); }
+.kr-ratio-track {
+	position: relative;
+	height: 6px;
+	border-radius: 999px;
+	background: var(--kr-border-soft);
+	overflow: hidden;
+}
+.kr-ratio-fill {
+	height: 100%;
+	width: 100%;
+	border-radius: 999px;
+	background: var(--kr-primary);
+	transform: scaleX(var(--kr-p, 0));
+	transform-origin: left center;
+	transition: transform 0.4s ease;
+}
+.kr-ratio-fill[data-met="0"] { background: var(--kr-destructive); }
+.kr-ratio-tick {
+	position: absolute;
+	top: -2px;
+	bottom: -2px;
+	left: 100%;
+	width: 0;
+}
+
+.kr-meta {
+	display: flex;
+	align-items: baseline;
+	gap: 10px;
+	min-width: 0;
+	padding: 3px 0;
+}
+.kr-meta-wide { flex-direction: column; align-items: stretch; gap: 3px; }
+.kr-meta-label {
+	flex: none;
+	color: var(--kr-fg-muted);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.kr-meta-value {
+	flex: 1 1 auto;
+	min-width: 0;
+	color: var(--kr-foreground);
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.kr-meta-wide .kr-meta-value { text-align: left; }
+
+.kr-ov-cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+	gap: 18px;
+	margin-top: 8px;
+	padding-top: 8px;
+	border-top: 1px solid var(--kr-border-soft);
+}
+
+.kr-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	max-height: 220px;
+	overflow: auto;
+	scrollbar-width: thin;
+}
+.kr-list-row {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 6px 8px;
+	border-radius: 8px;
+	background: var(--kr-surface-2);
+	border: 1px solid var(--kr-border-soft);
+}
+.kr-list-main {
+	min-width: 0;
+	flex: 1 1 auto;
+}
+.kr-list-title {
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--kr-foreground);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.kr-list-sub {
+	margin-top: 2px;
+	font-size: 11px;
+	color: var(--kr-fg-muted);
+	font-variant-numeric: tabular-nums;
+}
+.kr-list-flag {
+	flex: none;
+	font-size: 11px;
+	color: var(--kr-fg-muted);
+}
+.kr-card {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	min-width: 0;
+	padding: 12px 14px;
+	border: 1px solid var(--kr-border);
+	border-radius: var(--kr-radius-lg);
+	background: var(--kr-surface);
+	box-shadow: var(--kr-shadow-soft);
+}
+.kr-card-head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding-bottom: 7px;
+	border-bottom: 1px solid var(--kr-border-soft);
+}
+.kr-card-icon {
+	width: 16px;
+	height: 16px;
+	flex: none;
+	background-color: var(--kr-primary-text);
+}
+.kr-card-title {
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.03em;
+	color: var(--kr-foreground);
+}
+.kr-card-body { display: flex; flex-direction: column; gap: 6px; }
+
+.kr-swarm-row {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 10px;
+}
+.kr-swarm-key {
+	color: var(--kr-fg-muted);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.kr-swarm-val {
+	color: var(--kr-foreground);
+	font-size: 13px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+.kr-swarm-bar {
+	height: 5px;
+	border-radius: 999px;
+	background: var(--kr-border-soft);
+	overflow: hidden;
+	margin-bottom: 2px;
+}
+.kr-swarm-fill {
+	height: 100%;
+	width: 100%;
+	border-radius: 999px;
+	transform: scaleX(var(--kr-p, 0));
+	transform-origin: left center;
+	transition: transform 0.4s ease;
+}
+.kr-swarm-fill.kr-dir-up { background: var(--kr-speed-up); }
+.kr-swarm-fill.kr-dir-down { background: var(--kr-speed-down); }
+
+.kr-trunc-wrap {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	min-width: 0;
+}
+.kr-trunc {
+	display: flex;
+	flex: 1 1 auto;
+	min-width: 0;
+	color: var(--kr-foreground);
+	font-size: 13px;
+}
+.kr-trunc .kr-mid-a {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	flex: 0 1 auto;
+	min-width: 0;
+}
+.kr-trunc .kr-mid-b { white-space: nowrap; flex: none; }
+.kr-trunc.kr-mono { font-size: 12px; letter-spacing: 0.01em; }
+
+.kr-icon-btn,
+.kr-copy-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	border: 0;
+	border-radius: 8px;
+	background: transparent;
+	color: var(--kr-fg-muted);
+	cursor: pointer;
+	flex: none;
+}
+.kr-icon-btn:hover,
+.kr-copy-btn:hover {
+	background: var(--kr-surface-2);
+	color: var(--kr-foreground);
+}
+.kr-copy-btn.kr-copied { color: var(--kr-primary-text); }
+.kr-copy-btn .kr-icon {
+	width: 14px;
+	height: 14px;
+	background-color: currentColor;
+}
+
+.kr-comment {
+	text-align: left;
+	white-space: normal;
+	overflow: visible;
+	line-height: 1.5;
+	word-break: break-word;
+	overflow-wrap: anywhere;
+}
+.kr-comment a { color: var(--kr-primary-text) !important; }
+
+.kr-disk-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 10px;
+}
+.kr-disk-val {
+	color: var(--kr-foreground);
+	font-size: 13px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+.kr-disk-track {
+	height: 4px;
+	border-radius: 999px;
+	background: var(--kr-border-soft);
+	overflow: hidden;
+}
+.kr-disk-fill {
+	height: 100%;
+	width: 100%;
+	border-radius: 999px;
+	background: var(--kr-primary);
+	transform: scaleX(var(--kr-p, 0));
+	transform-origin: left center;
+	transition: transform 0.4s ease;
+}
+
+.kr-status-cell { display: flex; justify-content: flex-end; }
+.kr-status-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 2px 9px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	background: var(--kr-pill-bg);
+	color: var(--kr-fg-muted);
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.kr-status-pill::before {
+	content: "";
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	flex: none;
+	background: currentColor;
+}
+.kr-status-pill[data-tone="ok"] { color: var(--kr-primary-text); }
+.kr-status-pill[data-tone="updating"] { color: var(--kr-fg-muted); }
+.kr-status-pill[data-tone="error"] { color: var(--kr-destructive-text, var(--kr-destructive)); }
+
+/* ==========================================================================
+ * Properties panel — card overview replaces General/Trackers/Peers/… tabs
+ * ========================================================================== */
+#propertiesPanel_header,
+#propertiesPanel_headerContent {
+	background: var(--kr-chrome) !important;
+	border-color: var(--kr-border) !important;
+}
+
+/* Hide redundant properties tabs (overview cards cover that data). */
+#propertiesPanel .toolbarTabs,
+#propertiesPanel_tabs,
+#propertiesPanel .tabs-container,
+#propertiesPanel_header .toolbarTabs,
+#propertiesPanel_headerContent .toolbarTabs {
+	display: none !important;
+	height: 0 !important;
+	overflow: hidden !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+}
+
+#propertiesPanel_pad,
+#propertiesPanel .panel-contentContent {
+	background: var(--kr-surface) !important;
+	padding-top: 4px !important;
+}
+
+#propGeneral.kr-prop-overview {
+	padding-top: 12px !important;
+}
+
+/* Keep General pane visible; other stock property panes stay unused. */
+body.kr-qbittorrent #propGeneral {
+	display: block !important;
+}
+body.kr-qbittorrent #propTrackers,
+body.kr-qbittorrent #propPeers,
+body.kr-qbittorrent #propWebSeeds,
+body.kr-qbittorrent #propFiles {
+	display: none !important;
 }
