@@ -1,7 +1,7 @@
 /**
- * @file Injected Krate chrome: variant select + What's New dialog.
+ * @file Injected Krate chrome: palette switcher.
  * Mounts into Flood's .action-bar (not a floating overlay).
- * @requires window.kr, kr.lib.{variants,i18n,markdown,dom}
+ * @requires window.kr, kr.lib.{variants,i18n,dom}
  */
 ;(function (kr) {
 	"use strict";
@@ -16,9 +16,6 @@
 		normalizeVariant: function (v) { return v === "light" ? "light" : "dark"; },
 		resolveAutoTheme: function () { return "dark"; }
 	};
-	var md = kr.lib && kr.lib.markdown;
-	var VERSION = kr.version || "";
-	var notesCache = {};
 	var currentDark = true;
 	var appDarkObserver = null;
 	var mountObserver = null;
@@ -96,26 +93,79 @@
 		bar.setAttribute("role", "group");
 		bar.setAttribute("aria-label", t("krAppearance", "Appearance"));
 
-		var sel = document.createElement("select");
-		sel.className = "kr-variant";
-		sel.setAttribute("aria-label", t("krAppearance", "Appearance"));
-		[
-			["auto", t("krVariantAuto", "Auto (HarmonyUI)")],
-			["dark", t("krVariantDark", "Dark")],
-			["light", t("krVariantLight", "Light")]
-		].forEach(function (opt) {
-			var o = document.createElement("option");
-			o.value = opt[0];
-			o.textContent = opt[1];
-			sel.appendChild(o);
-		});
-		sel.value = storedPreference() || "auto";
-		sel.addEventListener("change", function () {
-			setPreference(sel.value);
-			applyVariant(sel.value);
-		});
-		bar.appendChild(sel);
+		var pal = document.createElement("div");
+		pal.className = "kr-palette";
+		var pbtn = document.createElement("button");
+		pbtn.type = "button";
+		pbtn.className = "kr-palette-btn";
+		pbtn.setAttribute("aria-haspopup", "true");
+		pbtn.setAttribute("aria-label", t("krAppearance", "Appearance"));
+		pbtn.title = t("krAppearance", "Appearance");
+		pbtn.appendChild(document.createElement("span")).className = "kr-palette-glyph";
 
+		var menu = document.createElement("div");
+		menu.className = "kr-palette-menu";
+		menu.hidden = true;
+		menu.setAttribute("role", "menu");
+
+		var OPTS = [
+			["auto", "krVariantAuto", "Auto (HarmonyUI)"],
+			["dark", "krVariantDark", "Dark"],
+			["light", "krVariantLight", "Light"]
+		];
+		OPTS.forEach(function (o) {
+			var it = document.createElement("button");
+			it.type = "button";
+			it.className = "kr-palette-item";
+			it.setAttribute("data-variant", o[0]);
+			it.setAttribute("role", "menuitemradio");
+			var lb = document.createElement("span");
+			lb.textContent = t(o[1], o[2]);
+			var ck = document.createElement("span");
+			ck.className = "kr-palette-check";
+			it.appendChild(lb);
+			it.appendChild(ck);
+			it.addEventListener("click", function () {
+				setPreference(o[0]);
+				applyVariant(o[0]);
+				markActive();
+				closeMenu();
+			});
+			menu.appendChild(it);
+		});
+
+		function markActive() {
+			var cur = storedPreference() || "auto";
+			menu.querySelectorAll(".kr-palette-item").forEach(function (it) {
+				var on = it.getAttribute("data-variant") === cur;
+				it.classList.toggle("active", on);
+				it.setAttribute("aria-checked", on ? "true" : "false");
+			});
+		}
+		function onDoc(e) { if (!pal.contains(e.target)) closeMenu(); }
+		function onEsc(e) { if (e.key === "Escape") closeMenu(); }
+		function openMenu() {
+			markActive();
+			menu.hidden = false;
+			pbtn.classList.add("open");
+			document.addEventListener("mousedown", onDoc, true);
+			document.addEventListener("keydown", onEsc, true);
+		}
+		function closeMenu() {
+			menu.hidden = true;
+			pbtn.classList.remove("open");
+			document.removeEventListener("mousedown", onDoc, true);
+			document.removeEventListener("keydown", onEsc, true);
+		}
+		pbtn.addEventListener("click", function () {
+			menu.hidden ? openMenu() : closeMenu();
+		});
+
+		pal.appendChild(pbtn);
+		pal.appendChild(menu);
+		bar.appendChild(pal);
+		bar._krMarkActive = markActive;
+		markActive();
 		return bar;
 	}
 
@@ -129,6 +179,10 @@
 
 	function ensureChrome() {
 		var existing = document.getElementById("kr-chrome");
+		if (existing && existing.querySelector("select.kr-variant")) {
+			existing.parentNode && existing.parentNode.removeChild(existing);
+			existing = null;
+		}
 		if (existing) {
 			mountIntoActionBar(existing);
 			return existing;
@@ -148,82 +202,6 @@
 		}
 		return bar;
 	}
-
-	function ensureDialog() {
-		var existing = document.getElementById("krWhatsNew");
-		if (existing) return existing;
-		var overlay = document.createElement("div");
-		overlay.id = "krWhatsNew";
-		overlay.innerHTML =
-			'<div class="kr-wn-panel" role="dialog" aria-modal="true">' +
-			'<div class="kr-wn-title"><span></span><button type="button" class="kr-wn-close"></button></div>' +
-			'<div class="kr-wn-body"></div></div>';
-		overlay.querySelector(".kr-wn-title span").textContent =
-			t("kr_wn_title", "What's new in Krate");
-		var close = overlay.querySelector(".kr-wn-close");
-		close.textContent = t("kr_wn_close", "Close");
-		close.addEventListener("click", function () { overlay.removeAttribute("data-open"); });
-		overlay.addEventListener("click", function (e) {
-			if (e.target === overlay) overlay.removeAttribute("data-open");
-		});
-		document.addEventListener("keydown", function (e) {
-			if (e.key === "Escape") overlay.removeAttribute("data-open");
-		});
-		document.body.appendChild(overlay);
-		return overlay;
-	}
-
-	function localUrl(path) {
-		return kr.path + path + (VERSION ? "?kr=" + VERSION : "");
-	}
-
-	function fetchText(url) {
-		if (notesCache[url] != null) return Promise.resolve(notesCache[url]);
-		if (typeof fetch !== "function") return Promise.reject();
-		return fetch(url, { credentials: "same-origin" }).then(function (r) {
-			if (!r.ok) throw 0;
-			return r.text();
-		}).then(function (txt) {
-			notesCache[url] = txt;
-			return txt;
-		});
-	}
-
-	function renderMarkdown(container, text) {
-		if (md && typeof md.renderMarkdown === "function") md.renderMarkdown(container, text);
-		else container.appendChild(document.createTextNode(String(text)));
-	}
-
-	kr.openWhatsNew = function () {
-		var overlay = ensureDialog();
-		var body = overlay.querySelector(".kr-wn-body");
-		body.textContent = "";
-		fetchText(localUrl("changelogs/index.json"))
-			.then(function (txt) {
-				var idx = JSON.parse(txt);
-				if (!Array.isArray(idx) || !idx.length) throw 0;
-				var chain = Promise.resolve();
-				idx.forEach(function (entry) {
-					chain = chain.then(function () {
-						return fetchText(localUrl(entry.file)).then(function (mdTxt) {
-							var sec = document.createElement("section");
-							sec.className = "kr-wn-entry";
-							renderMarkdown(sec, mdTxt);
-							body.appendChild(sec);
-						}).catch(function () { /* skip */ });
-					});
-				});
-				return chain;
-			})
-			.catch(function () {
-				if (body.childNodes.length) return;
-				var empty = document.createElement("p");
-				empty.className = "kr-wn-empty";
-				empty.textContent = t("kr_wn_none", "No release notes yet.");
-				body.appendChild(empty);
-			});
-		overlay.setAttribute("data-open", "1");
-	};
 
 	kr.applyVariant = applyVariant;
 	kr.getPreference = function () { return storedPreference() || "auto"; };

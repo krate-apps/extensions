@@ -42,7 +42,7 @@ Serve this tree at that URL path.
 
 - Tests: `npm test`
 - Catalog: `sh scripts/i18n.sh`
-- Bump SemVer + changelogs: `bash scripts/release.sh`
+- Bump SemVer + CHANGELOG: `bash scripts/release.sh`
 
 ## License
 

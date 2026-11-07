@@ -38,7 +38,7 @@ Reload ruTorrent. Auto mode needs a `krate_theme` cookie or `localStorage.theme`
 
 - Tests: `npm test`
 - Catalog: `sh scripts/i18n.sh`
-- Bump SemVer + local changelogs (cache-bust `?kr=<version>`, What’s New): `bash scripts/release.sh`
+- Bump SemVer (cache-bust `?kr=<version>`): `bash scripts/release.sh`
 
 ## Translations
 

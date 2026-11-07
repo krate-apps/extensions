@@ -1,13 +1,13 @@
 /**
  * @file Krate theme shell for qBittorrent (Caddy-injected).
- * Loads style.css + libs/lang/chrome and applies variants.
+ * Loads style.css + libs/lang/chrome (chrome.js also boots the General overview).
  */
 ;(function () {
 	"use strict";
 	/* var: scripts/release.sh rewrites this literal on bump. Also used as ?kr= cache-bust. */
-	var KR_VERSION = "0.0.2";
+	var KR_VERSION = "1.0.0";
 	var OVERRIDE_KEY = "kr-qbittorrent-variant";
-	var LIBS = ["variants", "i18n", "dom", "markdown"];
+	var LIBS = ["variants", "i18n", "dom"];
 	var LANGS = ["en", "fr", "de", "es", "da", "pt-br", "zh-cn"];
 
 	function scriptBase() {
@@ -48,11 +48,20 @@
 	}
 
 	function loadCss(url) {
-		if (document.querySelector('link[href*="krate-theme/style.css"]')) return;
 		var l = document.createElement("link");
 		l.rel = "stylesheet";
 		l.href = url;
 		document.head.appendChild(l);
+	}
+
+	/** Always pin style.css to ?kr=VERSION (Caddy injects an unbust link). */
+	function ensureStyle(url) {
+		var nodes = document.querySelectorAll('link[rel="stylesheet"][href*="krate-theme/style.css"]');
+		if (nodes.length) {
+			for (var i = 0; i < nodes.length; i++) nodes[i].href = url;
+			return;
+		}
+		loadCss(url);
 	}
 
 	function bust(path) {
@@ -70,18 +79,7 @@
 		return "en";
 	}
 
-	try {
-		document.documentElement.style.setProperty(
-			"--kr-mark-url",
-			'url("' + bust("images/brand/krate-mark.svg") + '")'
-		);
-		document.documentElement.style.setProperty(
-			"--kr-favicon-url",
-			'url("' + bust("images/brand/krate-logo.png") + '")'
-		);
-	} catch (e) { /* ignore */ }
-
-	loadCss(bust("style.css"));
+	ensureStyle(bust("style.css"));
 
 	var chain = Promise.resolve();
 	LIBS.forEach(function (name) {

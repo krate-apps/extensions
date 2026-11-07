@@ -1,42 +1,51 @@
-# Krate
+# Krate — Deluge
 
-Deluge WebUI theme aligned with HarmonyUI (sky accent, Dark / Light).
+Deluge WebUI theme. **Look** aligned with the ruTorrent Krate theme (HarmonyUI sky, cards, palette). Architecture is Deluge-specific: vendor Ext xtheme + one `style.css` + one `js/theme.js`.
 
-**Distribution**
+## Layout
 
-- **Any Deluge** — copy `themes/css/xtheme-krate.css` into Deluge’s `ui/web/themes/css/`, set `"theme": "krate"` in `web.conf`, and load `init.js` (Caddy inject or a `<script>` in `index.html`).
-- **KRATE** — synced into `krate-apps/extensions/deluge/themes`; install copies the xtheme into the vendor WebUI and injects the shell via Caddy.
+| Path | Role |
+|------|------|
+| `themes/css/xtheme-krate.css` | Ext skin (copied into Deluge vendor WebUI) |
+| `style.css` | Tokens, palette, Status overview cards |
+| `init.js` | Injected by Caddy; loads CSS/JS with `?kr=` bust |
+| `js/theme.js` | Palette, mono icons, Status cards |
+
+`init.js` is linked from Deluge’s vendor `index.html` via `${base}krate-theme/…` (install/deploy patches that file). Caddy only serves `/krate-theme/*` (no HTML replace, no SemVer in the proxy). Theme SemVer lives in `init.js` / `plugin.info`.
 
 ## Variants
 
-| Variant | Role |
-|---------|------|
-| **Dark** | Default. Charcoal `#171519`, sky accent. |
-| **Light** | Light gray page, sky accent. |
-| **Auto** | HarmonyUI `krate_theme` cookie → `localStorage.theme` → `prefers-color-scheme`. |
+Dark (default), Light, Auto — palette control in the toolbar.
 
-The chrome control (injected) switches variants. Auto re-checks when the tab regains focus.
+## Deploy (trevor on krate-server)
 
-## Install
-
-### KRATE
-
-Install/update writes the xtheme into the active Deluge vendor tree and sets `"theme": "krate"`. Caddy injects `init.js` and serves theme assets under `{base}/krate-theme/`.
-
-### Any Deluge
+Run from a machine that can SSH as `krate-client` (this laptop). Paths below are on the **server**, not the laptop.
 
 ```bash
-# From this tree:
-cp themes/css/xtheme-krate.css /path/to/deluge/ui/web/themes/css/
-# web.conf → "theme": "krate"
-# Serve this tree and inject: <script defer src="…/init.js"></script>
+THEME=/home/thomas/Dev/GitHub/Organizations/Krate/krate-apps/krate-theme/deluge
+
+rsync -av --delete "$THEME/" krate-client:/opt/trevor/deluge/krate-theme/
+
+ssh krate-client 'cp -f /opt/trevor/deluge/krate-theme/themes/css/xtheme-krate.css \
+  /home/trevor/.krate/active/deluge/usr/lib/python3.13/site-packages/deluge/ui/web/themes/css/xtheme-krate.css \
+  && chown -R trevor:trevor /opt/trevor/deluge/krate-theme'
+
+# Ensure vendor index.html loads init (once; idempotent):
+ssh krate-client 'IDX=/home/trevor/.krate/active/deluge/usr/lib/python3.13/site-packages/deluge/ui/web/index.html
+grep -q krate-theme/init.js "$IDX" || sed -i "s|</head>|        <link rel=\"stylesheet\" type=\"text/css\" href=\"\${base}krate-theme/style.css\"/>\n        <script defer type=\"text/javascript\" src=\"\${base}krate-theme/init.js\"></script>\n    </head>|" "$IDX"'
+
+# Only when the Caddy fragment shape changes (not on every version bump):
+scp /home/thomas/Dev/GitHub/Organizations/Krate/krate-apps/bugs/caddy/softwares/path/trevor.deluge.caddy \
+  krate-client:/etc/caddy/softwares/path/trevor.deluge.caddy
+ssh krate-client 'systemctl reload caddy'
 ```
+
+`web.conf` must have `"theme": "krate"`.
 
 ## Development
 
 - Tests: `npm test`
-- Catalog: `sh scripts/i18n.sh`
-- Bump SemVer + changelogs: `bash scripts/release.sh`
+- Bump: `bash scripts/release.sh`
 
 ## License
 

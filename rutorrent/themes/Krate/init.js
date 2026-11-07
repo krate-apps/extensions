@@ -12,9 +12,9 @@
 	var KR_VERSION = "0.0.0";
 	const VARIANTS = ["dark", "light"];
 	const OVERRIDE_KEY = "kr-rutorrent-variant";
-	const LIB_MODULES = ["variants", "i18n", "dom", "markdown"];
-	const CSS_MODULES = ["base", "topbar", "sidebar", "table", "peers", "details", "chunks", "dialogs", "settings", "settings-plugins", "select", "statusbar", "extras", "about", "icons"];
-	const JS_MODULES = ["topbar", "sidebar", "table", "peers", "details", "chunks", "dialogs", "settings", "settings-plugins", "select", "statusbar", "extras", "about", "icons"];
+	const LIB_MODULES = ["variants", "i18n", "dom"];
+	const CSS_MODULES = ["base", "topbar", "sidebar", "table", "peers", "details", "chunks", "dialogs", "settings", "settings-plugins", "select", "statusbar", "extras", "icons"];
+	const JS_MODULES = ["topbar", "sidebar", "table", "peers", "details", "chunks", "dialogs", "settings", "settings-plugins", "select", "statusbar", "extras", "icons"];
 	const root = document.documentElement;
 	const variantListeners = [];
 	let jsModulesLoaded = false;

@@ -258,12 +258,4 @@ theUILang.kr_peerFlagIncoming  = "传入连接";
 theUILang.kr_peerFlagEncrypted = "已加密";
 theUILang.kr_peerFlagSnubbed   = "已忽略";
 
-/* About / What's new (js/about.js; the palette command in js/extras.js). */
-theUILang.kr_wn_title         = "Krate 的新功能";
-theUILang.kr_wn_link          = "新功能";
-theUILang.kr_wn_version       = "Krate v{version}";
-theUILang.kr_wn_update        = "有可用更新：v{version}";
-theUILang.kr_wn_update_hint = "KRATE：通过 HarmonyUI 更新 ruTorrent，或运行 {cmd}。";
-theUILang.kr_wn_update_manual = "手动安装：在主题文件夹中运行 {cmd}。";
-theUILang.kr_wn_none          = "暂无发行说明。";
 theUILang.krPalHelp            = "帮助";
